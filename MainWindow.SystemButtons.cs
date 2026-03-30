@@ -4,6 +4,7 @@
 //            SelectNoneAllTabs, Install, Pause, Resume, Refresh Color,
 //            BtnDownloadPage, DPI controls
 // Cập nhật gần đây:
+//   - 2026-03-29 (5): Added ChkBoilsoftVideoSplitter, ChkVibe, ChkMKVToolNix
 //   - 2026-03-29: Added ChkVidCoder and new Subtitle tab support
 //   - 2026-03-28: Added ChkSubtitleEdit to BtnSelectAll, BtnSelectNone,
 //                 BtnSelectNoneAllTabs, UpdateInstallButtonState, BtnInstall_Click
@@ -246,6 +247,9 @@ namespace GMTPC.Tool
                 {
                     ChkSubtitleEdit.IsChecked = true;
                     ChkVidCoder.IsChecked = true;
+                    ChkBoilsoftVideoSplitter.IsChecked = true;
+                    ChkVibe.IsChecked = true;
+                    ChkMKVToolNix.IsChecked = true;
                 }
                 // Nếu tab là "Partition"
                 else if (tabHeader == "Partition")
@@ -366,6 +370,9 @@ namespace GMTPC.Tool
                 {
                     ChkSubtitleEdit.IsChecked = false;
                     ChkVidCoder.IsChecked = false;
+                    ChkBoilsoftVideoSplitter.IsChecked = false;
+                    ChkVibe.IsChecked = false;
+                    ChkMKVToolNix.IsChecked = false;
                 }
                 // Nếu tab là "Partition"
                 else if (tabHeader == "Partition")
@@ -506,6 +513,9 @@ namespace GMTPC.Tool
             // Bỏ chọn checkbox trong tab Subtitle
             ChkSubtitleEdit.IsChecked = false;
             ChkVidCoder.IsChecked = false;
+            ChkBoilsoftVideoSplitter.IsChecked = false;
+            ChkVibe.IsChecked = false;
+            ChkMKVToolNix.IsChecked = false;
 
             // Bỏ chọn checkbox trong tab Windows - Microsoft
             ChkWin11_26H1.IsChecked = false;
@@ -567,6 +577,9 @@ namespace GMTPC.Tool
             if (ChkNotepadPlusPlus.IsChecked == true) tasks.Add((InstallNotepadPlusPlusAsync, ChkNotepadPlusPlus));
             if (ChkSubtitleEdit.IsChecked == true) tasks.Add((InstallSubtitleEditAsync, ChkSubtitleEdit));
             if (ChkVidCoder.IsChecked == true) tasks.Add((InstallVidCoderAsync, ChkVidCoder));
+            if (ChkBoilsoftVideoSplitter.IsChecked == true) tasks.Add((InstallBoilsoftVideoSplitterAsync, ChkBoilsoftVideoSplitter));
+            if (ChkVibe.IsChecked == true) tasks.Add((InstallVibeAsync, ChkVibe));
+            if (ChkMKVToolNix.IsChecked == true) tasks.Add((InstallMKVToolNixAsync, ChkMKVToolNix));
             // Only add once to avoid duplicate install and MessageBox
             if (ChkPowerISO.IsChecked == true) tasks.Add((InstallPowerISOAsync, ChkPowerISO));
             if (ChkTeraCopy.IsChecked == true) tasks.Add((InstallTeraCopyAsync, ChkTeraCopy));
@@ -768,6 +781,15 @@ namespace GMTPC.Tool
 
             if (ChkVidCoder?.IsChecked == true)
                 _cachedDownloadLinks.Add("https://github.com/RandomEngy/VidCoder/releases");
+
+            if (ChkBoilsoftVideoSplitter?.IsChecked == true)
+                _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/v1.0/BoilsoftVideoSplitter.8.3.3.by.elchupacabra.exe");
+
+            if (ChkVibe?.IsChecked == true)
+                _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/v1.0/vibe.exe");
+
+            if (ChkMKVToolNix?.IsChecked == true)
+                _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/v1.0/mkvtoolnix-mkvcleaver.exe");
 
             if (ChkPowerISO?.IsChecked == true)
                 _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/v1.0/PowerISO.exe");

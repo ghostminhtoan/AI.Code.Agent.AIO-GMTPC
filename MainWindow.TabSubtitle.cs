@@ -23,6 +23,9 @@ namespace GMTPC.Tool
     {
         /*
          * AI Summary:
+         * Date: 2026-03-29 (3)
+         * - Added 3 new checkboxes: ChkBoilsoftVideoSplitter, ChkVibe, ChkMKVToolNix
+         * - Using InstallWithPromptAsync mechanism (Yes/No dialog)
          * Date: 2026-03-29 (2)
          * - Added Desktop shortcut creation for VidCoder after download
          * Date: 2026-03-29
@@ -237,6 +240,255 @@ namespace GMTPC.Tool
             catch { }
 
             return 0;
+        }
+
+        // ===================================================================
+        // TabSubtitle — Boilsoft Video Splitter
+        // ===================================================================
+        private void ChkBoilsoftVideoSplitter_Click(object sender, RoutedEventArgs e)
+        {
+            if (ChkBoilsoftVideoSplitter.IsChecked == true)
+            {
+                UpdateStatus("Đã chọn: Boilsoft Video Splitter", "Green");
+            }
+            else
+            {
+                UpdateStatus("Đã hủy chọn: Boilsoft Video Splitter", "Yellow");
+            }
+
+            UpdateInstallButtonState();
+        }
+
+        private async Task InstallBoilsoftVideoSplitterAsync()
+        {
+            try
+            {
+                UpdateStatus("Đang tải Boilsoft Video Splitter...", "Cyan");
+                string boilsoftPath = Path.Combine(GetGMTPCFolder(), "Boilsoft.VideoSplitter.exe");
+                await DownloadWithProgressAsync(BOILSOFT_VIDEO_SPLITTER_DOWNLOAD_URL, boilsoftPath, "Boilsoft Video Splitter");
+
+                Dispatcher.Invoke(() =>
+                {
+                    DownloadProgressBar.Value = 0;
+                    ProgressTextBlock.Text = "";
+                    SpeedTextBlock.Text = "";
+                });
+
+                // Hiển thị popup để hỏi người dùng chọn cài đặt
+                MessageBoxResult result = MessageBox.Show("Yes = Cài đặt tự động (silent)\nNo = Cài đặt thủ công (GUI)", "Cài đặt Boilsoft Video Splitter", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Cancel)
+                {
+                    UpdateStatus("Đã hủy cài đặt Boilsoft Video Splitter", "Yellow");
+                    if (File.Exists(boilsoftPath))
+                    {
+                        File.Delete(boilsoftPath);
+                    }
+                    return;
+                }
+
+                ProcessStartInfo startInfo = new ProcessStartInfo
+                {
+                    FileName = boilsoftPath,
+                    UseShellExecute = true
+                };
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    // Cài đặt tự động
+                    startInfo.Arguments = BOILSOFT_VIDEO_SPLITTER_INSTALL_ARGUMENTS;
+                    UpdateStatus("Đang cài đặt Boilsoft Video Splitter (silent)...", "Yellow");
+                }
+                else
+                {
+                    // Cài đặt thủ công
+                    UpdateStatus("Đang mở Boilsoft Video Splitter installer (thủ công)...", "Yellow");
+                }
+
+                Process process = Process.Start(startInfo);
+
+                if (process != null)
+                {
+                    await Task.Run(() => process.WaitForExit());
+                    UpdateStatus("Cài đặt Boilsoft Video Splitter hoàn tất!", "Green");
+                }
+
+                if (File.Exists(boilsoftPath))
+                {
+                    File.Delete(boilsoftPath);
+                    UpdateStatus("Đã xóa file Boilsoft.VideoSplitter.exe", "Cyan");
+                }
+            }
+            catch (Exception ex)
+            {
+                UpdateStatus($"Lỗi khi cài đặt Boilsoft Video Splitter: {ex.Message}", "Red");
+            }
+        }
+
+        // ===================================================================
+        // TabSubtitle — Vibe
+        // ===================================================================
+        private void ChkVibe_Click(object sender, RoutedEventArgs e)
+        {
+            if (ChkVibe.IsChecked == true)
+            {
+                UpdateStatus("Đã chọn: Vibe", "Green");
+            }
+            else
+            {
+                UpdateStatus("Đã hủy chọn: Vibe", "Yellow");
+            }
+
+            UpdateInstallButtonState();
+        }
+
+        private async Task InstallVibeAsync()
+        {
+            try
+            {
+                UpdateStatus("Đang tải Vibe...", "Cyan");
+                string vibePath = Path.Combine(GetGMTPCFolder(), "Vibe.exe");
+                await DownloadWithProgressAsync(VIBE_DOWNLOAD_URL, vibePath, "Vibe");
+
+                Dispatcher.Invoke(() =>
+                {
+                    DownloadProgressBar.Value = 0;
+                    ProgressTextBlock.Text = "";
+                    SpeedTextBlock.Text = "";
+                });
+
+                // Hiển thị popup để hỏi người dùng chọn cài đặt
+                MessageBoxResult result = MessageBox.Show("Yes = Cài đặt tự động (silent)\nNo = Cài đặt thủ công (GUI)", "Cài đặt Vibe", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Cancel)
+                {
+                    UpdateStatus("Đã hủy cài đặt Vibe", "Yellow");
+                    if (File.Exists(vibePath))
+                    {
+                        File.Delete(vibePath);
+                    }
+                    return;
+                }
+
+                ProcessStartInfo startInfo = new ProcessStartInfo
+                {
+                    FileName = vibePath,
+                    UseShellExecute = true
+                };
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    // Cài đặt tự động
+                    startInfo.Arguments = VIBE_INSTALL_ARGUMENTS;
+                    UpdateStatus("Đang cài đặt Vibe (silent)...", "Yellow");
+                }
+                else
+                {
+                    // Cài đặt thủ công
+                    UpdateStatus("Đang mở Vibe installer (thủ công)...", "Yellow");
+                }
+
+                Process process = Process.Start(startInfo);
+
+                if (process != null)
+                {
+                    await Task.Run(() => process.WaitForExit());
+                    UpdateStatus("Cài đặt Vibe hoàn tất!", "Green");
+                }
+
+                if (File.Exists(vibePath))
+                {
+                    File.Delete(vibePath);
+                    UpdateStatus("Đã xóa file Vibe.exe", "Cyan");
+                }
+            }
+            catch (Exception ex)
+            {
+                UpdateStatus($"Lỗi khi cài đặt Vibe: {ex.Message}", "Red");
+            }
+        }
+
+        // ===================================================================
+        // TabSubtitle — MKVToolNix MKVCleaver
+        // ===================================================================
+        private void ChkMKVToolNix_Click(object sender, RoutedEventArgs e)
+        {
+            if (ChkMKVToolNix.IsChecked == true)
+            {
+                UpdateStatus("Đã chọn: MKVToolNix MKVCleaver", "Green");
+            }
+            else
+            {
+                UpdateStatus("Đã hủy chọn: MKVToolNix MKVCleaver", "Yellow");
+            }
+
+            UpdateInstallButtonState();
+        }
+
+        private async Task InstallMKVToolNixAsync()
+        {
+            try
+            {
+                UpdateStatus("Đang tải MKVToolNix MKVCleaver...", "Cyan");
+                string mkvtoolnixPath = Path.Combine(GetGMTPCFolder(), "MKVToolNix.MKVCleaver.exe");
+                await DownloadWithProgressAsync(MKVTOOLNIX_DOWNLOAD_URL, mkvtoolnixPath, "MKVToolNix MKVCleaver");
+
+                Dispatcher.Invoke(() =>
+                {
+                    DownloadProgressBar.Value = 0;
+                    ProgressTextBlock.Text = "";
+                    SpeedTextBlock.Text = "";
+                });
+
+                // Hiển thị popup để hỏi người dùng chọn cài đặt
+                MessageBoxResult result = MessageBox.Show("Yes = Cài đặt tự động (silent)\nNo = Cài đặt thủ công (GUI)", "Cài đặt MKVToolNix MKVCleaver", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Cancel)
+                {
+                    UpdateStatus("Đã hủy cài đặt MKVToolNix MKVCleaver", "Yellow");
+                    if (File.Exists(mkvtoolnixPath))
+                    {
+                        File.Delete(mkvtoolnixPath);
+                    }
+                    return;
+                }
+
+                ProcessStartInfo startInfo = new ProcessStartInfo
+                {
+                    FileName = mkvtoolnixPath,
+                    UseShellExecute = true
+                };
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    // Cài đặt tự động
+                    startInfo.Arguments = MKVTOOLNIX_INSTALL_ARGUMENTS;
+                    UpdateStatus("Đang cài đặt MKVToolNix MKVCleaver (silent)...", "Yellow");
+                }
+                else
+                {
+                    // Cài đặt thủ công
+                    UpdateStatus("Đang mở MKVToolNix MKVCleaver installer (thủ công)...", "Yellow");
+                }
+
+                Process process = Process.Start(startInfo);
+
+                if (process != null)
+                {
+                    await Task.Run(() => process.WaitForExit());
+                    UpdateStatus("Cài đặt MKVToolNix MKVCleaver hoàn tất!", "Green");
+                }
+
+                if (File.Exists(mkvtoolnixPath))
+                {
+                    File.Delete(mkvtoolnixPath);
+                    UpdateStatus("Đã xóa file MKVToolNix.MKVCleaver.exe", "Cyan");
+                }
+            }
+            catch (Exception ex)
+            {
+                UpdateStatus($"Lỗi khi cài đặt MKVToolNix MKVCleaver: {ex.Message}", "Red");
+            }
         }
     }
 }

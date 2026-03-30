@@ -1,4 +1,4 @@
-<!-- AI Summary: 2026-03-29 - Created new Subtitle tab, moved ChkSubtitleEdit from Office tab, added ChkVidCoder -->
+<!-- AI Summary: 2026-03-29 (7) - Added 3 new checkboxes to Tab Subtitle: ChkBoilsoftVideoSplitter, ChkVibe, ChkMKVToolNix -->
 
 # Danh sách Checkbox
 
@@ -49,6 +49,9 @@
 |-------------|---------------|----------|
 | ChkSubtitleEdit | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/Subtitle.Edit.exe | `/verysilent /norestart` |
 | ChkVidCoder | https://github.com/RandomEngy/VidCoder/releases (auto-probe latest version) | *(GitHub latest version, C:\Vidcoder)* |
+| ChkBoilsoftVideoSplitter | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/BoilsoftVideoSplitter.8.3.3.by.elchupacabra.exe | *(Yes: /S, No: manual)* |
+| ChkVibe | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/vibe.exe | *(Yes: /S, No: manual)* |
+| ChkMKVToolNix | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/mkvtoolnix-mkvcleaver.exe | *(Yes: /S, No: manual)* |
 
 ## Tab Multimedia
 
@@ -133,7 +136,7 @@
 
 ---
 
-**Tổng số:** 52 checkboxes
+**Tổng số:** 55 checkboxes
 
 **Ghi chú:**
 - Các checkbox được phân loại theo Tab tương ứng trong giao diện (MainWindow.xaml)

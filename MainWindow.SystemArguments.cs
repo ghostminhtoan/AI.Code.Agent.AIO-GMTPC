@@ -11,6 +11,10 @@ namespace GMTPC.Tool
 {
     /*
  * AI Summary:
+ * Date: 2026-03-29 (6)
+ * - Added ChkBoilsoftVideoSplitter, ChkVibe, ChkMKVToolNix to UpdateInstallButtonState()
+ * Date: 2026-03-29 (4)
+ * - Added BOILSOFT_VIDEO_SPLITTER_DOWNLOAD_URL, VIBE_DOWNLOAD_URL, MKVTOOLNIX_DOWNLOAD_URL and arguments
  * Date: 2026-03-29 (2)
  * - Added ChkVidCoder to UpdateInstallButtonState()
  * Date: 2026-03-28
@@ -168,6 +172,23 @@ namespace GMTPC.Tool
         // Subtitle Edit (Tab: Office)
         private const string SUBTITLE_EDIT_DOWNLOAD_URL = "https://github.com/ghostminhtoan/MMT/releases/download/v1.0/Subtitle.Edit.exe";
         private const string SUBTITLE_EDIT_INSTALL_ARGUMENTS = "/passive";
+
+        // ===================================================================
+        // TabSubtitle — Links (B) and Arguments (C)
+        // TabItem Header: "Subtitle"
+        // Checkboxes: ChkBoilsoftVideoSplitter, ChkVibe, ChkMKVToolNix
+        // ===================================================================
+        // Boilsoft Video Splitter (Tab: Subtitle)
+        private const string BOILSOFT_VIDEO_SPLITTER_DOWNLOAD_URL = "https://github.com/ghostminhtoan/MMT/releases/download/v1.0/BoilsoftVideoSplitter.8.3.3.by.elchupacabra.exe";
+        private const string BOILSOFT_VIDEO_SPLITTER_INSTALL_ARGUMENTS = "/S";
+
+        // Vibe (Tab: Subtitle)
+        private const string VIBE_DOWNLOAD_URL = "https://github.com/ghostminhtoan/MMT/releases/download/v1.0/vibe.exe";
+        private const string VIBE_INSTALL_ARGUMENTS = "/S";
+
+        // MKVToolNix MKVCleaver (Tab: Subtitle)
+        private const string MKVTOOLNIX_DOWNLOAD_URL = "https://github.com/ghostminhtoan/MMT/releases/download/v1.0/mkvtoolnix-mkvcleaver.exe";
+        private const string MKVTOOLNIX_INSTALL_ARGUMENTS = "/S";
 
         // ===================================================================
         // TabDriver — Links (B) and Arguments (C)
@@ -607,6 +628,12 @@ namespace GMTPC.Tool
                              ChkSubtitleEdit.IsChecked == true ||
                              // Thêm checkbox cho VidCoder (Tab Subtitle)
                              ChkVidCoder.IsChecked == true ||
+                             // Thêm checkbox cho Boilsoft Video Splitter (Tab Subtitle)
+                             ChkBoilsoftVideoSplitter.IsChecked == true ||
+                             // Thêm checkbox cho Vibe (Tab Subtitle)
+                             ChkVibe.IsChecked == true ||
+                             // Thêm checkbox cho MKVToolNix MKVCleaver (Tab Subtitle)
+                             ChkMKVToolNix.IsChecked == true ||
                              // Thêm checkbox cho AOMEI Partition Assistant
                              ChkAomeiPartitionAssistant.IsChecked == true ||
                              // Thêm checkbox cho PowerISO

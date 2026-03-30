@@ -455,6 +455,9 @@
                         <WrapPanel x:Name="SubtitlePanel" Orientation="Horizontal" HorizontalAlignment="Stretch" Style="{StaticResource ResponsiveWrapPanelStyle}">
                             <CheckBox x:Name="ChkSubtitleEdit" Content="Subtitle Edit" Width="200" Height="34" Click="ChkSubtitleEdit_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
                             <CheckBox x:Name="ChkVidCoder" Content="VidCoder" Width="200" Height="34" Click="ChkVidCoder_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
+                            <CheckBox x:Name="ChkBoilsoftVideoSplitter" Content="Boilsoft Video Splitter" Width="200" Height="34" Click="ChkBoilsoftVideoSplitter_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
+                            <CheckBox x:Name="ChkVibe" Content="Vibe" Width="200" Height="34" Click="ChkVibe_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
+                            <CheckBox x:Name="ChkMKVToolNix" Content="MKVToolNix MKVCleaver" Width="200" Height="34" Click="ChkMKVToolNix_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
                         </WrapPanel>
                     </ScrollViewer>
                 </TabItem>

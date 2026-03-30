@@ -23,6 +23,8 @@ namespace GMTPC.Tool
     {
         /*
          * AI Summary:
+         * Date: 2026-03-29 (2)
+         * - Added Desktop shortcut creation for VidCoder after download
          * Date: 2026-03-29
          * - Created MainWindow.TabSubtitle.cs for Subtitle tab
          * - Added ChkVidCoder_Click, InstallVidCoderAsync with GitHub latest version probe
@@ -96,7 +98,40 @@ namespace GMTPC.Tool
 
                 UpdateStatus("Đã tải xong VidCoder.sqlite", "Green");
 
-                // Bước 5: Chỉ chạy file .exe sau khi tải xong SQLite
+                // Bước 5: Tạo shortcut trên Desktop
+                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+                string shortcutPath = Path.Combine(desktopPath, "VidCoder.lnk");
+                
+                // Xóa shortcut cũ nếu tồn tại
+                if (File.Exists(shortcutPath))
+                {
+                    File.Delete(shortcutPath);
+                }
+                
+                // Tạo shortcut mới sử dụng WshShell
+                try
+                {
+                    Type shellType = Type.GetTypeFromProgID("WScript.Shell");
+                    if (shellType != null)
+                    {
+                        object shell = Activator.CreateInstance(shellType);
+                        object shortcut = shellType.InvokeMember("CreateShortcut", System.Reflection.BindingFlags.InvokeMethod, null, shell, new object[] { shortcutPath });
+                        
+                        // Set các thuộc tính shortcut
+                        shellType.InvokeMember("TargetPath", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { vidCoderExePath });
+                        shellType.InvokeMember("WorkingDirectory", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { vidCoderFolder });
+                        shellType.InvokeMember("Description", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { "VidCoder - Video transcoder" });
+                        shellType.InvokeMember("Save", System.Reflection.BindingFlags.InvokeMethod, null, shortcut, null);
+                        
+                        UpdateStatus("Đã tạo shortcut VidCoder trên Desktop", "Green");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    UpdateStatus($"Không thể tạo shortcut: {ex.Message}", "Orange");
+                }
+
+                // Bước 6: Chỉ chạy file .exe sau khi tải xong SQLite
                 UpdateStatus("Đang mở VidCoder...", "Cyan");
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {

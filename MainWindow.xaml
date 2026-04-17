@@ -455,14 +455,16 @@
                 <TabItem Header="Subtitle">
                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Background="#FF1F1F1F">
                         <WrapPanel x:Name="SubtitlePanel" Orientation="Horizontal" HorizontalAlignment="Stretch" Style="{StaticResource ResponsiveWrapPanelStyle}">
-                            <StackPanel Orientation="Vertical" Margin="2">
-                                <CheckBox x:Name="ChkSubtitleEdit" Content="Subtitle Edit" Width="200" Height="34" Click="ChkSubtitleEdit_Click" MouseEnter="Checkbox_MouseEnter"/>
-                                <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
-                                    <Button x:Name="BtnDownloadVietnameseProfile" Content="Vietnamese Profile" Width="90" Height="25" Click="BtnDownloadVietnameseProfile_Click" Margin="0,0,2,0" FontSize="10"/>
-                                    <Button x:Name="BtnDownloadMultipleReplace" Content="Multiple Replace" Width="90" Height="25" Click="BtnDownloadMultipleReplace_Click" Margin="0,0,2,0" FontSize="10"/>
-                                    <Button x:Name="BtnDownloadShortcutMMT" Content="Shortcut MMT" Width="90" Height="25" Click="BtnDownloadShortcutMMT_Click" FontSize="10"/>
+                            <Border BorderBrush="#FF555555" BorderThickness="1" CornerRadius="3" Margin="2" Padding="5" Background="#FF2A2A2A">
+                                <StackPanel Orientation="Vertical">
+                                    <CheckBox x:Name="ChkSubtitleEdit" Content="Subtitle Edit" Width="180" Height="30" Click="ChkSubtitleEdit_Click" MouseEnter="Checkbox_MouseEnter" Margin="0,0,0,3"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button x:Name="BtnDownloadVietnameseProfile" Content="Profile" Width="50" Height="20" Click="BtnDownloadVietnameseProfile_Click" Margin="0,0,1,0" FontSize="8"/>
+                                        <Button x:Name="BtnDownloadMultipleReplace" Content="Template" Width="55" Height="20" Click="BtnDownloadMultipleReplace_Click" Margin="0,0,1,0" FontSize="8"/>
+                                        <Button x:Name="BtnDownloadShortcutMMT" Content="Shortcut" Width="50" Height="20" Click="BtnDownloadShortcutMMT_Click" FontSize="8"/>
+                                    </StackPanel>
                                 </StackPanel>
-                            </StackPanel>
+                            </Border>
                             <CheckBox x:Name="ChkVidCoder" Content="VidCoder" Width="200" Height="34" Click="ChkVidCoder_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
                             <CheckBox x:Name="ChkBoilsoftVideoSplitter" Content="Boilsoft Video Splitter" Width="200" Height="34" Click="ChkBoilsoftVideoSplitter_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
                             <CheckBox x:Name="ChkVibe" Content="Vibe" Width="200" Height="34" Click="ChkVibe_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>

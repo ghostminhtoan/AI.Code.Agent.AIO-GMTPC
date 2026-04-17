@@ -22,6 +22,8 @@ namespace GMTPC.Tool
     {
         /*
          * AI Summary:
+         * Date: 2026-04-17
+         * - Added 3 download buttons for Subtitle Edit: Vietnamese Profile, Multiple Replace Template, and Shortcut MMT XML
          * Date: 2026-03-28
          * - Added ChkSubtitleEdit_Click and InstallSubtitleEditAsync
          * Date: 2026-03-08
@@ -438,6 +440,46 @@ namespace GMTPC.Tool
             catch (Exception ex)
             {
                 UpdateStatus($"Lỗi khi cài đặt Subtitle Edit: {ex.Message}", "Red");
+            }
+        }
+
+        // ===================================================================
+        // Subtitle Edit Download Buttons
+        // ===================================================================
+        private async void BtnDownloadVietnameseProfile_Click(object sender, RoutedEventArgs e)
+        {
+            await DownloadSubtitleFileAsync("https://github.com/ghostminhtoan/Subtitle-draft-GMTPC/releases/download/subtitle.materials/vietnamese.profile.profile", "vietnamese.profile.profile");
+        }
+
+        private async void BtnDownloadMultipleReplace_Click(object sender, RoutedEventArgs e)
+        {
+            await DownloadSubtitleFileAsync("https://github.com/ghostminhtoan/Subtitle-draft-GMTPC/releases/download/subtitle.materials/multiple_replace.template", "multiple_replace.template");
+        }
+
+        private async void BtnDownloadShortcutMMT_Click(object sender, RoutedEventArgs e)
+        {
+            await DownloadSubtitleFileAsync("https://github.com/ghostminhtoan/Subtitle-draft-GMTPC/releases/download/subtitle.materials/shortcut.MMT.xml", "shortcut.MMT.xml");
+        }
+
+        private async Task DownloadSubtitleFileAsync(string url, string fileName)
+        {
+            try
+            {
+                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+                string filePath = Path.Combine(desktopPath, fileName);
+
+                UpdateStatus($"Đang tải {fileName} về Desktop...", "Cyan");
+
+                using (WebClient client = new WebClient())
+                {
+                    await client.DownloadFileTaskAsync(url, filePath);
+                }
+
+                UpdateStatus($"{fileName} đã tải về Desktop!", "Green");
+            }
+            catch (Exception ex)
+            {
+                UpdateStatus($"Lỗi khi tải {fileName}: {ex.Message}", "Red");
             }
         }
 

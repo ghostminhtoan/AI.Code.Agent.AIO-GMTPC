@@ -1,4 +1,5 @@
-﻿<Window x:Class="GMTPC.Tool.MainWindow"
+﻿<!-- AI Summary: 2026-04-18 - Added child button "enable INVITE WORKSPACE LTSC" inside ChkEdge checkbox -->
+<Window x:Class="GMTPC.Tool.MainWindow"
          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
          Title="GMTPC Tools" SizeToContent="WidthAndHeight" MinHeight="480" MinWidth="700" MaxHeight="800" MaxWidth="1000"
@@ -546,7 +547,14 @@
                         <WrapPanel x:Name="BrowserPanel" Orientation="Horizontal" HorizontalAlignment="Stretch" Style="{StaticResource ResponsiveWrapPanelStyle}">
                             <CheckBox x:Name="ChkChrome" Content="Google Chrome" Width="200" Height="34" Click="ChkChrome_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
                             <CheckBox x:Name="ChkCocCoc" Content="Cốc Cốc" Width="200" Height="34" Click="ChkCocCoc_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
-                            <CheckBox x:Name="ChkEdge" Content="Microsoft Edge" Width="200" Height="34" Click="ChkEdge_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
+                            <CheckBox x:Name="ChkEdge" Width="200" Height="34" Click="ChkEdge_Click" Margin="2" MouseEnter="Checkbox_MouseEnter">
+                                <CheckBox.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Microsoft Edge" VerticalAlignment="Center" />
+                                        <Button x:Name="BtnEnableWorkspaceLTSC" Content="enable INVITE WORKSPACE LTSC" Click="BtnEnableWorkspaceLTSC_Click" Margin="5,0,0,0" FontSize="8" />
+                                    </StackPanel>
+                                </CheckBox.Content>
+                            </CheckBox>
                         </WrapPanel>
                     </ScrollViewer>
                 </TabItem>

@@ -270,7 +270,7 @@ namespace GMTPC.Tool
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = vmwarePath,
-                    Arguments = "/S /V/qn",
+                    Arguments = "",
                     UseShellExecute = true
                 };
                 Process process = Process.Start(startInfo);

@@ -42,10 +42,42 @@ echo Copying exe to root folder...
 copy /Y "bin\x64\Release\net48\GMTPC.Tool.exe" "GMTPC.Tool.exe" >nul
 if %ERRORLEVEL% NEQ 0 (
     echo [WARNING] Failed to copy exe to root folder.
+    goto end
 ) else (
     echo [OK] Exe copied to root: GMTPC.Tool.exe
 )
 echo.
 
+echo Adding exe to git...
+git add GMTPC.Tool.exe
+if %ERRORLEVEL% NEQ 0 (
+    echo [ERROR] Failed to add exe to git.
+    goto end
+)
+
+echo.
+set /p commit_msg="Enter commit message: "
+if "%commit_msg%"=="" (
+    echo [WARNING] No commit message provided. Skipping commit.
+    goto end
+)
+
+git commit -m "%commit_msg%"
+if %ERRORLEVEL% NEQ 0 (
+    echo [ERROR] Commit failed.
+    goto end
+)
+
+echo.
+echo Pushing to remote repository...
+git push
+if %ERRORLEVEL% NEQ 0 (
+    echo [ERROR] Push failed.
+    goto end
+)
+
+echo [OK] Commit and push successful!
+
+:end
 echo Done!
 pause

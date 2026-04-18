@@ -48,39 +48,6 @@ if %ERRORLEVEL% NEQ 0 (
 )
 echo.
 
-<<<<<<< HEAD
-echo Adding exe to git...
-git add GMTPC.Tool.exe
-if %ERRORLEVEL% NEQ 0 (
-    echo [ERROR] Failed to add exe to git.
-    goto end
-)
-
-echo.
-set /p commit_msg="Enter commit message: "
-if "%commit_msg%"=="" (
-    echo [WARNING] No commit message provided. Skipping commit.
-    goto end
-)
-
-git commit -m "%commit_msg%"
-if %ERRORLEVEL% NEQ 0 (
-    echo [ERROR] Commit failed.
-    goto end
-)
-
-echo.
-echo Pushing to remote repository...
-git push
-if %ERRORLEVEL% NEQ 0 (
-    echo [ERROR] Push failed.
-    goto end
-)
-
-echo [OK] Commit and push successful!
-
-:end
-=======
 echo Adding to git...
 git add .
 echo Enter commit message:
@@ -91,6 +58,13 @@ if %ERRORLEVEL% NEQ 0 (
     pause
     exit /b %ERRORLEVEL%
 )
+echo Rebasing with remote...
+git pull --rebase origin main
+if %ERRORLEVEL% NEQ 0 (
+    echo [ERROR] Rebase failed! Please resolve conflicts manually.
+    pause
+    exit /b %ERRORLEVEL%
+)
 echo Pushing to remote...
 git push
 if %ERRORLEVEL% NEQ 0 (
@@ -98,7 +72,5 @@ if %ERRORLEVEL% NEQ 0 (
     pause
     exit /b %ERRORLEVEL%
 )
-
->>>>>>> 3fa1fd0 (fix UI)
 echo Done!
 pause

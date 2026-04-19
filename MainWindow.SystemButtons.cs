@@ -4,6 +4,7 @@
 //            SelectNoneAllTabs, Install, Pause, Resume, Refresh Color,
 //            BtnDownloadPage, DPI controls
 // Cập nhật gần đây:
+//   - 2026-04-19: Added ChkInstallNeatDM to BtnSelectNoneAllTabs for proper interaction with Select None All Tabs button
 //   - 2026-04-19: Added missing checkbox cases in Checkbox_MouseEnter for ChkGouenjiFonts, ChkNotepadPlusPlus, ChkSubtitleEdit, ChkVidCoder, ChkBoilsoftVideoSplitter, ChkVibe, ChkMKVToolNix, ChkSubtitleDraftGMTPC; Added ChkSubtitleDraftGMTPC to _cachedDownloadLinks
 //   - 2026-04-19: Added missing checkboxes to Checkbox_MouseEnter: ChkInstallZalo, ChkJumpForce, ChkWintoHDD; Added missing checkboxes to _cachedDownloadLinks for hover and copy functionality
 //   - 2026-03-29 (5): Added ChkBoilsoftVideoSplitter, ChkVibe, ChkMKVToolNix
@@ -449,6 +450,7 @@ namespace GMTPC.Tool
 
             // Bỏ chọn tất cả các checkbox trong tab Popular
             ChkInstallIDM.IsChecked = false;
+            ChkInstallNeatDM.IsChecked = false;
             ChkActivateWindows.IsChecked = false;
             ChkActivateOffice.IsChecked = false;
             ChkPauseWindowsUpdate.IsChecked = false;

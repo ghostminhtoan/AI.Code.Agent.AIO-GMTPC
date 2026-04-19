@@ -4,6 +4,7 @@
 //            SelectNoneAllTabs, Install, Pause, Resume, Refresh Color,
 //            BtnDownloadPage, DPI controls
 // Cập nhật gần đây:
+//   - 2026-04-19: Added missing checkbox cases in Checkbox_MouseEnter for ChkGouenjiFonts, ChkNotepadPlusPlus, ChkSubtitleEdit, ChkVidCoder, ChkBoilsoftVideoSplitter, ChkVibe, ChkMKVToolNix, ChkSubtitleDraftGMTPC; Added ChkSubtitleDraftGMTPC to _cachedDownloadLinks
 //   - 2026-03-29 (5): Added ChkBoilsoftVideoSplitter, ChkVibe, ChkMKVToolNix
 //   - 2026-03-29: Added ChkVidCoder and new Subtitle tab support
 //   - 2026-03-28: Added ChkSubtitleEdit to BtnSelectAll, BtnSelectNone,
@@ -795,6 +796,9 @@ namespace GMTPC.Tool
             if (ChkMKVToolNix?.IsChecked == true)
                 _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/v1.0/mkvtoolnix-mkvcleaver.exe");
 
+            if (ChkSubtitleDraftGMTPC?.IsChecked == true)
+                _cachedDownloadLinks.Add(SUBTITLE_DRAFT_GMTPC_DOWNLOAD_URL);
+
             if (ChkPowerISO?.IsChecked == true)
                 _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/v1.0/PowerISO.exe");
 
@@ -1120,7 +1124,16 @@ namespace GMTPC.Tool
                         link = "https://github.com/ghostminhtoan/MMT/releases/download/v1.0/VMware.Workstation.Pro.16.2.Lite.exe";
                         break;
                     case "ChkActivateOffice":
-                        link = "https://github.com/ghostminhtoan/MMT/releases/download/activate/activate-office.bat";
+                        link = "https://github.com/ghostminhtoan/MMT/releases/download/activate/ACTIVATE.OFFICE.cmd";
+                        break;
+                    case "ChkGouenjiFonts":
+                        link = GOUENJI_FONTS_DOWNLOAD_URL;
+                        break;
+                    case "ChkNotepadPlusPlus":
+                        link = NOTEPAD_PLUS_PLUS_DOWNLOAD_URL;
+                        break;
+                    case "ChkSubtitleEdit":
+                        link = SUBTITLE_EDIT_DOWNLOAD_URL;
                         break;
                     case "ChkFolderSize":
                         link = "https://github.com/ghostminhtoan/MMT/releases/download/v1.0/FolderSize.exe";
@@ -1136,6 +1149,21 @@ namespace GMTPC.Tool
                         break;
                     case "ChkGhostOfTsushima":
                         link = "https://github.com/ghostminhtoan/MMT/releases/download/game/Ghost.of.Tsushima_LinkNeverDie.Com.part01.exe (29 parts)";
+                        break;
+                    case "ChkVidCoder":
+                        link = "https://github.com/RandomEngy/VidCoder/releases";
+                        break;
+                    case "ChkBoilsoftVideoSplitter":
+                        link = BOILSOFT_VIDEO_SPLITTER_DOWNLOAD_URL;
+                        break;
+                    case "ChkVibe":
+                        link = VIBE_DOWNLOAD_URL;
+                        break;
+                    case "ChkMKVToolNix":
+                        link = MKVTOOLNIX_DOWNLOAD_URL;
+                        break;
+                    case "ChkSubtitleDraftGMTPC":
+                        link = SUBTITLE_DRAFT_GMTPC_DOWNLOAD_URL;
                         break;
                     case "ChkWin11_26H1":
                         link = "https://archive.org/download/microsoft-win11-26h2-february-2026/en-us_windows_11_consumer_editions_version_26h1_x64_dvd_5208fe5b.iso";

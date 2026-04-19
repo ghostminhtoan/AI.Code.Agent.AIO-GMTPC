@@ -5,6 +5,7 @@
 //            BtnDownloadPage, DPI controls
 // Cập nhật gần đây:
 //   - 2026-04-19: Added missing checkbox cases in Checkbox_MouseEnter for ChkGouenjiFonts, ChkNotepadPlusPlus, ChkSubtitleEdit, ChkVidCoder, ChkBoilsoftVideoSplitter, ChkVibe, ChkMKVToolNix, ChkSubtitleDraftGMTPC; Added ChkSubtitleDraftGMTPC to _cachedDownloadLinks
+//   - 2026-04-19: Added missing checkboxes to Checkbox_MouseEnter: ChkInstallZalo, ChkJumpForce, ChkWintoHDD; Added missing checkboxes to _cachedDownloadLinks for hover and copy functionality
 //   - 2026-03-29 (5): Added ChkBoilsoftVideoSplitter, ChkVibe, ChkMKVToolNix
 //   - 2026-03-29: Added ChkVidCoder and new Subtitle tab support
 //   - 2026-03-28: Added ChkSubtitleEdit to BtnSelectAll, BtnSelectNone,
@@ -781,6 +782,39 @@ namespace GMTPC.Tool
             if (ChkOfficeSoftmaker?.IsChecked == true)
                 _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/v1.0/Office.Softmaker.exe");
 
+            if (ChkActivateOffice?.IsChecked == true)
+                _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/activate/ACTIVATE.OFFICE.cmd");
+
+            if (ChkGouenjiFonts?.IsChecked == true)
+                _cachedDownloadLinks.Add(GOUENJI_FONTS_DOWNLOAD_URL);
+
+            if (ChkNotepadPlusPlus?.IsChecked == true)
+                _cachedDownloadLinks.Add(NOTEPAD_PLUS_PLUS_DOWNLOAD_URL);
+
+            if (ChkInstallNeatDM?.IsChecked == true)
+                _cachedDownloadLinks.Add("https://neatdownloadmanager.com/file/NeatDM_setup.exe");
+
+            if (ChkInstallZalo?.IsChecked == true)
+                _cachedDownloadLinks.Add("https://zalo.me/download/zalo-pc?utm=90000");
+
+            if (ChkJumpForce?.IsChecked == true)
+            {
+                _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/game/JUMP.FORCE_LinkNeverDie.Com.part01.exe");
+                _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/game/JUMP.FORCE_LinkNeverDie.Com.part02.rar");
+                _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/game/JUMP.FORCE_LinkNeverDie.Com.part03.rar");
+                _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/game/JUMP.FORCE_LinkNeverDie.Com.part04.rar");
+                _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/game/JUMP.FORCE_LinkNeverDie.Com.part05.rar");
+                _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/game/JUMP.FORCE_LinkNeverDie.Com.part06.rar");
+                _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/game/JUMP.FORCE_LinkNeverDie.Com.part07.rar");
+                _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/game/JUMP.FORCE_LinkNeverDie.Com.part08.rar");
+                _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/game/JUMP.FORCE_LinkNeverDie.Com.part09.rar");
+                _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/game/JUMP.FORCE_LinkNeverDie.Com.part10.rar");
+                _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/game/JUMP.FORCE_LinkNeverDie.Com.part11.rar");
+            }
+
+            if (ChkWintoHDD?.IsChecked == true)
+                _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/WinPE/wintohdd.exe");
+
             if (ChkSubtitleEdit?.IsChecked == true)
                 _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/v1.0/Subtitle.Edit.exe");
 
@@ -1181,6 +1215,15 @@ namespace GMTPC.Tool
                                "https://github.com/ghostminhtoan/MMT/releases/download/windows/win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso.003\n" +
                                "https://github.com/ghostminhtoan/MMT/releases/download/windows/win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso.004\n" +
                                "https://github.com/ghostminhtoan/MMT/releases/download/windows/win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso.005";
+                        break;
+                    case "ChkInstallZalo":
+                        link = "https://zalo.me/download/zalo-pc?utm=90000";
+                        break;
+                    case "ChkJumpForce":
+                        link = "https://github.com/ghostminhtoan/MMT/releases/download/game/JUMP.FORCE_LinkNeverDie.Com.part01.exe (11 parts)";
+                        break;
+                    case "ChkWintoHDD":
+                        link = "https://github.com/ghostminhtoan/MMT/releases/download/WinPE/wintohdd.exe";
                         break;
                 }
 

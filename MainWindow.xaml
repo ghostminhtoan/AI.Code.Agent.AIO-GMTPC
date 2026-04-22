@@ -223,10 +223,16 @@
                                 Foreground="Yellow"
                                 Margin="0,0,10,5" Height="29" Width="138"/>
                 </StackPanel>
-                <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,0,0">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,6">
-                        <TextBlock Width="180" Text="Tác giả: Ma Minh Toàn 1993" FontSize="13" Foreground="LightGreen" VerticalAlignment="Center"/>
+                <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,0,0,0">
+                    <Grid VerticalAlignment="Center" Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Width="180" Text="Tác giả: Ma Minh Toàn 1993" FontSize="13" Foreground="LightGreen" VerticalAlignment="Center"/>
                         <Button x:Name="BtnDonate"
+                                Grid.Column="1"
                                 Content="Ủng hộ tác giả"
                                 Background="DarkGreen"
                                 BorderBrush="#FF005FB8"
@@ -236,13 +242,14 @@
                                 Margin="0,0,12,0"
                                 HorizontalAlignment="Left"
                                 Click="BtnExit_Click" Height="22" Width="90"/>
-                        <TextBlock Text="Windows Defender: không cần tắt, Antivirus khác: phải tắt."
+                        <TextBlock Grid.Column="2"
+                                   Text="Windows Defender: không cần tắt, Antivirus khác: phải tắt."
                                    FontSize="15"
                                    Foreground="Cyan"
                                    TextWrapping="Wrap"
-                                   Width="430"
+                                   MinWidth="0"
                                    VerticalAlignment="Center"/>
-                    </StackPanel>
+                    </Grid>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="0,0,10,0">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

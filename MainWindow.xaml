@@ -294,7 +294,7 @@
             </Grid>
         </Border>
         <!-- Checkboxes Section with ScrollViewer -->
-        <Border x:Name="TabHostBorder" Background="#FF1F1F1F" CornerRadius="6" Padding="10" Margin="0,95,19,10" Grid.ColumnSpan="2" Grid.RowSpan="2">
+        <Border x:Name="TabHostBorder" Grid.Row="1" Background="#FF1F1F1F" CornerRadius="6" Padding="10" Margin="0,0,19,10" Grid.ColumnSpan="2">
             <TabControl x:Name="MainTabControl" Background="Yellow" BorderBrush="#FF7A7A7A" SelectionChanged="MainTabControl_SelectionChanged">
                 <TabControl.Resources>
                     <!-- Style cho TabItem - nhỏ gọn, 1 hàng -->

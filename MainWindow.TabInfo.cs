@@ -1,3 +1,4 @@
+// AI Summary: 2026-04-23 - Expanded System Information into detailed GPU/CPU/RAM/Mainboard hardware panels.
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,6 +16,7 @@ using System.Windows.Input;
 using System.Net.Http;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Text;
 
 namespace GMTPC.Tool
 {
@@ -24,78 +26,244 @@ namespace GMTPC.Tool
         {
             try
             {
-                // Mainboard
-                string manufacturer = GetWmiSingleValue("Win32_BaseBoard", "Manufacturer");
-                string mainboardProduct = GetWmiSingleValue("Win32_BaseBoard", "Product");
-                string mainboard = !string.IsNullOrEmpty(manufacturer) && !string.IsNullOrEmpty(mainboardProduct)
-                    ? $"{manufacturer} {mainboardProduct}"
-                    : mainboardProduct ?? manufacturer ?? "Unknown";
-                TbMainboard.Text = mainboard;
-
-                // CPU
-                string cpuName = GetWmiSingleValue("Win32_Processor", "Name") ?? "Unknown";
-                string cpuClock = GetWmiSingleValue("Win32_Processor", "MaxClockSpeed");
-                string cores = GetWmiSingleValue("Win32_Processor", "NumberOfCores");
-                string threads = GetWmiSingleValue("Win32_Processor", "NumberOfLogicalProcessors");
-                string cpuInfo = cpuName;
-                if (!string.IsNullOrEmpty(cpuClock)) cpuInfo += $" - {cpuClock} MHz";
-                cpuInfo += $" ({cores} cores / {threads} threads)";
-                TbCPU.Text = cpuInfo;
-
-                // RAM
-                ulong totalRamBytes = 0;
-                try
-                {
-                    var search = new ManagementObjectSearcher("select Capacity from Win32_PhysicalMemory");
-                    foreach (ManagementObject mo in search.Get())
-                    {
-                        if (mo["Capacity"] != null)
-                        {
-                            ulong part = Convert.ToUInt64(mo["Capacity"]);
-                            totalRamBytes += part;
-                        }
-                    }
-                }
-                catch { }
-                TbRAM.Text = totalRamBytes > 0 ? FormatBytes(totalRamBytes) : "Unknown";
-
-                // GPU
-                string gpu = GetWmiSingleValue("Win32_VideoController", "Name") ?? "Unknown";
-                TbGPU.Text = gpu;
-
-                // Windows product and build
-                try
-                {
-                    using (var key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion"))
-                    {
-                        if (key != null)
-                        {
-                            string productName = key.GetValue("ProductName") as string ?? "Windows";
-                            string displayVersion = key.GetValue("DisplayVersion") as string ?? key.GetValue("ReleaseId") as string ?? "";
-                            string build = key.GetValue("CurrentBuild")?.ToString() ?? key.GetValue("CurrentBuildNumber")?.ToString() ?? "";
-                            string ubr = key.GetValue("UBR")?.ToString();
-                            string edition = key.GetValue("EditionID") as string ?? "";
-                            string winText = productName;
-                            if (!string.IsNullOrEmpty(edition)) winText += $" {edition}";
-                            if (!string.IsNullOrEmpty(displayVersion)) winText += $" {displayVersion}";
-                            if (!string.IsNullOrEmpty(build)) winText += $" (Build {build}{(ubr != null ? "." + ubr : "")})";
-                            TbWindows.Text = winText;
-                        }
-                    }
-                }
-                catch { TbWindows.Text = "Unknown"; }
-
-                // DirectX version
-                try
-                {
-                    TbDirectX.Text = GetDirectXVersion();
-                }
-                catch { TbDirectX.Text = "Unknown"; }
+                TbGPU.Text = BuildGpuInfo();
+                TbCPU.Text = BuildCpuInfo();
+                TbRAM.Text = BuildRamInfo();
+                TbMainboard.Text = BuildMainboardInfo();
             }
             catch (Exception ex)
             {
                 // don't crash UI
                 try { TbMainboard.Text = "Error: " + ex.Message; } catch { }
+            }
+        }
+
+        private string BuildGpuInfo()
+        {
+            StringBuilder sb = new StringBuilder();
+            int index = 1;
+
+            foreach (ManagementObject gpu in QueryWmi("Win32_VideoController"))
+            {
+                AppendLine(sb, $"=== GPU {index} ===");
+                AppendLine(sb, "Tên", GetValue(gpu, "Name"));
+                AppendLine(sb, "Driver Version", GetValue(gpu, "DriverVersion"));
+                AppendLine(sb, "VRAM", FormatBytes(GetUlongValue(gpu, "AdapterRAM")));
+                AppendLine(sb, "Video Processor", GetValue(gpu, "VideoProcessor"));
+                AppendLine(sb, "Độ phân giải", FormatResolution(gpu));
+                AppendLine(sb, "Refresh Rate", AppendUnit(GetValue(gpu, "CurrentRefreshRate"), "Hz"));
+                AppendLine(sb, "Bit Depth", AppendUnit(GetValue(gpu, "CurrentBitsPerPixel"), "bit"));
+                AppendLine(sb, "Trạng thái", GetValue(gpu, "Status"));
+                AppendLine(sb, "PNP Device ID", GetValue(gpu, "PNPDeviceID"));
+                index++;
+            }
+
+            return sb.Length > 0 ? sb.ToString().TrimEnd() : "Unknown";
+        }
+
+        private string BuildCpuInfo()
+        {
+            StringBuilder sb = new StringBuilder();
+            int index = 1;
+
+            foreach (ManagementObject cpu in QueryWmi("Win32_Processor"))
+            {
+                AppendLine(sb, $"=== CPU {index} ===");
+                AppendLine(sb, "Tên", GetValue(cpu, "Name"));
+                AppendLine(sb, "Hãng sản xuất", GetValue(cpu, "Manufacturer"));
+                AppendLine(sb, "Kiến trúc", GetArchitectureName(GetValue(cpu, "Architecture")));
+                AppendLine(sb, "Socket", GetValue(cpu, "SocketDesignation"));
+                AppendLine(sb, "Số nhân", GetValue(cpu, "NumberOfCores"));
+                AppendLine(sb, "Số luồng", GetValue(cpu, "NumberOfLogicalProcessors"));
+                AppendLine(sb, "Xung nhịp hiện tại", AppendUnit(GetValue(cpu, "CurrentClockSpeed"), "MHz"));
+                AppendLine(sb, "Xung nhịp tối đa", AppendUnit(GetValue(cpu, "MaxClockSpeed"), "MHz"));
+                AppendLine(sb, "Cache L2", AppendUnit(GetValue(cpu, "L2CacheSize"), "KB"));
+                AppendLine(sb, "Cache L3", AppendUnit(GetValue(cpu, "L3CacheSize"), "KB"));
+                AppendLine(sb, "Virtualization", GetValue(cpu, "VirtualizationFirmwareEnabled"));
+                AppendLine(sb, "Processor ID", GetValue(cpu, "ProcessorId"));
+                index++;
+            }
+
+            return sb.Length > 0 ? sb.ToString().TrimEnd() : "Unknown";
+        }
+
+        private string BuildRamInfo()
+        {
+            StringBuilder sb = new StringBuilder();
+            ulong totalRamBytes = 0;
+            int slot = 1;
+
+            foreach (ManagementObject ram in QueryWmi("Win32_PhysicalMemory"))
+            {
+                ulong capacity = GetUlongValue(ram, "Capacity");
+                totalRamBytes += capacity;
+
+                AppendLine(sb, $"=== RAM Slot {slot} ===");
+                AppendLine(sb, "Dung lượng", FormatBytes(capacity));
+                AppendLine(sb, "Hãng sản xuất", GetValue(ram, "Manufacturer"));
+                AppendLine(sb, "Part Number", GetValue(ram, "PartNumber"));
+                AppendLine(sb, "Serial", GetValue(ram, "SerialNumber"));
+                AppendLine(sb, "Bank", GetValue(ram, "BankLabel"));
+                AppendLine(sb, "Vị trí", GetValue(ram, "DeviceLocator"));
+                AppendLine(sb, "Tốc độ", AppendUnit(GetValue(ram, "Speed"), "MHz"));
+                AppendLine(sb, "Configured Speed", AppendUnit(GetValue(ram, "ConfiguredClockSpeed"), "MHz"));
+                AppendLine(sb, "Form Factor", GetMemoryFormFactor(GetValue(ram, "FormFactor")));
+                AppendLine(sb, "");
+                slot++;
+            }
+
+            if (totalRamBytes > 0)
+            {
+                sb.Insert(0, $"Tổng RAM vật lý: {FormatBytes(totalRamBytes)}{Environment.NewLine}{Environment.NewLine}");
+            }
+
+            return sb.Length > 0 ? sb.ToString().TrimEnd() : "Unknown";
+        }
+
+        private string BuildMainboardInfo()
+        {
+            StringBuilder sb = new StringBuilder();
+            ManagementObject board = FirstOrDefault(QueryWmi("Win32_BaseBoard"));
+            ManagementObject bios = FirstOrDefault(QueryWmi("Win32_BIOS"));
+            ManagementObject system = FirstOrDefault(QueryWmi("Win32_ComputerSystem"));
+
+            AppendLine(sb, "Hãng sản xuất", GetValue(board, "Manufacturer"));
+            AppendLine(sb, "Model", GetValue(board, "Product"));
+            AppendLine(sb, "Serial", GetValue(board, "SerialNumber"));
+            AppendLine(sb, "Version", GetValue(board, "Version"));
+            AppendLine(sb, "Trạng thái", GetValue(board, "Status"));
+            AppendLine(sb, "");
+            AppendLine(sb, "BIOS", GetValue(bios, "Manufacturer"));
+            AppendLine(sb, "BIOS Version", GetValue(bios, "SMBIOSBIOSVersion"));
+            AppendLine(sb, "Ngày phát hành", FormatWmiDate(GetValue(bios, "ReleaseDate")));
+            AppendLine(sb, "");
+            AppendLine(sb, "System", GetValue(system, "Manufacturer"));
+            AppendLine(sb, "System Model", GetValue(system, "Model"));
+            AppendLine(sb, "System Type", GetValue(system, "SystemType"));
+
+            return sb.Length > 0 ? sb.ToString().TrimEnd() : "Unknown";
+        }
+
+        private IEnumerable<ManagementObject> QueryWmi(string wmiClass)
+        {
+            List<ManagementObject> results = new List<ManagementObject>();
+
+            try
+            {
+                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher($"SELECT * FROM {wmiClass}"))
+                {
+                    foreach (ManagementObject item in searcher.Get())
+                    {
+                        results.Add(item);
+                    }
+                }
+            }
+            catch { }
+
+            return results;
+        }
+
+        private ManagementObject FirstOrDefault(IEnumerable<ManagementObject> items)
+        {
+            foreach (ManagementObject item in items)
+            {
+                return item;
+            }
+
+            return null;
+        }
+
+        private string GetValue(ManagementObject item, string propertyName)
+        {
+            try
+            {
+                if (item == null || item[propertyName] == null) return "Unknown";
+                string value = item[propertyName].ToString().Trim();
+                return string.IsNullOrWhiteSpace(value) ? "Unknown" : value;
+            }
+            catch
+            {
+                return "Unknown";
+            }
+        }
+
+        private ulong GetUlongValue(ManagementObject item, string propertyName)
+        {
+            try
+            {
+                if (item == null || item[propertyName] == null) return 0;
+                return Convert.ToUInt64(item[propertyName]);
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        private void AppendLine(StringBuilder sb, string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return;
+            sb.AppendLine(text);
+        }
+
+        private void AppendLine(StringBuilder sb, string label, string value)
+        {
+            if (string.IsNullOrWhiteSpace(value) || value == "Unknown") return;
+            sb.AppendLine($"{label}: {value}");
+        }
+
+        private string AppendUnit(string value, string unit)
+        {
+            if (string.IsNullOrWhiteSpace(value) || value == "Unknown") return "Unknown";
+            return $"{value} {unit}";
+        }
+
+        private string FormatResolution(ManagementObject gpu)
+        {
+            string width = GetValue(gpu, "CurrentHorizontalResolution");
+            string height = GetValue(gpu, "CurrentVerticalResolution");
+            if (width == "Unknown" || height == "Unknown") return "Unknown";
+            return $"{width} x {height}";
+        }
+
+        private string FormatWmiDate(string value)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(value) || value == "Unknown") return "Unknown";
+                DateTime date = ManagementDateTimeConverter.ToDateTime(value);
+                return date.ToString("dd/MM/yyyy");
+            }
+            catch
+            {
+                return "Unknown";
+            }
+        }
+
+        private string GetArchitectureName(string value)
+        {
+            switch (value)
+            {
+                case "0": return "x86";
+                case "1": return "MIPS";
+                case "2": return "Alpha";
+                case "3": return "PowerPC";
+                case "5": return "ARM";
+                case "6": return "Itanium";
+                case "9": return "x64";
+                case "12": return "ARM64";
+                default: return value;
+            }
+        }
+
+        private string GetMemoryFormFactor(string value)
+        {
+            switch (value)
+            {
+                case "8": return "DIMM";
+                case "12": return "SODIMM";
+                case "13": return "SRIMM";
+                default: return value;
             }
         }
 

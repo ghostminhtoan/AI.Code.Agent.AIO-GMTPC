@@ -1,4 +1,4 @@
-// AI Summary: 2026-04-23 - Capped landscape zoom-out content width so checkbox rows stay readable;
+// AI Summary: 2026-04-23 - Capped landscape zoom-out content width and hid command/status chrome on System Information.
 // WrapPanels now size to the computed column count instead of stretching across the whole monitor.
 // =======================================================================
 // MainWindow.ResponsiveLayout.cs
@@ -68,6 +68,7 @@ namespace GMTPC.Tool
             {
                 ApplyResponsiveLayout();
                 MainGrid.UpdateLayout();
+                UpdateSystemInformationChromeVisibility();
                 QueueAutoFitScaleToCurrentMonitor();
             }));
         }
@@ -93,6 +94,7 @@ namespace GMTPC.Tool
                 ApplyTabItemSizing(monitorWidth, isMonitorPortrait, isCompact);
                 ApplyCommandSizing(windowWidth, isCompact);
                 ApplyProgressSizing(isCompact);
+                UpdateSystemInformationChromeVisibility();
                 KeepWindowInsideCurrentMonitor(workArea);
                 QueueAutoFitScaleToCurrentMonitor();
             }
@@ -261,6 +263,26 @@ namespace GMTPC.Tool
                 ConnectionTraceBorder.Height = isCompact ? 14 : 18;
                 originalHeight = ConnectionTraceBorder.Height;
             }
+        }
+
+        private void UpdateSystemInformationChromeVisibility()
+        {
+            bool isSystemInformationTab = false;
+
+            try
+            {
+                if (MainTabControl != null && MainTabControl.SelectedItem is TabItem selectedTab)
+                {
+                    isSystemInformationTab = selectedTab.Header != null &&
+                                             selectedTab.Header.ToString() == "System Information";
+                }
+            }
+            catch { }
+
+            Visibility chromeVisibility = isSystemInformationTab ? Visibility.Collapsed : Visibility.Visible;
+
+            if (ButtonsBorder != null) ButtonsBorder.Visibility = chromeVisibility;
+            if (ProgressBorder != null) ProgressBorder.Visibility = chromeVisibility;
         }
 
         private void KeepWindowInsideCurrentMonitor()

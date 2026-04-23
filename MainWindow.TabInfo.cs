@@ -1,4 +1,4 @@
-// AI Summary: 2026-04-23 - Fixed blank-line rendering between CPU sockets and RAM slots in System Information.
+// AI Summary: 2026-04-23 - Added GPU hardware encode/decode capability detection for NVIDIA, Intel, and AMD.
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -50,6 +50,7 @@ namespace GMTPC.Tool
                 AppendLine(sb, "Driver Version", GetValue(gpu, "DriverVersion"));
                 AppendLine(sb, "VRAM", FormatBytes(GetUlongValue(gpu, "AdapterRAM")));
                 AppendLine(sb, "Video Processor", GetValue(gpu, "VideoProcessor"));
+                AppendGpuCodecInfo(sb, GetValue(gpu, "Name"), GetValue(gpu, "VideoProcessor"));
                 AppendLine(sb, "Độ phân giải", FormatResolution(gpu));
                 AppendLine(sb, "Refresh Rate", AppendUnit(GetValue(gpu, "CurrentRefreshRate"), "Hz"));
                 AppendLine(sb, "Bit Depth", AppendUnit(GetValue(gpu, "CurrentBitsPerPixel"), "bit"));
@@ -59,6 +60,43 @@ namespace GMTPC.Tool
             }
 
             return sb.Length > 0 ? sb.ToString().TrimEnd() : "Unknown";
+        }
+
+        private void AppendGpuCodecInfo(StringBuilder sb, string gpuName, string videoProcessor)
+        {
+            string name = $"{gpuName} {videoProcessor}".ToLowerInvariant();
+            string encoder = "Unknown";
+            string decoder = "Unknown";
+            string quickSync = "No";
+            string nvidiaEncode = "No";
+            string amdEncode = "No";
+
+            if (name.Contains("nvidia") || name.Contains("geforce") || name.Contains("quadro") || name.Contains("rtx") || name.Contains("gtx"))
+            {
+                encoder = "NVIDIA NVENC";
+                decoder = "NVIDIA NVDEC / PureVideo";
+                nvidiaEncode = "Yes";
+            }
+            else if (name.Contains("intel") || name.Contains("uhd") || name.Contains("iris") || name.Contains("arc"))
+            {
+                encoder = "Intel Quick Sync Video";
+                decoder = "Intel Quick Sync Video";
+                quickSync = "Yes";
+            }
+            else if (name.Contains("amd") || name.Contains("radeon") || name.Contains("rx ") || name.Contains("vega"))
+            {
+                encoder = "AMD AMF / VCE / VCN";
+                decoder = "AMD UVD / VCN";
+                amdEncode = "Yes";
+            }
+
+            AppendLine(sb, "Encode Support", encoder == "Unknown" ? "Unknown" : "Yes");
+            AppendLine(sb, "Decode Support", decoder == "Unknown" ? "Unknown" : "Yes");
+            AppendLine(sb, "Hardware Encoder", encoder);
+            AppendLine(sb, "Hardware Decoder", decoder);
+            AppendLine(sb, "Intel QuickSync Support", quickSync);
+            AppendLine(sb, "NVIDIA Encode", nvidiaEncode);
+            AppendLine(sb, "AMD Encode", amdEncode);
         }
 
         private string BuildCpuInfo()

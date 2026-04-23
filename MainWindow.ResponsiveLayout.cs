@@ -1,4 +1,4 @@
-// AI Summary: 2026-04-23 - Restored auto-fit DPI reduction for sparse Windows tabs while preserving their custom sizing.
+// AI Summary: 2026-04-23 - Added sparse Windows tab overflow detection so DPI reduces before content overlaps buttons.
 // WrapPanels now size to the computed column count instead of stretching across the whole monitor.
 // =======================================================================
 // MainWindow.ResponsiveLayout.cs
@@ -439,7 +439,7 @@ namespace GMTPC.Tool
                 double desiredHeight = Math.Max(ActualHeight, DesiredSize.Height);
                 bool tooWide = desiredWidth > maxAllowedWidth + 1;
                 bool tooTall = desiredHeight > maxAllowedHeight + 1 || ActualHeight >= maxAllowedHeight - 1;
-                bool clippedContent = HasClippedScrollViewerContent();
+                bool clippedContent = HasClippedScrollViewerContent() || HasSparseWindowsTabOverflow();
 
                 if (!tooWide && !tooTall && !clippedContent) return;
 
@@ -505,6 +505,45 @@ namespace GMTPC.Tool
             }
 
             return false;
+        }
+
+        private bool HasSparseWindowsTabOverflow()
+        {
+            if (!IsSelectedTab("Windows - Microsoft") && !IsSelectedTab("Windows Mod MMT")) return false;
+
+            try
+            {
+                if (TabHostBorder == null || ButtonsBorder == null || MainGrid == null) return false;
+                if (TabHostBorder.ActualWidth <= 0 || TabHostBorder.ActualHeight <= 0) return false;
+                if (ButtonsBorder.ActualWidth <= 0 || ButtonsBorder.ActualHeight <= 0) return false;
+
+                Rect tabBounds = TabHostBorder.TransformToAncestor(MainGrid)
+                                              .TransformBounds(new Rect(0, 0, TabHostBorder.ActualWidth, TabHostBorder.ActualHeight));
+                Rect buttonsBounds = ButtonsBorder.TransformToAncestor(MainGrid)
+                                                  .TransformBounds(new Rect(0, 0, ButtonsBorder.ActualWidth, ButtonsBorder.ActualHeight));
+
+                if (tabBounds.Bottom > buttonsBounds.Top - 2)
+                {
+                    return true;
+                }
+
+                WrapPanel selectedPanel = IsSelectedTab("Windows - Microsoft") ? WindowsPanel : WindowsModPanel;
+                if (selectedPanel == null || selectedPanel.ActualWidth <= 0 || selectedPanel.ActualHeight <= 0) return false;
+
+                Rect panelBounds = selectedPanel.TransformToAncestor(TabHostBorder)
+                                                .TransformBounds(new Rect(0, 0, selectedPanel.ActualWidth, selectedPanel.ActualHeight));
+                double leftLimit = Math.Max(0, TabHostBorder.Padding.Left);
+                double rightLimit = Math.Max(0, TabHostBorder.ActualWidth - TabHostBorder.Padding.Right);
+                double bottomLimit = Math.Max(0, TabHostBorder.ActualHeight - TabHostBorder.Padding.Bottom);
+
+                return panelBounds.Left < leftLimit - 2 ||
+                       panelBounds.Right > rightLimit + 2 ||
+                       panelBounds.Bottom > bottomLimit + 2;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private bool IsElementClippedByScrollViewer(FrameworkElement element, ScrollViewer scrollViewer)

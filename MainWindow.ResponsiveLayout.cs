@@ -1,4 +1,4 @@
-// AI Summary: 2026-04-23 - Fixed sparse Windows tab clipping by sizing columns and child controls to the scaled viewport.
+// AI Summary: 2026-04-23 - Restored auto-fit DPI reduction for sparse Windows tabs while preserving their custom sizing.
 // WrapPanels now size to the computed column count instead of stretching across the whole monitor.
 // =======================================================================
 // MainWindow.ResponsiveLayout.cs
@@ -369,9 +369,7 @@ namespace GMTPC.Tool
 
         private bool ShouldSkipAutoFitScale()
         {
-            return IsSystemInformationTabSelected() ||
-                   IsSelectedTab("Windows - Microsoft") ||
-                   IsSelectedTab("Windows Mod MMT");
+            return IsSystemInformationTabSelected();
         }
 
         private void KeepWindowInsideCurrentMonitor()

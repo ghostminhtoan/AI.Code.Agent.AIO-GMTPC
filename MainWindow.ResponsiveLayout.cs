@@ -1,4 +1,4 @@
-// AI Summary: 2026-04-23 - Disabled auto-fit DPI reduction for System Information because it uses per-panel scrolling.
+// AI Summary: 2026-04-23 - Kept sparse Windows tabs readable by skipping auto-fit and giving them a minimum content height.
 // WrapPanels now size to the computed column count instead of stretching across the whole monitor.
 // =======================================================================
 // MainWindow.ResponsiveLayout.cs
@@ -69,7 +69,7 @@ namespace GMTPC.Tool
                 ApplyResponsiveLayout();
                 MainGrid.UpdateLayout();
                 UpdateSystemInformationChromeVisibility();
-                if (!IsSystemInformationTabSelected()) QueueAutoFitScaleToCurrentMonitor();
+                if (!ShouldSkipAutoFitScale()) QueueAutoFitScaleToCurrentMonitor();
             }));
         }
 
@@ -92,11 +92,12 @@ namespace GMTPC.Tool
                 ApplyWindowBounds(workArea, isMonitorPortrait);
                 ApplyOuterSpacing(isCompact);
                 ApplyTabItemSizing(monitorWidth, isMonitorPortrait, isCompact);
+                ApplySparseTabSizing(isCompact);
                 ApplyCommandSizing(windowWidth, isCompact);
                 ApplyProgressSizing(isCompact);
                 UpdateSystemInformationChromeVisibility();
                 KeepWindowInsideCurrentMonitor(workArea);
-                if (!IsSystemInformationTabSelected()) QueueAutoFitScaleToCurrentMonitor();
+                if (!ShouldSkipAutoFitScale()) QueueAutoFitScaleToCurrentMonitor();
             }
             finally
             {
@@ -233,6 +234,31 @@ namespace GMTPC.Tool
             yield return WindowsModPanel;
         }
 
+        private void ApplySparseTabSizing(bool isCompact)
+        {
+            bool isWindowsTab = IsSelectedTab("Windows - Microsoft");
+            bool isWindowsModTab = IsSelectedTab("Windows Mod MMT");
+            bool isSparseWindowsTab = isWindowsTab || isWindowsModTab;
+            double panelMinHeight = isCompact ? 74 : 88;
+
+            if (TabHostBorder != null)
+            {
+                TabHostBorder.MinHeight = isSparseWindowsTab ? (isCompact ? 130 : 150) : 0;
+            }
+
+            if (WindowsPanel != null)
+            {
+                WindowsPanel.MinHeight = isWindowsTab ? panelMinHeight : 0;
+                WindowsPanel.VerticalAlignment = isWindowsTab ? VerticalAlignment.Center : VerticalAlignment.Top;
+            }
+
+            if (WindowsModPanel != null)
+            {
+                WindowsModPanel.MinHeight = isWindowsModTab ? panelMinHeight : 0;
+                WindowsModPanel.VerticalAlignment = isWindowsModTab ? VerticalAlignment.Center : VerticalAlignment.Top;
+            }
+        }
+
         private void ApplyCommandSizing(double windowWidth, bool isCompact)
         {
             double available = Math.Max(260, windowWidth - (isCompact ? 42 : 82));
@@ -276,17 +302,29 @@ namespace GMTPC.Tool
 
         private bool IsSystemInformationTabSelected()
         {
+            return IsSelectedTab("System Information");
+        }
+
+        private bool IsSelectedTab(string header)
+        {
             try
             {
                 if (MainTabControl != null && MainTabControl.SelectedItem is TabItem selectedTab)
                 {
                     return selectedTab.Header != null &&
-                           selectedTab.Header.ToString() == "System Information";
+                           selectedTab.Header.ToString() == header;
                 }
             }
             catch { }
 
             return false;
+        }
+
+        private bool ShouldSkipAutoFitScale()
+        {
+            return IsSystemInformationTabSelected() ||
+                   IsSelectedTab("Windows - Microsoft") ||
+                   IsSelectedTab("Windows Mod MMT");
         }
 
         private void KeepWindowInsideCurrentMonitor()
@@ -328,7 +366,7 @@ namespace GMTPC.Tool
 
         private void QueueAutoFitScaleToCurrentMonitor()
         {
-            if (IsSystemInformationTabSelected()) return;
+            if (ShouldSkipAutoFitScale()) return;
             if (_isAutoFittingScale) return;
 
             Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.ApplicationIdle, new Action(() =>
@@ -339,7 +377,7 @@ namespace GMTPC.Tool
 
         private void AutoFitScaleToCurrentMonitor()
         {
-            if (IsSystemInformationTabSelected()) return;
+            if (ShouldSkipAutoFitScale()) return;
             if (_isAutoFittingScale || currentDPIScale <= 0.5) return;
             bool reducedScale = false;
 

@@ -23,6 +23,8 @@ namespace GMTPC.Tool
     {
         /*
          * AI Summary:
+         * Date: 2026-04-24
+         * - Added ChkDownloadSampleVideo and InstallSampleVideoAsync to download sample video directly to C:\ and open its containing folder
          * Date: 2026-04-13
          * - Added ChkSubtitleDraftGMTPC and InstallSubtitleDraftGMTPCAsync with download to C:\, desktop shortcut, and open file
          * Date: 2026-03-29 (3)
@@ -581,6 +583,58 @@ namespace GMTPC.Tool
             catch (Exception ex)
             {
                 UpdateStatus($"Lỗi khi cài đặt Subtitle Draft GMTPC: {ex.Message}", "Red");
+            }
+        }
+
+        // ===================================================================
+        // TabSubtitle — Download sample video
+        // ===================================================================
+        private void ChkDownloadSampleVideo_Click(object sender, RoutedEventArgs e)
+        {
+            if (ChkDownloadSampleVideo.IsChecked == true)
+            {
+                UpdateStatus("Đã chọn: Download sample video", "Green");
+            }
+            else
+            {
+                UpdateStatus("Đã hủy chọn: Download sample video", "Yellow");
+            }
+
+            UpdateInstallButtonState();
+        }
+
+        private async Task InstallSampleVideoAsync()
+        {
+            try
+            {
+                string targetFolder = @"C:\";
+                string fileName = Path.GetFileName(new Uri(SAMPLE_VIDEO_DOWNLOAD_URL).LocalPath);
+                string sampleVideoPath = Path.Combine(targetFolder, fileName);
+
+                UpdateStatus("Đang tải sample video về C:\\...", "Cyan");
+                await DownloadWithProgressAsync(SAMPLE_VIDEO_DOWNLOAD_URL, sampleVideoPath, "Sample video");
+
+                Dispatcher.Invoke(() =>
+                {
+                    DownloadProgressBar.Value = 0;
+                    ProgressTextBlock.Text = "";
+                    SpeedTextBlock.Text = "";
+                });
+
+                UpdateStatus("Đã tải xong sample video vào C:\\", "Green");
+
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "explorer.exe",
+                    Arguments = $"/select,\"{sampleVideoPath}\"",
+                    UseShellExecute = true
+                });
+
+                UpdateStatus("Đã mở thư mục chứa sample video", "Green");
+            }
+            catch (Exception ex)
+            {
+                UpdateStatus($"Lỗi khi tải sample video: {ex.Message}", "Red");
             }
         }
     }

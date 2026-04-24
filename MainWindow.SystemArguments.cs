@@ -11,6 +11,8 @@ namespace GMTPC.Tool
 {
     /*
  * AI Summary:
+ * Date: 2026-04-24
+ * - Added SAMPLE_VIDEO_DOWNLOAD_URL and ChkDownloadSampleVideo to UpdateInstallButtonState()
  * Date: 2026-03-29 (6)
  * - Added ChkBoilsoftVideoSplitter, ChkVibe, ChkMKVToolNix to UpdateInstallButtonState()
  * Date: 2026-03-29 (4)
@@ -175,7 +177,7 @@ namespace GMTPC.Tool
         // ===================================================================
         // TabSubtitle — Links (B) and Arguments (C)
         // TabItem Header: "Subtitle"
-        // Checkboxes: ChkBoilsoftVideoSplitter, ChkVibe, ChkMKVToolNix, ChkSubtitleDraftGMTPC
+        // Checkboxes: ChkBoilsoftVideoSplitter, ChkVibe, ChkMKVToolNix, ChkSubtitleDraftGMTPC, ChkDownloadSampleVideo
         // ===================================================================
         // Boilsoft Video Splitter (Tab: Subtitle)
         private const string BOILSOFT_VIDEO_SPLITTER_DOWNLOAD_URL = "https://github.com/ghostminhtoan/MMT/releases/download/v1.0/BoilsoftVideoSplitter.8.3.3.by.elchupacabra.exe";
@@ -191,6 +193,9 @@ namespace GMTPC.Tool
 
         // Subtitle Draft GMTPC (Tab: Subtitle)
         private const string SUBTITLE_DRAFT_GMTPC_DOWNLOAD_URL = "https://raw.githubusercontent.com/ghostminhtoan/Subtitle-draft-GMTPC/refs/heads/master/Subtitle%20draft%20GMTPC.exe";
+
+        // Download sample video (Tab: Subtitle)
+        private const string SAMPLE_VIDEO_DOWNLOAD_URL = "https://github.com/ghostminhtoan/Subtitle-draft-GMTPC/releases/download/subtitle.materials/ReZero.Starting.Life.in.Another.World.S04E01.WEB-DL.1080p.AVC.AAC.Dual.Audio-FBI.mkv";
 
         // ===================================================================
         // TabDriver — Links (B) and Arguments (C)
@@ -638,6 +643,7 @@ namespace GMTPC.Tool
                              ChkMKVToolNix.IsChecked == true ||
                              // Thêm checkbox cho Subtitle Draft GMTPC (Tab Subtitle)
                              ChkSubtitleDraftGMTPC.IsChecked == true ||
+                             ChkDownloadSampleVideo.IsChecked == true ||
                              // Thêm checkbox cho AOMEI Partition Assistant
                              ChkAomeiPartitionAssistant.IsChecked == true ||
                              // Thêm checkbox cho PowerISO

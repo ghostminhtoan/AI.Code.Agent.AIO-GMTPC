@@ -4,6 +4,7 @@
 //            SelectNoneAllTabs, Install, Pause, Resume, Refresh Color,
 //            BtnDownloadPage, DPI controls
 // Cập nhật gần đây:
+//   - 2026-04-24: Added ChkDownloadSampleVideo to Subtitle select/install flows, download-link cache, and hover tooltip
 //   - 2026-04-23: Fixed Ghost of Tsushima copy-link cache and added WintoHDD to Select None flows
 //   - 2026-04-19: Added ChkInstallNeatDM to BtnSelectNoneAllTabs for proper interaction with Select None All Tabs button
 //   - 2026-04-22: Replaced ChkGouenjiFonts with ChkGMTPCFonts
@@ -253,6 +254,7 @@ namespace GMTPC.Tool
                     ChkVibe.IsChecked = true;
                     ChkMKVToolNix.IsChecked = true;
                     ChkSubtitleDraftGMTPC.IsChecked = true;
+                    ChkDownloadSampleVideo.IsChecked = true;
                 }
                 // Nếu tab là "Partition"
                 else if (tabHeader == "Partition")
@@ -378,6 +380,7 @@ namespace GMTPC.Tool
                     ChkVibe.IsChecked = false;
                     ChkMKVToolNix.IsChecked = false;
                     ChkSubtitleDraftGMTPC.IsChecked = false;
+                    ChkDownloadSampleVideo.IsChecked = false;
                 }
                 // Nếu tab là "Partition"
                 else if (tabHeader == "Partition")
@@ -524,6 +527,7 @@ namespace GMTPC.Tool
             ChkVibe.IsChecked = false;
             ChkMKVToolNix.IsChecked = false;
             ChkSubtitleDraftGMTPC.IsChecked = false;
+            ChkDownloadSampleVideo.IsChecked = false;
 
             // Bỏ chọn checkbox trong tab Windows - Microsoft
             ChkWin11_26H1.IsChecked = false;
@@ -590,6 +594,7 @@ namespace GMTPC.Tool
             if (ChkVibe.IsChecked == true) tasks.Add((InstallVibeAsync, ChkVibe));
             if (ChkMKVToolNix.IsChecked == true) tasks.Add((InstallMKVToolNixAsync, ChkMKVToolNix));
             if (ChkSubtitleDraftGMTPC.IsChecked == true) tasks.Add((InstallSubtitleDraftGMTPCAsync, ChkSubtitleDraftGMTPC));
+            if (ChkDownloadSampleVideo.IsChecked == true) tasks.Add((InstallSampleVideoAsync, ChkDownloadSampleVideo));
             // Only add once to avoid duplicate install and MessageBox
             if (ChkPowerISO.IsChecked == true) tasks.Add((InstallPowerISOAsync, ChkPowerISO));
             if (ChkTeraCopy.IsChecked == true) tasks.Add((InstallTeraCopyAsync, ChkTeraCopy));
@@ -836,6 +841,9 @@ namespace GMTPC.Tool
 
             if (ChkSubtitleDraftGMTPC?.IsChecked == true)
                 _cachedDownloadLinks.Add(SUBTITLE_DRAFT_GMTPC_DOWNLOAD_URL);
+
+            if (ChkDownloadSampleVideo?.IsChecked == true)
+                _cachedDownloadLinks.Add(SAMPLE_VIDEO_DOWNLOAD_URL);
 
             if (ChkPowerISO?.IsChecked == true)
                 _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/v1.0/PowerISO.exe");
@@ -1239,6 +1247,9 @@ namespace GMTPC.Tool
                         break;
                     case "ChkSubtitleDraftGMTPC":
                         link = SUBTITLE_DRAFT_GMTPC_DOWNLOAD_URL;
+                        break;
+                    case "ChkDownloadSampleVideo":
+                        link = SAMPLE_VIDEO_DOWNLOAD_URL;
                         break;
                     case "ChkWin11_26H1":
                         link = "https://archive.org/download/microsoft-win11-26h2-february-2026/en-us_windows_11_consumer_editions_version_26h1_x64_dvd_5208fe5b.iso";

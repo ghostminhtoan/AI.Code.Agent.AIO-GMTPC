@@ -1,5 +1,6 @@
 ﻿<!-- AI Summary: 2026-04-18 - Added child button "enable INVITE WORKSPACE LTSC" inside ChkEdge checkbox -->
 <!-- AI Summary: 2026-04-23 - Added spacing between CPU/RAM entries and distinct accent colors for System Information panels -->
+<!-- AI Summary: 2026-04-24 - Added ChkDownloadSampleVideo to the Subtitle tab -->
 <Window x:Class="GMTPC.Tool.MainWindow"
          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -496,6 +497,7 @@
                             <CheckBox x:Name="ChkVibe" Content="Vibe" Width="200" Height="34" Click="ChkVibe_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
                             <CheckBox x:Name="ChkMKVToolNix" Content="MKVToolNix MKVCleaver" Width="200" Height="34" Click="ChkMKVToolNix_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
                             <CheckBox x:Name="ChkSubtitleDraftGMTPC" Content="Subtitle Draft GMTPC" Width="200" Height="34" Click="ChkSubtitleDraftGMTPC_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
+                            <CheckBox x:Name="ChkDownloadSampleVideo" Content="Download sample video" Width="200" Height="34" Click="ChkDownloadSampleVideo_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
                         </WrapPanel>
                     </ScrollViewer>
                 </TabItem>

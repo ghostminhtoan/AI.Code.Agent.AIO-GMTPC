@@ -22,6 +22,7 @@ namespace GMTPC.Tool
         private bool _isApplyingResponsiveLayout;
         private bool _isAutoFittingScale;
         private bool _hasCompletedInitialTabScaleFit;
+        private bool _suppressResponsiveAutoFitQueue;
 
         private const int GWL_STYLE = -16;
         private const int WS_MAXIMIZEBOX = 0x00010000;
@@ -68,9 +69,11 @@ namespace GMTPC.Tool
 
             Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded, new Action(() =>
             {
+                _suppressResponsiveAutoFitQueue = true;
                 ApplyResponsiveLayout();
                 MainGrid.UpdateLayout();
                 UpdateSystemInformationChromeVisibility();
+                _suppressResponsiveAutoFitQueue = false;
                 QueueTabScaleFrom100ToBestFit();
             }));
         }
@@ -104,7 +107,7 @@ namespace GMTPC.Tool
                     _hasCompletedInitialTabScaleFit = true;
                     QueueTabScaleFrom100ToBestFit();
                 }
-                else if (!ShouldSkipAutoFitScale())
+                else if (!_suppressResponsiveAutoFitQueue && !ShouldSkipAutoFitScale())
                 {
                     QueueAutoFitScaleToCurrentMonitor();
                 }
@@ -465,8 +468,6 @@ namespace GMTPC.Tool
                         break;
                     }
                 }
-                UpdateSecondaryStatus($"Tá»± giáº£m DPI Ä‘á»ƒ hiá»ƒn thá»‹ toÃ n bá»™: {DPI_STEPS[targetIndex]}%", "Cyan");
-                reducedScale = true;
             }
             finally
             {
@@ -475,6 +476,7 @@ namespace GMTPC.Tool
 
             if (reducedScale)
             {
+                ShowAutoReducedDpiStatus(targetIndex);
                 QueueAutoFitScaleToCurrentMonitor();
             }
         }
@@ -504,6 +506,7 @@ namespace GMTPC.Tool
             {
                 _isAutoFittingScale = true;
                 _suppressPrimaryDpiStatus = true;
+                _suppressResponsiveAutoFitQueue = true;
 
                 Rect workArea = GetCurrentMonitorWorkAreaDip();
                 currentDPIScale = DPI_STEPS[baseIndex] / 100.0;
@@ -535,6 +538,7 @@ namespace GMTPC.Tool
             }
             finally
             {
+                _suppressResponsiveAutoFitQueue = false;
                 _suppressPrimaryDpiStatus = false;
                 _isAutoFittingScale = false;
             }
@@ -549,8 +553,13 @@ namespace GMTPC.Tool
 
             if (changedScale && reducedScale)
             {
-                UpdateSecondaryStatus($"Tự giảm DPI để hiển thị toàn bộ: {DPI_STEPS[targetIndex]}%", "Cyan");
+                ShowAutoReducedDpiStatus(targetIndex);
             }
+        }
+
+        private void ShowAutoReducedDpiStatus(int targetIndex)
+        {
+            UpdateSecondaryStatus($"Tự giảm DPI để hiển thị toàn bộ: {DPI_STEPS[targetIndex]}%", "Cyan");
         }
 
         private int GetClosestDpiStepIndexForTabFit(int percent)

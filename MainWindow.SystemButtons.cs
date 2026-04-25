@@ -119,8 +119,31 @@ namespace GMTPC.Tool
         }
 
         private void ResetDPIButtonStates() { /* Kept for compatibility */ }
+        private bool ForceSystemInformationDpiTo100Percent()
+        {
+            if (!IsSystemInformationTabSelected()) return false;
+
+            int baseIndex = Array.IndexOf(DPI_STEPS, 100);
+            if (baseIndex < 0) baseIndex = GetClosestDpiStepIndex(100);
+
+            try
+            {
+                _suppressPrimaryDpiStatus = true;
+                currentDPIScale = DPI_STEPS[baseIndex] / 100.0;
+                SetDPIComboIndexSilently(baseIndex);
+                ApplyDPIScale();
+                return true;
+            }
+            finally
+            {
+                _suppressPrimaryDpiStatus = false;
+            }
+        }
+
         private void BtnDPIMinus_Click(object sender, RoutedEventArgs e)
         {
+            if (ForceSystemInformationDpiTo100Percent()) return;
+
             // Find current index in DPI_STEPS
             int currentPercent = (int)Math.Round(currentDPIScale * 100.0);
             int idx = Array.IndexOf(DPI_STEPS, currentPercent);
@@ -134,6 +157,8 @@ namespace GMTPC.Tool
 
         private void BtnDPIPlus_Click(object sender, RoutedEventArgs e)
         {
+            if (ForceSystemInformationDpiTo100Percent()) return;
+
             int currentPercent = (int)Math.Round(currentDPIScale * 100.0);
             int idx = Array.IndexOf(DPI_STEPS, currentPercent);
             if (idx < 0) // if current percent not exactly in steps, find nearest
@@ -158,6 +183,7 @@ namespace GMTPC.Tool
         {
             if (_isUpdatingDpiSelection) return;
             if (CboDPIValue.SelectedItem == null) return;
+            if (ForceSystemInformationDpiTo100Percent()) return;
 
             // Get the ComboBoxItem and extract its Content
             ComboBoxItem selectedItem = CboDPIValue.SelectedItem as ComboBoxItem;

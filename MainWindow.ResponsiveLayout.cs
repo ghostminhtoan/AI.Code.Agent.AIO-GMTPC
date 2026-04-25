@@ -9,6 +9,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,6 +27,8 @@ namespace GMTPC.Tool
         private bool _hasCompletedInitialTabScaleFit;
         private bool _suppressResponsiveAutoFitQueue;
         private int _tabScaleFitRequestId;
+        private CancellationTokenSource _tabScaleFitDelayCts;
+        private const int TabScaleFitDelayMs = 700;
 
         private const int GWL_STYLE = -16;
         private const int WS_MAXIMIZEBOX = 0x00010000;
@@ -70,15 +74,18 @@ namespace GMTPC.Tool
             if (e.Source != MainTabControl) return;
 
             int requestId = ++_tabScaleFitRequestId;
+            _suppressResponsiveAutoFitQueue = true;
+            CancellationTokenSource previousCts = Interlocked.Exchange(ref _tabScaleFitDelayCts, new CancellationTokenSource());
+            if (previousCts != null)
+            {
+                try { previousCts.Cancel(); } catch { }
+                previousCts.Dispose();
+            }
+
             Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded, new Action(() =>
             {
                 if (requestId != _tabScaleFitRequestId) return;
-                _suppressResponsiveAutoFitQueue = true;
-                ApplyResponsiveLayout();
-                MainGrid.UpdateLayout();
-                UpdateSystemInformationChromeVisibility();
-                _hasCompletedInitialTabScaleFit = true;
-                QueueTabScaleFrom100ToBestFit(requestId);
+                _ = StartSelectedTabScaleWorkflowAsync(requestId, _tabScaleFitDelayCts.Token);
             }));
         }
 
@@ -386,7 +393,8 @@ namespace GMTPC.Tool
 
         private bool ShouldSkipAutoFitScale()
         {
-            return IsSystemInformationTabSelected();
+            if (IsSystemInformationTabSelected()) return true;
+            return !(IsSelectedTab("Windows - Microsoft") || IsSelectedTab("Windows Mod MMT"));
         }
 
         private void KeepWindowInsideCurrentMonitor()
@@ -495,6 +503,44 @@ namespace GMTPC.Tool
             }));
         }
 
+        private async Task StartSelectedTabScaleWorkflowAsync(int requestId, CancellationToken token)
+        {
+            try
+            {
+                if (requestId != _tabScaleFitRequestId) return;
+
+                _suppressResponsiveAutoFitQueue = true;
+                _suppressPrimaryDpiStatus = true;
+
+                ApplyResponsiveLayout();
+                MainGrid.UpdateLayout();
+                UpdateSystemInformationChromeVisibility();
+                ResetCurrentTabDpiTo100Percent();
+                _hasCompletedInitialTabScaleFit = true;
+
+                if (IsSystemInformationTabSelected())
+                {
+                    return;
+                }
+
+                await Task.Delay(TabScaleFitDelayMs, token).ConfigureAwait(true);
+                if (token.IsCancellationRequested || requestId != _tabScaleFitRequestId) return;
+
+                QueueTabScaleFrom100ToBestFit(requestId);
+            }
+            catch (TaskCanceledException)
+            {
+            }
+            finally
+            {
+                if (requestId == _tabScaleFitRequestId && IsSystemInformationTabSelected())
+                {
+                    _suppressPrimaryDpiStatus = false;
+                    _suppressResponsiveAutoFitQueue = false;
+                }
+            }
+        }
+
         private void FitSelectedTabStartingFrom100Percent(int requestId)
         {
             if (_isAutoFittingScale || currentDPIScale <= 0.5) return;
@@ -570,6 +616,18 @@ namespace GMTPC.Tool
                     _isAutoFittingScale = false;
                 }
             }));
+        }
+
+        private void ResetCurrentTabDpiTo100Percent()
+        {
+            int baseIndex = Array.IndexOf(DPI_STEPS, 100);
+            if (baseIndex < 0) baseIndex = GetClosestDpiStepIndexForTabFit(100);
+
+            currentDPIScale = DPI_STEPS[baseIndex] / 100.0;
+            SetDPIComboIndexSilently(baseIndex);
+            ApplyDPIScale();
+            MainGrid.UpdateLayout();
+            UpdateLayout();
         }
 
         private int GetClosestDpiStepIndexForTabFit(int percent)

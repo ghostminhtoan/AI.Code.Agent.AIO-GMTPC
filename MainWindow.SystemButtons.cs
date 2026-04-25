@@ -4,6 +4,7 @@
 //            SelectNoneAllTabs, Install, Pause, Resume, Refresh Color,
 //            BtnDownloadPage, DPI controls
 // Cập nhật gần đây:
+//   - 2026-04-25: Added Brave to Browser tab selection, install, hover, and download-link cache flows
 //   - 2026-04-25: Suppressed repetitive primary DPI status messages while auto-fitting scale for the selected tab
 //   - 2026-04-25: Updated Subtitle Edit cached download link to the new GMTPC portable release URL
 //   - 2026-04-24: Added ChkDownloadSampleVideo to Subtitle select/install flows, download-link cache, and hover tooltip
@@ -383,6 +384,7 @@ namespace GMTPC.Tool
                     ChkChrome.IsChecked = true;
                     ChkCocCoc.IsChecked = true;
                     ChkEdge.IsChecked = true;
+                    ChkBrave.IsChecked = true;
                 }
                 else if (tabHeader == "Multimedia")
                 {
@@ -509,6 +511,7 @@ namespace GMTPC.Tool
                     ChkChrome.IsChecked = false;
                     ChkCocCoc.IsChecked = false;
                     ChkEdge.IsChecked = false;
+                    ChkBrave.IsChecked = false;
                 }
                 else if (tabHeader == "Multimedia")
                 {
@@ -570,6 +573,7 @@ namespace GMTPC.Tool
             ChkChrome.IsChecked = false;
             ChkCocCoc.IsChecked = false;
             ChkEdge.IsChecked = false;
+            ChkBrave.IsChecked = false;
             ChkPotPlayer.IsChecked = false;
             ChkFastStone.IsChecked = false;
             ChkFoxit.IsChecked = false;
@@ -674,6 +678,7 @@ namespace GMTPC.Tool
             if (ChkChrome.IsChecked == true) tasks.Add((InstallChromeAsync, ChkChrome));
             if (ChkCocCoc.IsChecked == true) tasks.Add((InstallCocCocAsync, ChkCocCoc));
             if (ChkEdge.IsChecked == true) tasks.Add((InstallEdgeAsync, ChkEdge));
+            if (ChkBrave.IsChecked == true) tasks.Add((InstallBraveAsync, ChkBrave));
             if (ChkPotPlayer.IsChecked == true) tasks.Add((InstallPotPlayerAsync, ChkPotPlayer));
             if (ChkFastStone.IsChecked == true) tasks.Add((InstallFastStoneAsync, ChkFastStone));
             if (ChkFoxit.IsChecked == true) tasks.Add((InstallFoxitAsync, ChkFoxit));
@@ -828,6 +833,9 @@ namespace GMTPC.Tool
 
             if (ChkEdge?.IsChecked == true)
                 _cachedDownloadLinks.Add("https://c2rsetup.officeapps.live.com/c2r/downloadEdge.aspx?platform=Default&source=EdgeStablePage&Channel=Stable&language=vi&brand=M100");
+
+            if (ChkBrave?.IsChecked == true)
+                _cachedDownloadLinks.Add("https://laptop-updates.brave.com/download/BRV010?bitness=64");
 
             if (ChkRevoUninstaller?.IsChecked == true)
                 _cachedDownloadLinks.Add("https://www.hibitsoft.ir/HiBitUninstaller/RevoUninstaller-setup.exe");
@@ -1164,6 +1172,7 @@ namespace GMTPC.Tool
                 ChkNetLimiter, ChkAomeiPartitionAssistant, ChkDiskGenius, ChkProcessLasso,
                 ChkThrottlestop, ChkMSIAfterburner, ChkLeagueOfLegends, ChkPorofessor,
                 ChkSamuraiMaiden, ChkChrome, ChkCocCoc, ChkEdge,
+                ChkBrave,
                 ChkUltraviewer, ChkTeamViewerQS, ChkTeamViewerFull, ChkAnyDesk, ChkVMWare162Lite,
                 ChkWin11_26H1, ChkWin10LtscIot21H2, ChkWin10_22H2_2024_December,
                 // ChkWin10ProWorkstations22H2 removed
@@ -1291,6 +1300,9 @@ namespace GMTPC.Tool
                         break;
                     case "ChkEdge":
                         link = "https://c2rsetup.officeapps.live.com/c2r/downloadEdge.aspx?platform=Default&source=EdgeStablePage&Channel=Stable&language=vi&brand=M100";
+                        break;
+                    case "ChkBrave":
+                        link = "https://laptop-updates.brave.com/download/BRV010?bitness=64";
                         break;
                     case "ChkUltraviewer":
                         link = "https://dl2.ultraviewer.net/UltraViewer_setup_6.6_vi.exe";

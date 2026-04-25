@@ -11,6 +11,8 @@ namespace GMTPC.Tool
 {
     /*
  * AI Summary:
+ * Date: 2026-04-25 (2)
+ * - Added Brave browser download URL, install arguments, and Browser-tab install wiring
  * Date: 2026-04-25
  * - Updated SUBTITLE_EDIT_DOWNLOAD_URL to the new Subtitle Edit GMTPC portable release link
  * Date: 2026-04-24
@@ -215,7 +217,7 @@ namespace GMTPC.Tool
         // ===================================================================
         // TabBrowser — Links (B) and Arguments (C)
         // TabItem Header: "Browser"
-        // Checkboxes: ChkChrome, ChkCocCoc, ChkEdge
+        // Checkboxes: ChkChrome, ChkCocCoc, ChkEdge, ChkBrave
         // ===================================================================
         // Chrome (Tab: Browser)
         private const string CHROME_DOWNLOAD_URL = "https://dl.google.com/chrome/install/latest/chrome_installer.exe";
@@ -228,6 +230,10 @@ namespace GMTPC.Tool
         // Edge (Tab: Browser)
         private const string EDGE_DOWNLOAD_URL = "https://go.microsoft.com/fwlink/?linkid=2108834&Channel=Stable&language=vi";
         private const string EDGE_INSTALL_ARGUMENTS = "/silent /install";
+
+        // Brave (Tab: Browser)
+        private const string BRAVE_DOWNLOAD_URL = "https://laptop-updates.brave.com/download/BRV010?bitness=64";
+        private const string BRAVE_INSTALL_ARGUMENTS = "";
 
         // ===================================================================
         // TabMultimedia — Advanced Codec Pack
@@ -618,6 +624,8 @@ namespace GMTPC.Tool
                              ChkCocCoc.IsChecked == true ||
                              // Microsoft Edge
                              ChkEdge.IsChecked == true ||
+                             // Brave
+                             ChkBrave.IsChecked == true ||
                              ChkRevoUninstaller.IsChecked == true ||
                              // Thêm checkbox cho Zalo
                              ChkInstallZalo.IsChecked == true ||

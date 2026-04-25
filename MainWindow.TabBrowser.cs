@@ -1,3 +1,4 @@
+// AI Summary: 2026-04-25 - Added Brave browser install handler and Browser-tab selection/status wiring
 // AI Summary: 2026-04-18 - Added BtnEnableWorkspaceLTSC_Click event handler to enable Edge Workspaces via registry
 using System;
 using System.Collections.Generic;
@@ -117,6 +118,44 @@ namespace GMTPC.Tool
             }
         }
 
+        private async Task InstallBraveAsync()
+        {
+            try
+            {
+                UpdateStatus("Đang tải Brave...", "Cyan");
+                string bravePath = Path.Combine(GetGMTPCFolder(), "BraveSetup.exe");
+                await DownloadWithProgressAsync(BRAVE_DOWNLOAD_URL, bravePath, "Brave");
+
+                Dispatcher.Invoke(() =>
+                {
+                    DownloadProgressBar.Value = 0;
+                    ProgressTextBlock.Text = "";
+                    SpeedTextBlock.Text = "";
+                });
+
+                UpdateStatus("Đang chạy Brave installer...", "Yellow");
+                ProcessStartInfo startInfo = new ProcessStartInfo
+                {
+                    FileName = bravePath,
+                    Arguments = BRAVE_INSTALL_ARGUMENTS,
+                    UseShellExecute = true
+                };
+
+                Process process = Process.Start(startInfo);
+                if (process != null)
+                {
+                    await Task.Run(() => process.WaitForExit());
+                    UpdateStatus("Brave đã hoàn tất.", "Green");
+                }
+
+                if (File.Exists(bravePath)) File.Delete(bravePath);
+            }
+            catch (Exception ex)
+            {
+                UpdateStatus($"Lỗi khi cài Brave: {ex.Message}", "Red");
+            }
+        }
+
 
         private void ChkChrome_Click(object sender, RoutedEventArgs e)
         {
@@ -157,6 +196,20 @@ namespace GMTPC.Tool
             else
             {
                 UpdateStatus("Đã hủy chọn: Microsoft Edge", "Yellow");
+            }
+
+            UpdateInstallButtonState();
+        }
+
+        private void ChkBrave_Click(object sender, RoutedEventArgs e)
+        {
+            if (ChkBrave.IsChecked == true)
+            {
+                UpdateStatus("Đã chọn: Brave", "Green");
+            }
+            else
+            {
+                UpdateStatus("Đã hủy chọn: Brave", "Yellow");
             }
 
             UpdateInstallButtonState();

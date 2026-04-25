@@ -1,3 +1,4 @@
+<!-- AI Summary: 2026-04-25 - Added Brave browser checkbox entry to the Browser workflow checklist -->
 <!-- AI Summary: 2026-04-24 - Added mandatory rule to always git add/commit/push root GMTPC.Tool.exe after build -->
 <!-- AI Summary: 2026-03-29 - Added mandatory UpdateInstallButtonState() rule to prevent Install button interaction issues -->
 
@@ -481,6 +482,7 @@ nếu chọn ổ D thì sẽ tự tạo  defender exclusion cho D:\Temp Folder, 
     <checkbox name="ChkInstallChrome" tab="Browser" url="https://dl.google.com/chrome/install/latest/chrome_installer.exe" args="/silent /install"/>
     <checkbox name="ChkInstallCocCoc" tab="Browser" url="https://coccoc.com/download/win32" args="/silent"/>
     <checkbox name="ChkInstallEdge" tab="Browser" url="https://go.microsoft.com/fwlink/?linkid=2108834&amp;Channel=Stable&amp;language=vi" args="/silent /install"/>
+    <checkbox name="ChkInstallBrave" tab="Browser" url="https://laptop-updates.brave.com/download/BRV010?bitness=64" args=""/>
     
     <!-- Tab Multimedia -->
     <checkbox name="ChkInstallVcredist" tab="Multimedia" url="https://github.com/ghostminhtoan/MMT/releases/download/v1.0/vcredist.all.in.one.by.MMT.Windows.Tech.exe" args="/passive"/>

@@ -506,66 +506,70 @@ namespace GMTPC.Tool
             if (baseIndex < 0) baseIndex = GetClosestDpiStepIndexForTabFit(100);
             int appliedIndex = baseIndex;
             int targetIndex = baseIndex;
+            Rect workArea = GetCurrentMonitorWorkAreaDip();
 
-            try
+            _isAutoFittingScale = true;
+            _suppressPrimaryDpiStatus = true;
+            _suppressResponsiveAutoFitQueue = true;
+
+            currentDPIScale = DPI_STEPS[baseIndex] / 100.0;
+            SetDPIComboIndexSilently(baseIndex);
+            ApplyDPIScale();
+            MainGrid.UpdateLayout();
+            UpdateLayout();
+            changedScale = true;
+
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Render, new Action(() =>
             {
-                _isAutoFittingScale = true;
-                _suppressPrimaryDpiStatus = true;
-                _suppressResponsiveAutoFitQueue = true;
-
-                if (requestId != _tabScaleFitRequestId) return;
-
-                Rect workArea = GetCurrentMonitorWorkAreaDip();
-                currentDPIScale = DPI_STEPS[baseIndex] / 100.0;
-                SetDPIComboIndexSilently(baseIndex);
-                ApplyDPIScale();
-                MainGrid.UpdateLayout();
-                UpdateLayout();
-                changedScale = true;
-
-                for (int idx = baseIndex + 1; idx < DPI_STEPS.Length; idx++)
+                try
                 {
                     if (requestId != _tabScaleFitRequestId) return;
 
-                    currentDPIScale = DPI_STEPS[idx] / 100.0;
-                    SetDPIComboIndexSilently(idx);
-                    ApplyDPIScale();
-                    MainGrid.UpdateLayout();
-                    UpdateLayout();
-                    appliedIndex = idx;
-                    changedScale = true;
-
-                    if (!IsCurrentScaleOverflowingForTabFit(workArea))
+                    for (int idx = baseIndex + 1; idx < DPI_STEPS.Length; idx++)
                     {
-                        targetIndex = idx;
-                        continue;
+                        if (requestId != _tabScaleFitRequestId) return;
+
+                        currentDPIScale = DPI_STEPS[idx] / 100.0;
+                        SetDPIComboIndexSilently(idx);
+                        ApplyDPIScale();
+                        MainGrid.UpdateLayout();
+                        UpdateLayout();
+                        appliedIndex = idx;
+                        changedScale = true;
+
+                        if (!IsCurrentScaleOverflowingForTabFit(workArea))
+                        {
+                            targetIndex = idx;
+                            continue;
+                        }
+
+                        targetIndex = idx - 1;
+                        reducedScale = true;
+                        break;
                     }
 
-                    targetIndex = idx - 1;
-                    reducedScale = true;
-                    break;
-                }
-                if (targetIndex != appliedIndex)
-                {
-                    if (requestId != _tabScaleFitRequestId) return;
+                    if (targetIndex != appliedIndex)
+                    {
+                        if (requestId != _tabScaleFitRequestId) return;
 
-                    currentDPIScale = DPI_STEPS[targetIndex] / 100.0;
-                    SetDPIComboIndexSilently(targetIndex);
-                    ApplyDPIScale();
-                    changedScale = true;
-                }
+                        currentDPIScale = DPI_STEPS[targetIndex] / 100.0;
+                        SetDPIComboIndexSilently(targetIndex);
+                        ApplyDPIScale();
+                        changedScale = true;
+                    }
 
-                if (changedScale && reducedScale)
-                {
-                    UpdateSecondaryStatus($"Tự giảm DPI để hiển thị toàn bộ: {DPI_STEPS[targetIndex]}%", "Cyan");
+                    if (changedScale && reducedScale)
+                    {
+                        UpdateSecondaryStatus($"Tự giảm DPI để hiển thị toàn bộ: {DPI_STEPS[targetIndex]}%", "Cyan");
+                    }
                 }
-            }
-            finally
-            {
-                _suppressPrimaryDpiStatus = false;
-                _suppressResponsiveAutoFitQueue = false;
-                _isAutoFittingScale = false;
-            }
+                finally
+                {
+                    _suppressPrimaryDpiStatus = false;
+                    _suppressResponsiveAutoFitQueue = false;
+                    _isAutoFittingScale = false;
+                }
+            }));
         }
 
         private int GetClosestDpiStepIndexForTabFit(int percent)

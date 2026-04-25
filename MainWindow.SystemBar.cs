@@ -64,6 +64,11 @@ namespace GMTPC.Tool
                 {
                     BuildNumberTextBlock.Text = $"Build: {BuildInfo.BUILD_NUMBER}";
                 }
+
+                if (BuildNumberHeaderTextBlock != null)
+                {
+                    BuildNumberHeaderTextBlock.Text = $"Build: {BuildInfo.BUILD_NUMBER}";
+                }
             });
         }
 

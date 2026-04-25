@@ -368,6 +368,10 @@ namespace GMTPC.Tool
 
             if (ButtonsBorder != null) ButtonsBorder.Visibility = chromeVisibility;
             if (ProgressBorder != null) ProgressBorder.Visibility = chromeVisibility;
+            if (BuildNumberHeaderTextBlock != null)
+            {
+                BuildNumberHeaderTextBlock.Visibility = isSystemInformationTab ? Visibility.Visible : Visibility.Collapsed;
+            }
         }
 
         private bool IsSystemInformationTabSelected()

@@ -284,11 +284,20 @@
                             </StackPanel>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="10,0,0,0">
-                            <TextBlock Text="Theme Windows" FontSize="10" Foreground="#FFE6E6E6" HorizontalAlignment="Center" Margin="0,0,0,2"/>
-                            <ToggleButton x:Name="TglTheme"
-                                          Style="{StaticResource ThemeToggleSwitchStyle}"
-                                          HorizontalAlignment="Center"
-                                          Click="TglTheme_Click"/>
+                            <TextBlock Text="Dark Theme Windows" FontSize="10" Foreground="#FFE6E6E6" HorizontalAlignment="Center" Margin="0,0,0,2"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <ToggleButton x:Name="TglTheme"
+                                              Style="{StaticResource ThemeToggleSwitchStyle}"
+                                              HorizontalAlignment="Center"
+                                              Click="TglTheme_Click"/>
+                                <TextBlock x:Name="BuildNumberHeaderTextBlock"
+                                           Text="Build: ----"
+                                           FontSize="12"
+                                           Foreground="#FFF0F0F0"
+                                           VerticalAlignment="Center"
+                                           Margin="10,0,0,0"
+                                           Visibility="Collapsed"/>
+                            </StackPanel>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>

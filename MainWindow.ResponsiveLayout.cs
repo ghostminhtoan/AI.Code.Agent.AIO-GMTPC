@@ -301,7 +301,7 @@ namespace GMTPC.Tool
             int columns = Math.Max(1, Math.Min(2, (int)Math.Floor(available / 180.0)));
             double gap = 8;
             double itemSlotWidth = Math.Floor((available - ((columns - 1) * gap)) / columns);
-            itemSlotWidth = Math.Max(180, Math.Min(isMonitorPortrait ? 420 : 360, itemSlotWidth));
+            itemSlotWidth = Math.Max(200, Math.Min(isMonitorPortrait ? 420 : 360, itemSlotWidth));
 
             panel.Orientation = Orientation.Horizontal;
             panel.ItemWidth = itemSlotWidth;
@@ -311,19 +311,19 @@ namespace GMTPC.Tool
 
             if (panel == PartitionPanel)
             {
-                double childWidth = Math.Max(180, itemSlotWidth - 10);
+                double childWidth = Math.Max(200, itemSlotWidth - 4);
                 if (ChkAomeiPartitionAssistant != null) ChkAomeiPartitionAssistant.Width = childWidth;
                 if (ChkDiskGenius != null) ChkDiskGenius.Width = childWidth;
             }
             else if (panel == DriverPanel)
             {
-                double childWidth = Math.Max(180, itemSlotWidth - 10);
+                double childWidth = Math.Max(200, itemSlotWidth - 4);
                 if (Chk3DPChip != null) Chk3DPChip.Width = childWidth;
                 if (Chk3DPNet != null) Chk3DPNet.Width = childWidth;
             }
             else if (panel == BrowserPanel)
             {
-                double childWidth = Math.Max(180, itemSlotWidth - 10);
+                double childWidth = Math.Max(200, itemSlotWidth - 4);
                 if (ChkChrome != null) ChkChrome.Width = childWidth;
                 if (ChkCocCoc != null) ChkCocCoc.Width = childWidth;
                 if (ChkEdge != null) ChkEdge.Width = childWidth;
@@ -923,3 +923,4 @@ namespace GMTPC.Tool
     }
 }
 
+// AI Summary: 2026-04-25 - Tuned tab spacer sizes and sparse-tab widths so clipped tabs can fit like Subtitle while dense tabs stay capped.

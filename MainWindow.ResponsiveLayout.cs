@@ -28,7 +28,6 @@ namespace GMTPC.Tool
         private bool _suppressResponsiveAutoFitQueue;
         private int _tabScaleFitRequestId;
         private CancellationTokenSource _tabScaleFitDelayCts;
-        private const int TabScaleFitDelayMs = 700;
 
         private const int GWL_STYLE = -16;
         private const int WS_MAXIMIZEBOX = 0x00010000;
@@ -523,7 +522,6 @@ namespace GMTPC.Tool
                     return;
                 }
 
-                await Task.Delay(TabScaleFitDelayMs, token).ConfigureAwait(true);
                 if (token.IsCancellationRequested || requestId != _tabScaleFitRequestId) return;
 
                 QueueTabScaleFrom100ToBestFit(requestId);

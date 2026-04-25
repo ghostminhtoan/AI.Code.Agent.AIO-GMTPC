@@ -73,7 +73,7 @@ namespace GMTPC.Tool
                 ApplyResponsiveLayout();
                 MainGrid.UpdateLayout();
                 UpdateSystemInformationChromeVisibility();
-                _suppressResponsiveAutoFitQueue = false;
+                _hasCompletedInitialTabScaleFit = true;
                 QueueTabScaleFrom100ToBestFit();
             }));
         }
@@ -102,7 +102,7 @@ namespace GMTPC.Tool
                 ApplyProgressSizing(isCompact);
                 UpdateSystemInformationChromeVisibility();
                 KeepWindowInsideCurrentMonitor(workArea);
-                if (!_hasCompletedInitialTabScaleFit && MainTabControl?.SelectedItem != null)
+                if (!_hasCompletedInitialTabScaleFit && MainTabControl?.SelectedItem != null && !_suppressResponsiveAutoFitQueue)
                 {
                     _hasCompletedInitialTabScaleFit = true;
                     QueueTabScaleFrom100ToBestFit();
@@ -476,7 +476,7 @@ namespace GMTPC.Tool
 
             if (reducedScale)
             {
-                ShowAutoReducedDpiStatus(targetIndex);
+                UpdateSecondaryStatus($"Tự giảm DPI để hiển thị toàn bộ: {DPI_STEPS[targetIndex]}%", "Cyan");
                 QueueAutoFitScaleToCurrentMonitor();
             }
         }
@@ -514,6 +514,7 @@ namespace GMTPC.Tool
                 ApplyDPIScale();
                 MainGrid.UpdateLayout();
                 UpdateLayout();
+                changedScale = true;
 
                 for (int idx = baseIndex + 1; idx < DPI_STEPS.Length; idx++)
                 {
@@ -535,31 +536,25 @@ namespace GMTPC.Tool
                     reducedScale = true;
                     break;
                 }
+                if (targetIndex != appliedIndex)
+                {
+                    currentDPIScale = DPI_STEPS[targetIndex] / 100.0;
+                    SetDPIComboIndexSilently(targetIndex);
+                    ApplyDPIScale();
+                    changedScale = true;
+                }
+
+                if (changedScale && reducedScale)
+                {
+                    UpdateSecondaryStatus($"Tự giảm DPI để hiển thị toàn bộ: {DPI_STEPS[targetIndex]}%", "Cyan");
+                }
             }
             finally
             {
-                _suppressResponsiveAutoFitQueue = false;
                 _suppressPrimaryDpiStatus = false;
+                _suppressResponsiveAutoFitQueue = false;
                 _isAutoFittingScale = false;
             }
-
-            if (targetIndex != appliedIndex)
-            {
-                currentDPIScale = DPI_STEPS[targetIndex] / 100.0;
-                SetDPIComboIndexSilently(targetIndex);
-                ApplyDPIScale();
-                changedScale = true;
-            }
-
-            if (changedScale && reducedScale)
-            {
-                ShowAutoReducedDpiStatus(targetIndex);
-            }
-        }
-
-        private void ShowAutoReducedDpiStatus(int targetIndex)
-        {
-            UpdateSecondaryStatus($"Tự giảm DPI để hiển thị toàn bộ: {DPI_STEPS[targetIndex]}%", "Cyan");
         }
 
         private int GetClosestDpiStepIndexForTabFit(int percent)

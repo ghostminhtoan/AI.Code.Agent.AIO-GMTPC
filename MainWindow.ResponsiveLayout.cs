@@ -23,6 +23,7 @@ namespace GMTPC.Tool
         private bool _isAutoFittingScale;
         private bool _hasCompletedInitialTabScaleFit;
         private bool _suppressResponsiveAutoFitQueue;
+        private int _tabScaleFitRequestId;
 
         private const int GWL_STYLE = -16;
         private const int WS_MAXIMIZEBOX = 0x00010000;
@@ -67,14 +68,16 @@ namespace GMTPC.Tool
         {
             if (e.Source != MainTabControl) return;
 
+            int requestId = ++_tabScaleFitRequestId;
             Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded, new Action(() =>
             {
+                if (requestId != _tabScaleFitRequestId) return;
                 _suppressResponsiveAutoFitQueue = true;
                 ApplyResponsiveLayout();
                 MainGrid.UpdateLayout();
                 UpdateSystemInformationChromeVisibility();
                 _hasCompletedInitialTabScaleFit = true;
-                QueueTabScaleFrom100ToBestFit();
+                QueueTabScaleFrom100ToBestFit(requestId);
             }));
         }
 
@@ -105,7 +108,7 @@ namespace GMTPC.Tool
                 if (!_hasCompletedInitialTabScaleFit && MainTabControl?.SelectedItem != null && !_suppressResponsiveAutoFitQueue)
                 {
                     _hasCompletedInitialTabScaleFit = true;
-                    QueueTabScaleFrom100ToBestFit();
+                    QueueTabScaleFrom100ToBestFit(_tabScaleFitRequestId);
                 }
                 else if (!_suppressResponsiveAutoFitQueue && !ShouldSkipAutoFitScale())
                 {
@@ -481,19 +484,20 @@ namespace GMTPC.Tool
             }
         }
 
-        private void QueueTabScaleFrom100ToBestFit()
+        private void QueueTabScaleFrom100ToBestFit(int requestId)
         {
             if (_isAutoFittingScale) return;
 
             Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.ApplicationIdle, new Action(() =>
             {
-                FitSelectedTabStartingFrom100Percent();
+                FitSelectedTabStartingFrom100Percent(requestId);
             }));
         }
 
-        private void FitSelectedTabStartingFrom100Percent()
+        private void FitSelectedTabStartingFrom100Percent(int requestId)
         {
             if (_isAutoFittingScale || currentDPIScale <= 0.5) return;
+            if (requestId != _tabScaleFitRequestId) return;
 
             bool changedScale = false;
             bool reducedScale = false;
@@ -508,6 +512,8 @@ namespace GMTPC.Tool
                 _suppressPrimaryDpiStatus = true;
                 _suppressResponsiveAutoFitQueue = true;
 
+                if (requestId != _tabScaleFitRequestId) return;
+
                 Rect workArea = GetCurrentMonitorWorkAreaDip();
                 currentDPIScale = DPI_STEPS[baseIndex] / 100.0;
                 SetDPIComboIndexSilently(baseIndex);
@@ -518,6 +524,8 @@ namespace GMTPC.Tool
 
                 for (int idx = baseIndex + 1; idx < DPI_STEPS.Length; idx++)
                 {
+                    if (requestId != _tabScaleFitRequestId) return;
+
                     currentDPIScale = DPI_STEPS[idx] / 100.0;
                     SetDPIComboIndexSilently(idx);
                     ApplyDPIScale();
@@ -538,6 +546,8 @@ namespace GMTPC.Tool
                 }
                 if (targetIndex != appliedIndex)
                 {
+                    if (requestId != _tabScaleFitRequestId) return;
+
                     currentDPIScale = DPI_STEPS[targetIndex] / 100.0;
                     SetDPIComboIndexSilently(targetIndex);
                     ApplyDPIScale();

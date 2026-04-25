@@ -107,7 +107,7 @@ namespace GMTPC.Tool
 
                 ApplyWindowBounds(workArea, isMonitorPortrait);
                 ApplyOuterSpacing(isCompact);
-                ApplyTabItemSizing(monitorWidth, isMonitorPortrait, isCompact);
+                ApplyTabItemSizing(windowWidth, isMonitorPortrait, isCompact);
                 ApplySparseTabSizing(isCompact);
                 ApplyCommandSizing(windowWidth, isCompact);
                 ApplyProgressSizing(isCompact);
@@ -213,11 +213,46 @@ namespace GMTPC.Tool
             border.Padding = padding;
         }
 
+        private double GetSelectedTabLogicalViewportWidth(double fallbackWidth)
+        {
+            double scale = Math.Max(0.5, currentDPIScale);
+
+            try
+            {
+                ScrollViewer selectedScrollViewer = GetSelectedTabScrollViewer();
+                if (selectedScrollViewer != null && selectedScrollViewer.ActualWidth > 0)
+                {
+                    return Math.Max(260, selectedScrollViewer.ActualWidth / scale);
+                }
+            }
+            catch
+            {
+            }
+
+            try
+            {
+                if (TabHostBorder != null && TabHostBorder.ActualWidth > 0)
+                {
+                    double hostWidth = Math.Max(0, TabHostBorder.ActualWidth - TabHostBorder.Padding.Left - TabHostBorder.Padding.Right - 12);
+                    if (hostWidth > 0)
+                    {
+                        return Math.Max(260, hostWidth / scale);
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+            return Math.Max(260, fallbackWidth);
+        }
+
         private void ApplyTabItemSizing(double monitorWidth, bool isMonitorPortrait, bool isCompact)
         {
             bool denseLandscape = !isMonitorPortrait && currentDPIScale >= 1.2;
             bool zoomedOutLandscape = !isMonitorPortrait && currentDPIScale < 1.0;
-            double available = Math.Max(260, monitorWidth - (denseLandscape ? 54 : (isCompact ? 48 : 86)));
+            double logicalViewportWidth = GetSelectedTabLogicalViewportWidth(monitorWidth);
+            double available = Math.Max(240, logicalViewportWidth - (denseLandscape ? 18 : (isCompact ? 16 : 24)));
             int maxColumns = isMonitorPortrait ? 2 : 4;
 
             foreach (WrapPanel panel in GetInstallPanels())
@@ -274,12 +309,12 @@ namespace GMTPC.Tool
             bool isWindowsModTab = panel == WindowsModPanel && IsSelectedTab("Windows Mod MMT");
             if (!isWindowsTab && !isWindowsModTab) return false;
 
-            double scaledViewportWidth = monitorWidth / Math.Max(1.0, currentDPIScale);
-            double available = Math.Max(260, scaledViewportWidth - (isCompact ? 52 : 96));
+            double scaledViewportWidth = GetSelectedTabLogicalViewportWidth(monitorWidth);
+            double available = Math.Max(240, scaledViewportWidth - (isCompact ? 16 : 24));
             int columns = isWindowsTab ? 1 : 2;
             double gap = 8;
             double itemSlotWidth = Math.Floor((available - ((columns - 1) * gap)) / columns);
-            itemSlotWidth = Math.Max(260, Math.Min(isWindowsTab ? 620 : 560, itemSlotWidth));
+            itemSlotWidth = Math.Max(isWindowsTab ? 300 : 280, Math.Min(isWindowsTab ? 560 : 420, itemSlotWidth));
 
             panel.Orientation = Orientation.Horizontal;
             panel.ItemWidth = itemSlotWidth;
@@ -297,12 +332,12 @@ namespace GMTPC.Tool
             if (!isStrictPortraitPanel) return false;
             if (!isMonitorPortrait && !isCompact) return false;
 
-            double scaledViewportWidth = monitorWidth / Math.Max(1.0, currentDPIScale);
-            double available = Math.Max(260, scaledViewportWidth - (isCompact ? 56 : 92));
-            int columns = Math.Max(1, Math.Min(2, (int)Math.Floor(available / 180.0)));
+            double scaledViewportWidth = GetSelectedTabLogicalViewportWidth(monitorWidth);
+            double available = Math.Max(240, scaledViewportWidth - (isCompact ? 16 : 24));
+            int columns = available >= 420 ? 2 : 1;
             double gap = 8;
             double itemSlotWidth = Math.Floor((available - ((columns - 1) * gap)) / columns);
-            itemSlotWidth = Math.Max(200, Math.Min(isMonitorPortrait ? 420 : 360, itemSlotWidth));
+            itemSlotWidth = Math.Max(208, Math.Min(isMonitorPortrait ? 360 : 320, itemSlotWidth));
 
             panel.Orientation = Orientation.Horizontal;
             panel.ItemWidth = itemSlotWidth;
@@ -312,19 +347,19 @@ namespace GMTPC.Tool
 
             if (panel == PartitionPanel)
             {
-                double childWidth = Math.Max(200, itemSlotWidth - 4);
+                double childWidth = Math.Max(200, itemSlotWidth - 8);
                 if (ChkAomeiPartitionAssistant != null) ChkAomeiPartitionAssistant.Width = childWidth;
                 if (ChkDiskGenius != null) ChkDiskGenius.Width = childWidth;
             }
             else if (panel == DriverPanel)
             {
-                double childWidth = Math.Max(200, itemSlotWidth - 4);
+                double childWidth = Math.Max(200, itemSlotWidth - 8);
                 if (Chk3DPChip != null) Chk3DPChip.Width = childWidth;
                 if (Chk3DPNet != null) Chk3DPNet.Width = childWidth;
             }
             else if (panel == BrowserPanel)
             {
-                double childWidth = Math.Max(200, itemSlotWidth - 4);
+                double childWidth = Math.Max(200, itemSlotWidth - 8);
                 if (ChkChrome != null) ChkChrome.Width = childWidth;
                 if (ChkCocCoc != null) ChkCocCoc.Width = childWidth;
                 if (ChkEdge != null) ChkEdge.Width = childWidth;
@@ -336,7 +371,7 @@ namespace GMTPC.Tool
 
         private void SetSparseWindowsChildWidths(WrapPanel panel, double itemSlotWidth)
         {
-            double childWidth = Math.Max(180, itemSlotWidth - 10);
+            double childWidth = Math.Max(220, itemSlotWidth - 6);
 
             if (panel == WindowsPanel)
             {
@@ -803,16 +838,36 @@ namespace GMTPC.Tool
 
                 WrapPanel selectedPanel = IsSelectedTab("Windows - Microsoft") ? WindowsPanel : WindowsModPanel;
                 if (selectedPanel == null || selectedPanel.ActualWidth <= 0 || selectedPanel.ActualHeight <= 0) return false;
+                ScrollViewer selectedScrollViewer = GetSelectedTabScrollViewer();
+                if (selectedScrollViewer == null || selectedScrollViewer.ActualWidth <= 0 || selectedScrollViewer.ActualHeight <= 0) return false;
 
-                Rect panelBounds = selectedPanel.TransformToAncestor(TabHostBorder)
+                Rect panelBounds = selectedPanel.TransformToAncestor(selectedScrollViewer)
                                                 .TransformBounds(new Rect(0, 0, selectedPanel.ActualWidth, selectedPanel.ActualHeight));
-                double leftLimit = Math.Max(0, TabHostBorder.Padding.Left);
-                double rightLimit = Math.Max(0, TabHostBorder.ActualWidth - TabHostBorder.Padding.Right);
-                double bottomLimit = Math.Max(0, TabHostBorder.ActualHeight - TabHostBorder.Padding.Bottom);
+                double leftLimit = 0;
+                double rightLimit = selectedScrollViewer.ActualWidth;
+                double bottomLimit = selectedScrollViewer.ActualHeight;
+
+                double maxChildRight = panelBounds.Right;
+                double maxChildBottom = panelBounds.Bottom;
+                foreach (FrameworkElement child in selectedPanel.Children.OfType<FrameworkElement>())
+                {
+                    if (!child.IsVisible || child.ActualWidth <= 0 || child.ActualHeight <= 0) continue;
+
+                    try
+                    {
+                        Rect childBounds = child.TransformToAncestor(selectedScrollViewer)
+                                                .TransformBounds(new Rect(0, 0, child.ActualWidth, child.ActualHeight));
+                        maxChildRight = Math.Max(maxChildRight, childBounds.Right);
+                        maxChildBottom = Math.Max(maxChildBottom, childBounds.Bottom);
+                    }
+                    catch
+                    {
+                    }
+                }
 
                 return panelBounds.Left < leftLimit - 2 ||
-                       panelBounds.Right > rightLimit + 2 ||
-                       panelBounds.Bottom > bottomLimit + 2;
+                       maxChildRight > rightLimit + 2 ||
+                       maxChildBottom > bottomLimit + 2;
             }
             catch
             {
@@ -839,19 +894,17 @@ namespace GMTPC.Tool
         private bool HasSelectedTabBottomOverflow()
         {
             const double tolerance = 1.0;
-            if (TabHostBorder == null || TabHostBorder.ActualWidth <= 0 || TabHostBorder.ActualHeight <= 0) return false;
-
             ScrollViewer selectedScrollViewer = GetSelectedTabScrollViewer();
             if (selectedScrollViewer == null || selectedScrollViewer.ActualWidth <= 0 || selectedScrollViewer.ActualHeight <= 0) return false;
             if (!(selectedScrollViewer.Content is WrapPanel panel)) return false;
 
-            double leftLimit = Math.Max(0, TabHostBorder.Padding.Left);
-            double rightLimit = Math.Max(0, TabHostBorder.ActualWidth - TabHostBorder.Padding.Right);
-            double bottomLimit = Math.Max(0, TabHostBorder.ActualHeight - TabHostBorder.Padding.Bottom);
+            double leftLimit = 0;
+            double rightLimit = selectedScrollViewer.ActualWidth;
+            double bottomLimit = selectedScrollViewer.ActualHeight;
 
             try
             {
-                Rect panelBounds = panel.TransformToAncestor(TabHostBorder)
+                Rect panelBounds = panel.TransformToAncestor(selectedScrollViewer)
                                         .TransformBounds(new Rect(0, 0, panel.ActualWidth, panel.ActualHeight));
 
                 double maxChildRight = panelBounds.Right;
@@ -862,7 +915,7 @@ namespace GMTPC.Tool
 
                     try
                     {
-                        Rect childBounds = child.TransformToAncestor(TabHostBorder)
+                        Rect childBounds = child.TransformToAncestor(selectedScrollViewer)
                                                 .TransformBounds(new Rect(0, 0, child.ActualWidth, child.ActualHeight));
                         maxChildRight = Math.Max(maxChildRight, childBounds.Right);
                         maxChildBottom = Math.Max(maxChildBottom, childBounds.Bottom);

@@ -71,7 +71,7 @@ namespace GMTPC.Tool
                 ApplyResponsiveLayout();
                 MainGrid.UpdateLayout();
                 UpdateSystemInformationChromeVisibility();
-                QueueMaximizeFitScaleForSelectedTab();
+                QueueTabScaleFrom100ToBestFit();
             }));
         }
 
@@ -102,7 +102,7 @@ namespace GMTPC.Tool
                 if (!_hasCompletedInitialTabScaleFit && MainTabControl?.SelectedItem != null)
                 {
                     _hasCompletedInitialTabScaleFit = true;
-                    QueueMaximizeFitScaleForSelectedTab();
+                    QueueTabScaleFrom100ToBestFit();
                 }
                 else if (!ShouldSkipAutoFitScale())
                 {
@@ -479,25 +479,26 @@ namespace GMTPC.Tool
             }
         }
 
-        private void QueueMaximizeFitScaleForSelectedTab()
+        private void QueueTabScaleFrom100ToBestFit()
         {
             if (_isAutoFittingScale) return;
 
             Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.ApplicationIdle, new Action(() =>
             {
-                MaximizeFitScaleForSelectedTab();
+                FitSelectedTabStartingFrom100Percent();
             }));
         }
 
-        private void MaximizeFitScaleForSelectedTab()
+        private void FitSelectedTabStartingFrom100Percent()
         {
             if (_isAutoFittingScale || currentDPIScale <= 0.5) return;
 
             bool changedScale = false;
             bool reducedScale = false;
-            int originalIndex = GetClosestDpiStepIndexForTabFit((int)Math.Round(currentDPIScale * 100.0));
-            int appliedIndex = originalIndex;
-            int targetIndex = originalIndex;
+            int baseIndex = Array.IndexOf(DPI_STEPS, 100);
+            if (baseIndex < 0) baseIndex = GetClosestDpiStepIndexForTabFit(100);
+            int appliedIndex = baseIndex;
+            int targetIndex = baseIndex;
 
             try
             {
@@ -505,32 +506,31 @@ namespace GMTPC.Tool
                 _suppressPrimaryDpiStatus = true;
 
                 Rect workArea = GetCurrentMonitorWorkAreaDip();
-                int startIndex = DPI_STEPS.Length - 1;
+                currentDPIScale = DPI_STEPS[baseIndex] / 100.0;
+                SetDPIComboIndexSilently(baseIndex);
+                ApplyDPIScale();
+                MainGrid.UpdateLayout();
+                UpdateLayout();
 
-                for (int idx = startIndex; idx >= 0; idx--)
+                for (int idx = baseIndex + 1; idx < DPI_STEPS.Length; idx++)
                 {
-                    if (idx != appliedIndex)
-                    {
-                        currentDPIScale = DPI_STEPS[idx] / 100.0;
-                        SetDPIComboIndexSilently(idx);
-                        ApplyDPIScale();
-                        MainGrid.UpdateLayout();
-                        UpdateLayout();
-                        appliedIndex = idx;
-                        changedScale = true;
-                    }
-                    else
-                    {
-                        MainGrid.UpdateLayout();
-                        UpdateLayout();
-                    }
+                    currentDPIScale = DPI_STEPS[idx] / 100.0;
+                    SetDPIComboIndexSilently(idx);
+                    ApplyDPIScale();
+                    MainGrid.UpdateLayout();
+                    UpdateLayout();
+                    appliedIndex = idx;
+                    changedScale = true;
 
                     if (!IsCurrentScaleOverflowingForTabFit(workArea))
                     {
                         targetIndex = idx;
-                        reducedScale = idx < startIndex;
-                        break;
+                        continue;
                     }
+
+                    targetIndex = idx - 1;
+                    reducedScale = true;
+                    break;
                 }
             }
             finally
@@ -549,7 +549,7 @@ namespace GMTPC.Tool
 
             if (changedScale && reducedScale)
             {
-                UpdateSecondaryStatus($"Tá»± giáº£m DPI Ä‘á»ƒ hiá»ƒn thá»‹ toÃ n bá»™: {DPI_STEPS[targetIndex]}%", "Cyan");
+                UpdateSecondaryStatus($"Tự giảm DPI để hiển thị toàn bộ: {DPI_STEPS[targetIndex]}%", "Cyan");
             }
         }
 

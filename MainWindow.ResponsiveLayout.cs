@@ -808,9 +808,27 @@ namespace GMTPC.Tool
                 Rect panelBounds = panel.TransformToAncestor(TabHostBorder)
                                         .TransformBounds(new Rect(0, 0, panel.ActualWidth, panel.ActualHeight));
 
+                double maxChildRight = panelBounds.Right;
+                double maxChildBottom = panelBounds.Bottom;
+                foreach (FrameworkElement child in panel.Children.OfType<FrameworkElement>())
+                {
+                    if (!child.IsVisible || child.ActualWidth <= 0 || child.ActualHeight <= 0) continue;
+
+                    try
+                    {
+                        Rect childBounds = child.TransformToAncestor(TabHostBorder)
+                                                .TransformBounds(new Rect(0, 0, child.ActualWidth, child.ActualHeight));
+                        maxChildRight = Math.Max(maxChildRight, childBounds.Right);
+                        maxChildBottom = Math.Max(maxChildBottom, childBounds.Bottom);
+                    }
+                    catch
+                    {
+                    }
+                }
+
                 return panelBounds.Left < leftLimit - tolerance ||
-                       panelBounds.Right > rightLimit + tolerance ||
-                       panelBounds.Bottom > bottomLimit + tolerance;
+                       maxChildRight > rightLimit + tolerance ||
+                       maxChildBottom > bottomLimit + tolerance;
             }
             catch
             {

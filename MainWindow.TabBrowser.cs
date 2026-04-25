@@ -1,5 +1,4 @@
-// AI Summary: 2026-04-25 - Added Brave browser install handler and Browser-tab selection/status wiring
-// AI Summary: 2026-04-18 - Added BtnEnableWorkspaceLTSC_Click event handler to enable Edge Workspaces via registry
+// AI Summary: 2026-04-25 - Added Brave browser install handler and Browser-tab selection/status wiring; removed Edge workspace button hook
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -214,39 +213,6 @@ namespace GMTPC.Tool
 
             UpdateInstallButtonState();
         }
-
-        private void BtnEnableWorkspaceLTSC_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                UpdateStatus("Đang bật Edge Workspaces...", "Cyan");
-                ProcessStartInfo psi = new ProcessStartInfo
-                {
-                    FileName = "cmd.exe",
-                    Arguments = "/c reg add \"HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\" /v EdgeWorkspacesEnabled /t REG_DWORD /d 1 /f",
-                    UseShellExecute = true,
-                    Verb = "runas"
-                };
-                Process process = Process.Start(psi);
-                if (process != null)
-                {
-                    process.WaitForExit();
-                    if (process.ExitCode == 0)
-                    {
-                        UpdateStatus("Đã bật Edge Workspaces thành công.", "Green");
-                    }
-                    else
-                    {
-                        UpdateStatus($"Lỗi khi bật Edge Workspaces: Exit code {process.ExitCode}", "Red");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                UpdateStatus($"Lỗi khi bật Edge Workspaces: {ex.Message}", "Red");
-            }
-        }
-
 
         private async Task InstallChromeAsync()
         {

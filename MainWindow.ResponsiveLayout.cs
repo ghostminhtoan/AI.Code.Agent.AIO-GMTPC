@@ -298,30 +298,36 @@ namespace GMTPC.Tool
 
             double scaledViewportWidth = monitorWidth / Math.Max(1.0, currentDPIScale);
             double available = Math.Max(260, scaledViewportWidth - (isCompact ? 56 : 92));
-            double itemSlotWidth = Math.Floor(Math.Min(available, isMonitorPortrait ? 420 : 360));
-            itemSlotWidth = Math.Max(260, itemSlotWidth);
+            int columns = Math.Max(1, Math.Min(2, (int)Math.Floor(available / 180.0)));
+            double gap = 8;
+            double itemSlotWidth = Math.Floor((available - ((columns - 1) * gap)) / columns);
+            itemSlotWidth = Math.Max(180, Math.Min(isMonitorPortrait ? 420 : 360, itemSlotWidth));
 
             panel.Orientation = Orientation.Horizontal;
             panel.ItemWidth = itemSlotWidth;
-            panel.Width = Math.Ceiling(itemSlotWidth);
+            panel.Width = Math.Ceiling((itemSlotWidth * columns) + ((columns - 1) * gap));
             panel.HorizontalAlignment = HorizontalAlignment.Center;
             panel.Margin = new Thickness(0);
 
             if (panel == PartitionPanel)
             {
-                if (ChkAomeiPartitionAssistant != null) ChkAomeiPartitionAssistant.Width = Math.Max(180, itemSlotWidth - 10);
-                if (ChkDiskGenius != null) ChkDiskGenius.Width = Math.Max(180, itemSlotWidth - 10);
+                double childWidth = Math.Max(180, itemSlotWidth - 10);
+                if (ChkAomeiPartitionAssistant != null) ChkAomeiPartitionAssistant.Width = childWidth;
+                if (ChkDiskGenius != null) ChkDiskGenius.Width = childWidth;
             }
             else if (panel == DriverPanel)
             {
-                if (Chk3DPChip != null) Chk3DPChip.Width = Math.Max(180, itemSlotWidth - 10);
-                if (Chk3DPNet != null) Chk3DPNet.Width = Math.Max(180, itemSlotWidth - 10);
+                double childWidth = Math.Max(180, itemSlotWidth - 10);
+                if (Chk3DPChip != null) Chk3DPChip.Width = childWidth;
+                if (Chk3DPNet != null) Chk3DPNet.Width = childWidth;
             }
             else if (panel == BrowserPanel)
             {
-                if (ChkChrome != null) ChkChrome.Width = Math.Max(180, itemSlotWidth - 10);
-                if (ChkCocCoc != null) ChkCocCoc.Width = Math.Max(180, itemSlotWidth - 10);
-                if (ChkEdge != null) ChkEdge.Width = Math.Max(180, itemSlotWidth - 10);
+                double childWidth = Math.Max(180, itemSlotWidth - 10);
+                if (ChkChrome != null) ChkChrome.Width = childWidth;
+                if (ChkCocCoc != null) ChkCocCoc.Width = childWidth;
+                if (ChkEdge != null) ChkEdge.Width = childWidth;
+                if (ChkBrave != null) ChkBrave.Width = childWidth;
             }
 
             return true;
@@ -410,10 +416,7 @@ namespace GMTPC.Tool
 
             if (ButtonsBorder != null) ButtonsBorder.Visibility = chromeVisibility;
             if (ProgressBorder != null) ProgressBorder.Visibility = chromeVisibility;
-            if (BuildNumberHeaderTextBlock != null)
-            {
-                BuildNumberHeaderTextBlock.Visibility = isSystemInformationTab ? Visibility.Visible : Visibility.Collapsed;
-            }
+            if (BuildNumberHeaderTextBlock != null) BuildNumberHeaderTextBlock.Visibility = Visibility.Visible;
         }
 
         private bool IsSystemInformationTabSelected()

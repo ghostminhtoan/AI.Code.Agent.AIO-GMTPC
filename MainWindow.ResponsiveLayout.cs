@@ -1,3 +1,4 @@
+﻿// AI Summary: 2026-04-25 - Added maximize-then-fit DPI logic for tab switching so each selected tab auto-zooms to the largest fully visible scale.
 // AI Summary: 2026-04-23 - Added sparse Windows tab overflow detection so DPI reduces before content overlaps buttons.
 // WrapPanels now size to the computed column count instead of stretching across the whole monitor.
 // =======================================================================
@@ -20,6 +21,7 @@ namespace GMTPC.Tool
     {
         private bool _isApplyingResponsiveLayout;
         private bool _isAutoFittingScale;
+        private bool _hasCompletedInitialTabScaleFit;
 
         private const int GWL_STYLE = -16;
         private const int WS_MAXIMIZEBOX = 0x00010000;
@@ -69,7 +71,7 @@ namespace GMTPC.Tool
                 ApplyResponsiveLayout();
                 MainGrid.UpdateLayout();
                 UpdateSystemInformationChromeVisibility();
-                if (!ShouldSkipAutoFitScale()) QueueAutoFitScaleToCurrentMonitor();
+                QueueMaximizeFitScaleForSelectedTab();
             }));
         }
 
@@ -97,7 +99,15 @@ namespace GMTPC.Tool
                 ApplyProgressSizing(isCompact);
                 UpdateSystemInformationChromeVisibility();
                 KeepWindowInsideCurrentMonitor(workArea);
-                if (!ShouldSkipAutoFitScale()) QueueAutoFitScaleToCurrentMonitor();
+                if (!_hasCompletedInitialTabScaleFit && MainTabControl?.SelectedItem != null)
+                {
+                    _hasCompletedInitialTabScaleFit = true;
+                    QueueMaximizeFitScaleForSelectedTab();
+                }
+                else if (!ShouldSkipAutoFitScale())
+                {
+                    QueueAutoFitScaleToCurrentMonitor();
+                }
             }
             finally
             {
@@ -409,48 +419,53 @@ namespace GMTPC.Tool
             catch { }
         }
 
-        private void QueueAutoFitScaleToCurrentMonitor()
+        private void QueueAutoFitScaleToCurrentMonitor(bool maximizeFirst = false)
         {
-            if (ShouldSkipAutoFitScale()) return;
+            if (!maximizeFirst && ShouldSkipAutoFitScale()) return;
             if (_isAutoFittingScale) return;
 
             Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.ApplicationIdle, new Action(() =>
             {
-                AutoFitScaleToCurrentMonitor();
+                AutoFitScaleToCurrentMonitor(maximizeFirst);
             }));
         }
 
-        private void AutoFitScaleToCurrentMonitor()
+        private void AutoFitScaleToCurrentMonitor(bool maximizeFirst = false)
         {
-            if (ShouldSkipAutoFitScale()) return;
+            if (!maximizeFirst && ShouldSkipAutoFitScale()) return;
             if (_isAutoFittingScale || currentDPIScale <= 0.5) return;
             bool reducedScale = false;
+            int originalIndex = GetClosestDpiStepIndex((int)Math.Round(currentDPIScale * 100.0));
+            int targetIndex = originalIndex;
 
             try
             {
                 _isAutoFittingScale = true;
 
                 Rect workArea = GetCurrentMonitorWorkAreaDip();
-                const double margin = 10.0;
-                double maxAllowedWidth = Math.Max(0, workArea.Width - margin);
-                double maxAllowedHeight = Math.Max(0, workArea.Height - margin);
+                int startIndex = maximizeFirst ? DPI_STEPS.Length - 1 : originalIndex;
 
-                double desiredWidth = Math.Max(ActualWidth, DesiredSize.Width);
-                double desiredHeight = Math.Max(ActualHeight, DesiredSize.Height);
-                bool tooWide = desiredWidth > maxAllowedWidth + 1;
-                bool tooTall = desiredHeight > maxAllowedHeight + 1 || ActualHeight >= maxAllowedHeight - 1;
-                bool clippedContent = HasClippedScrollViewerContent() || HasSparseWindowsTabOverflow();
+                if (!maximizeFirst && !IsCurrentScaleOverflowing(workArea)) return;
 
-                if (!tooWide && !tooTall && !clippedContent) return;
+                for (int idx = startIndex; idx >= 0; idx--)
+                {
+                    if (idx != targetIndex)
+                    {
+                        SetCurrentDpiStepSilently(idx);
+                        ApplyDPIScale();
+                    }
 
-                int currentPercent = (int)Math.Round(currentDPIScale * 100.0);
-                int idx = Array.IndexOf(DPI_STEPS, currentPercent);
-                if (idx <= 0) return;
+                    MainGrid.UpdateLayout();
+                    UpdateLayout();
 
-                currentDPIScale = DPI_STEPS[idx - 1] / 100.0;
-                SetDPIComboIndexSilently(idx - 1);
-                ApplyDPIScale();
-                UpdateSecondaryStatus($"Tự giảm DPI để hiển thị toàn bộ: {DPI_STEPS[idx - 1]}%", "Cyan");
+                    if (!IsCurrentScaleOverflowing(workArea))
+                    {
+                        targetIndex = idx;
+                        reducedScale = idx < startIndex;
+                        break;
+                    }
+                }
+                UpdateSecondaryStatus($"Tá»± giáº£m DPI Ä‘á»ƒ hiá»ƒn thá»‹ toÃ n bá»™: {DPI_STEPS[targetIndex]}%", "Cyan");
                 reducedScale = true;
             }
             finally
@@ -462,6 +477,129 @@ namespace GMTPC.Tool
             {
                 QueueAutoFitScaleToCurrentMonitor();
             }
+        }
+
+        private void QueueMaximizeFitScaleForSelectedTab()
+        {
+            if (_isAutoFittingScale) return;
+
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.ApplicationIdle, new Action(() =>
+            {
+                MaximizeFitScaleForSelectedTab();
+            }));
+        }
+
+        private void MaximizeFitScaleForSelectedTab()
+        {
+            if (_isAutoFittingScale || currentDPIScale <= 0.5) return;
+
+            bool changedScale = false;
+            bool reducedScale = false;
+            int originalIndex = GetClosestDpiStepIndexForTabFit((int)Math.Round(currentDPIScale * 100.0));
+            int appliedIndex = originalIndex;
+            int targetIndex = originalIndex;
+
+            try
+            {
+                _isAutoFittingScale = true;
+                _suppressPrimaryDpiStatus = true;
+
+                Rect workArea = GetCurrentMonitorWorkAreaDip();
+                int startIndex = DPI_STEPS.Length - 1;
+
+                for (int idx = startIndex; idx >= 0; idx--)
+                {
+                    if (idx != appliedIndex)
+                    {
+                        currentDPIScale = DPI_STEPS[idx] / 100.0;
+                        SetDPIComboIndexSilently(idx);
+                        ApplyDPIScale();
+                        MainGrid.UpdateLayout();
+                        UpdateLayout();
+                        appliedIndex = idx;
+                        changedScale = true;
+                    }
+                    else
+                    {
+                        MainGrid.UpdateLayout();
+                        UpdateLayout();
+                    }
+
+                    if (!IsCurrentScaleOverflowingForTabFit(workArea))
+                    {
+                        targetIndex = idx;
+                        reducedScale = idx < startIndex;
+                        break;
+                    }
+                }
+            }
+            finally
+            {
+                _suppressPrimaryDpiStatus = false;
+                _isAutoFittingScale = false;
+            }
+
+            if (targetIndex != appliedIndex)
+            {
+                currentDPIScale = DPI_STEPS[targetIndex] / 100.0;
+                SetDPIComboIndexSilently(targetIndex);
+                ApplyDPIScale();
+                changedScale = true;
+            }
+
+            if (changedScale && reducedScale)
+            {
+                UpdateSecondaryStatus($"Tá»± giáº£m DPI Ä‘á»ƒ hiá»ƒn thá»‹ toÃ n bá»™: {DPI_STEPS[targetIndex]}%", "Cyan");
+            }
+        }
+
+        private int GetClosestDpiStepIndexForTabFit(int percent)
+        {
+            int closest = 0;
+            int minDiff = int.MaxValue;
+
+            for (int i = 0; i < DPI_STEPS.Length; i++)
+            {
+                int diff = Math.Abs(DPI_STEPS[i] - percent);
+                if (diff < minDiff)
+                {
+                    minDiff = diff;
+                    closest = i;
+                }
+            }
+
+            return closest;
+        }
+
+        private bool IsCurrentScaleOverflowingForTabFit(Rect workArea)
+        {
+            const double margin = 10.0;
+            double maxAllowedWidth = Math.Max(0, workArea.Width - margin);
+            double maxAllowedHeight = Math.Max(0, workArea.Height - margin);
+
+            double desiredWidth = Math.Max(ActualWidth, DesiredSize.Width);
+            double desiredHeight = Math.Max(ActualHeight, DesiredSize.Height);
+            bool tooWide = desiredWidth > maxAllowedWidth + 1;
+            bool tooTall = desiredHeight > maxAllowedHeight + 1 || ActualHeight >= maxAllowedHeight - 1;
+            bool clippedContent = HasClippedScrollViewerContent() || HasSparseWindowsTabOverflow();
+
+            return tooWide || tooTall || clippedContent;
+        }
+
+        private int GetClosestDpiStepIndex(int percent)
+        {
+            return GetClosestDpiStepIndexForTabFit(percent);
+        }
+
+        private bool IsCurrentScaleOverflowing(Rect workArea)
+        {
+            return IsCurrentScaleOverflowingForTabFit(workArea);
+        }
+
+        private void SetCurrentDpiStepSilently(int index)
+        {
+            currentDPIScale = DPI_STEPS[Math.Max(0, Math.Min(DPI_STEPS.Length - 1, index))] / 100.0;
+            SetDPIComboIndexSilently(Math.Max(0, Math.Min(DPI_STEPS.Length - 1, index)));
         }
 
         private void SetDPIComboIndexSilently(int index)
@@ -587,3 +725,4 @@ namespace GMTPC.Tool
         }
     }
 }
+

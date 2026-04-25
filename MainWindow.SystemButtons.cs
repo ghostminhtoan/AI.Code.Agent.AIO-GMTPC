@@ -4,6 +4,7 @@
 //            SelectNoneAllTabs, Install, Pause, Resume, Refresh Color,
 //            BtnDownloadPage, DPI controls
 // Cập nhật gần đây:
+//   - 2026-04-25: Suppressed repetitive primary DPI status messages while auto-fitting scale for the selected tab
 //   - 2026-04-25: Updated Subtitle Edit cached download link to the new GMTPC portable release URL
 //   - 2026-04-24: Added ChkDownloadSampleVideo to Subtitle select/install flows, download-link cache, and hover tooltip
 //   - 2026-04-23: Fixed Ghost of Tsushima copy-link cache and added WintoHDD to Select None flows
@@ -50,6 +51,7 @@ namespace GMTPC.Tool
         // ===================== DPI Scale Fields =====================
         private double currentDPIScale = 1.0;
         private bool _isUpdatingDpiSelection;
+        private bool _suppressPrimaryDpiStatus;
         private readonly int[] DPI_STEPS = new int[] { 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 200 };
 
         private void ApplyDPIScale()
@@ -110,7 +112,10 @@ namespace GMTPC.Tool
                 }
             }
 
-            UpdateStatus($"Đã đặt tỷ lệ DPI: {dpiText}", "Green");
+            if (!_suppressPrimaryDpiStatus)
+            {
+                UpdateStatus($"Đã đặt tỷ lệ DPI: {dpiText}", "Green");
+            }
         }
 
         private void ResetDPIButtonStates() { /* Kept for compatibility */ }

@@ -228,6 +228,11 @@ namespace GMTPC.Tool
                     continue;
                 }
 
+                if (ApplyPortraitStrictPanelSizing(panel, monitorWidth, isMonitorPortrait, isCompact))
+                {
+                    continue;
+                }
+
                 bool longTextPanel = panel == WindowsPanel || panel == WindowsModPanel;
                 double desiredItemWidth = longTextPanel ? (denseLandscape ? 270 : 300) : (denseLandscape ? 190 : (zoomedOutLandscape ? 245 : 205));
                 int columns = Math.Max(1, Math.Min(maxColumns, (int)Math.Floor(available / desiredItemWidth)));
@@ -282,6 +287,43 @@ namespace GMTPC.Tool
             panel.Margin = new Thickness(0);
 
             SetSparseWindowsChildWidths(panel, itemSlotWidth);
+            return true;
+        }
+
+        private bool ApplyPortraitStrictPanelSizing(WrapPanel panel, double monitorWidth, bool isMonitorPortrait, bool isCompact)
+        {
+            bool isStrictPortraitPanel = panel == PartitionPanel || panel == DriverPanel || panel == BrowserPanel;
+            if (!isStrictPortraitPanel) return false;
+            if (!isMonitorPortrait && !isCompact) return false;
+
+            double scaledViewportWidth = monitorWidth / Math.Max(1.0, currentDPIScale);
+            double available = Math.Max(260, scaledViewportWidth - (isCompact ? 56 : 92));
+            double itemSlotWidth = Math.Floor(Math.Min(available, isMonitorPortrait ? 420 : 360));
+            itemSlotWidth = Math.Max(260, itemSlotWidth);
+
+            panel.Orientation = Orientation.Horizontal;
+            panel.ItemWidth = itemSlotWidth;
+            panel.Width = Math.Ceiling(itemSlotWidth);
+            panel.HorizontalAlignment = HorizontalAlignment.Center;
+            panel.Margin = new Thickness(0);
+
+            if (panel == PartitionPanel)
+            {
+                if (ChkAomeiPartitionAssistant != null) ChkAomeiPartitionAssistant.Width = Math.Max(180, itemSlotWidth - 10);
+                if (ChkDiskGenius != null) ChkDiskGenius.Width = Math.Max(180, itemSlotWidth - 10);
+            }
+            else if (panel == DriverPanel)
+            {
+                if (Chk3DPChip != null) Chk3DPChip.Width = Math.Max(180, itemSlotWidth - 10);
+                if (Chk3DPNet != null) Chk3DPNet.Width = Math.Max(180, itemSlotWidth - 10);
+            }
+            else if (panel == BrowserPanel)
+            {
+                if (ChkChrome != null) ChkChrome.Width = Math.Max(180, itemSlotWidth - 10);
+                if (ChkCocCoc != null) ChkCocCoc.Width = Math.Max(180, itemSlotWidth - 10);
+                if (ChkEdge != null) ChkEdge.Width = Math.Max(180, itemSlotWidth - 10);
+            }
+
             return true;
         }
 

@@ -599,11 +599,13 @@ namespace GMTPC.Tool
                 ApplyResponsiveLayout();
                 MainGrid.UpdateLayout();
                 UpdateSystemInformationChromeVisibility();
+                ResetSelectedTabDpiLimitTo100Percent();
                 ResetCurrentTabDpiTo100Percent();
                 _hasCompletedInitialTabScaleFit = true;
 
                 if (IsSystemInformationTabSelected())
                 {
+                    SetSelectedTabDpiLimitIndex(GetBase100DpiIndex());
                     return;
                 }
 
@@ -692,6 +694,8 @@ namespace GMTPC.Tool
                 {
                     UpdateSecondaryStatus($"Tự giảm DPI để hiển thị toàn bộ: {DPI_STEPS[targetIndex]}%", "Cyan");
                 }
+
+                SetSelectedTabDpiLimitIndex(targetIndex);
             }
             finally
             {

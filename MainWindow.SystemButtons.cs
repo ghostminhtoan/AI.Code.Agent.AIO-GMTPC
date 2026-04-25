@@ -4,6 +4,7 @@
 //            SelectNoneAllTabs, Install, Pause, Resume, Refresh Color,
 //            BtnDownloadPage, DPI controls
 // Cập nhật gần đây:
+//   - 2026-04-25: Locked manual DPI changes to each tab's auto-fit ceiling until the next tab selection resets and recomputes it
 //   - 2026-04-25: Kept window max height independent from DPI so sparse tabs clamp manual zoom before becoming oversized
 //   - 2026-04-25: Added Brave to Browser tab selection, install, hover, and download-link cache flows
 //   - 2026-04-25: Suppressed repetitive primary DPI status messages while auto-fitting scale for the selected tab
@@ -54,6 +55,7 @@ namespace GMTPC.Tool
         private double currentDPIScale = 1.0;
         private bool _isUpdatingDpiSelection;
         private bool _suppressPrimaryDpiStatus;
+        private readonly Dictionary<string, int> _tabMaxDpiIndexByHeader = new Dictionary<string, int>(StringComparer.Ordinal);
         private readonly int[] DPI_STEPS = new int[] { 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 200 };
 
         private void ApplyDPIScale()
@@ -138,11 +140,70 @@ namespace GMTPC.Tool
             return closest;
         }
 
+        private string GetSelectedTabHeader()
+        {
+            try
+            {
+                if (MainTabControl?.SelectedItem is TabItem selectedTab)
+                {
+                    return selectedTab.Header?.ToString() ?? string.Empty;
+                }
+            }
+            catch
+            {
+            }
+
+            return string.Empty;
+        }
+
+        private int GetBase100DpiIndex()
+        {
+            int baseIndex = Array.IndexOf(DPI_STEPS, 100);
+            if (baseIndex >= 0) return baseIndex;
+            return GetClosestDpiStepIndex(100);
+        }
+
+        private void ResetSelectedTabDpiLimitTo100Percent()
+        {
+            string header = GetSelectedTabHeader();
+            if (string.IsNullOrWhiteSpace(header)) return;
+
+            _tabMaxDpiIndexByHeader[header] = GetBase100DpiIndex();
+        }
+
+        private void SetSelectedTabDpiLimitIndex(int maxIndex)
+        {
+            string header = GetSelectedTabHeader();
+            if (string.IsNullOrWhiteSpace(header)) return;
+
+            maxIndex = Math.Max(0, Math.Min(DPI_STEPS.Length - 1, maxIndex));
+            _tabMaxDpiIndexByHeader[header] = maxIndex;
+        }
+
+        private int GetSelectedTabDpiLimitIndex()
+        {
+            if (IsSystemInformationTabSelected())
+            {
+                return GetBase100DpiIndex();
+            }
+
+            string header = GetSelectedTabHeader();
+            if (!string.IsNullOrWhiteSpace(header) && _tabMaxDpiIndexByHeader.TryGetValue(header, out int maxIndex))
+            {
+                return Math.Max(0, Math.Min(DPI_STEPS.Length - 1, maxIndex));
+            }
+
+            return DPI_STEPS.Length - 1;
+        }
+
         private bool TrySetDpiIndexSafelyForCurrentTab(int targetIndex)
         {
+            if (_isAutoFittingScale) return false;
             if (ForceSystemInformationDpiTo100Percent()) return false;
 
+            int maxAllowedIndex = GetSelectedTabDpiLimitIndex();
             targetIndex = Math.Max(0, Math.Min(DPI_STEPS.Length - 1, targetIndex));
+            targetIndex = Math.Min(targetIndex, maxAllowedIndex);
             int currentIndex = GetCurrentDpiStepIndex();
             if (targetIndex == currentIndex) return false;
 

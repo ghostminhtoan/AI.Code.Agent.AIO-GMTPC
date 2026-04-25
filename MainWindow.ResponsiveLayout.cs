@@ -29,7 +29,6 @@ namespace GMTPC.Tool
         private int _tabScaleFitRequestId;
         private CancellationTokenSource _tabScaleFitDelayCts;
         private const int TabScaleFitDelayMs = 700;
-        private const int TabScaleFitStepDelayMs = 80;
 
         private const int GWL_STYLE = -16;
         private const int WS_MAXIMIZEBOX = 0x00010000;
@@ -569,8 +568,6 @@ namespace GMTPC.Tool
                 changedScale = true;
 
                 await Task.Yield();
-                await Task.Delay(TabScaleFitStepDelayMs);
-
                 if (requestId != _tabScaleFitRequestId) return;
 
                 for (int idx = baseIndex + 1; idx < DPI_STEPS.Length; idx++)
@@ -586,9 +583,6 @@ namespace GMTPC.Tool
                     changedScale = true;
 
                     await Task.Yield();
-                    await Task.Delay(TabScaleFitStepDelayMs);
-
-                    if (requestId != _tabScaleFitRequestId) return;
 
                     if (!IsCurrentScaleOverflowingForTabFit(workArea))
                     {

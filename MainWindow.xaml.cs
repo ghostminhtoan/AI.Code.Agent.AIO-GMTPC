@@ -92,9 +92,19 @@ namespace GMTPC.Tool
         private void Window_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
             if (e.Delta > 0)
+            {
+                if (IsManualDpiIncreaseLockedForCurrentTab())
+                {
+                    e.Handled = true;
+                    return;
+                }
+
                 BtnDPIPlus_Click(sender, new RoutedEventArgs());
+            }
             else if (e.Delta < 0)
+            {
                 BtnDPIMinus_Click(sender, new RoutedEventArgs());
+            }
             e.Handled = true;
         }
     }

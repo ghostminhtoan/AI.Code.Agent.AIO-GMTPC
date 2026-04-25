@@ -119,6 +119,12 @@ namespace GMTPC.Tool
         }
 
         private void ResetDPIButtonStates() { /* Kept for compatibility */ }
+        private bool IsManualDpiIncreaseLockedForCurrentTab()
+        {
+            if (IsSystemInformationTabSelected()) return true;
+            return !(IsSelectedTab("Windows - Microsoft") || IsSelectedTab("Windows Mod MMT"));
+        }
+
         private bool ForceSystemInformationDpiTo100Percent()
         {
             if (!IsSystemInformationTabSelected()) return false;
@@ -158,6 +164,7 @@ namespace GMTPC.Tool
         private void BtnDPIPlus_Click(object sender, RoutedEventArgs e)
         {
             if (ForceSystemInformationDpiTo100Percent()) return;
+            if (IsManualDpiIncreaseLockedForCurrentTab()) return;
 
             int currentPercent = (int)Math.Round(currentDPIScale * 100.0);
             int idx = Array.IndexOf(DPI_STEPS, currentPercent);
@@ -207,6 +214,25 @@ namespace GMTPC.Tool
                     int diff = Math.Abs(DPI_STEPS[i] - sel);
                     if (diff < minDiff) { minDiff = diff; closest = i; }
                 }
+                int currentIndex = Array.IndexOf(DPI_STEPS, (int)Math.Round(currentDPIScale * 100.0));
+                if (currentIndex < 0)
+                {
+                    currentIndex = 0;
+                    int currentDiff = int.MaxValue;
+                    int currentPercent = (int)Math.Round(currentDPIScale * 100.0);
+                    for (int i = 0; i < DPI_STEPS.Length; i++)
+                    {
+                        int diff = Math.Abs(DPI_STEPS[i] - currentPercent);
+                        if (diff < currentDiff) { currentDiff = diff; currentIndex = i; }
+                    }
+                }
+
+                if (IsManualDpiIncreaseLockedForCurrentTab() && closest > currentIndex)
+                {
+                    SetDPIComboIndexSilently(currentIndex);
+                    return;
+                }
+
                 currentDPIScale = DPI_STEPS[closest] / 100.0;
                 // Keep combobox selection consistent
                 try { if (CboDPIValue != null && closest >= 0 && closest < CboDPIValue.Items.Count) CboDPIValue.SelectedIndex = closest; } catch { }

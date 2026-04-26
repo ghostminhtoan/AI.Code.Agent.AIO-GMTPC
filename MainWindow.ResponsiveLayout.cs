@@ -255,7 +255,7 @@ namespace GMTPC.Tool
             bool zoomedOutLandscape = !isMonitorPortrait && currentDPIScale < 1.0;
             double logicalViewportWidth = GetSelectedTabLogicalViewportWidth(monitorWidth);
             double available = Math.Max(240, logicalViewportWidth - (denseLandscape ? 18 : (isCompact ? 16 : 24)));
-            int maxColumns = isMonitorPortrait ? 2 : 3;
+            int maxColumns = isMonitorPortrait ? 2 : 4;
 
             foreach (WrapPanel panel in GetInstallPanels())
             {
@@ -314,7 +314,7 @@ namespace GMTPC.Tool
             double scaledViewportWidth = GetSelectedTabLogicalViewportWidth(monitorWidth);
             double available = Math.Max(240, scaledViewportWidth - (isCompact ? 16 : 24));
             bool isLandscape = !IsPortrait(GetCurrentMonitorWorkAreaDip()) && !isCompact;
-            int targetColumns = isLandscape ? 3 : (isWindowsTab ? 1 : 2);
+            int targetColumns = isLandscape ? 4 : (isWindowsTab ? 1 : 2);
             int itemCount = isWindowsTab ? 1 : 4;
             int columns = Math.Max(1, Math.Min(targetColumns, itemCount));
             double gap = 8;
@@ -1113,4 +1113,3 @@ namespace GMTPC.Tool
         }
     }
 }
-

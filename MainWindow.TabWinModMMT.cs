@@ -235,6 +235,13 @@ namespace GMTPC.Tool
                     zipFileName = $"ventoy-{latestVersionName.TrimStart('v')}-windows.zip";
                 }
 
+                UpdateStatus("Đang probe nút Download cuối cùng của Ventoy...", "Cyan");
+                string finalVentoyDownloadUrl = await ResolveVentoyFinalDownloadUrlAsync(ventoyZipDownloadUrl);
+                if (string.IsNullOrEmpty(finalVentoyDownloadUrl))
+                {
+                    throw new InvalidOperationException("Không tìm thấy nút Download cuối cùng của Ventoy.");
+                }
+
                 string versionFolderPath = Path.Combine(VENTOY_EXTRACT_ROOT, latestVersionName);
                 string zipPath = Path.Combine(VENTOY_EXTRACT_ROOT, zipFileName);
 
@@ -252,7 +259,7 @@ namespace GMTPC.Tool
 
                 UpdateStatus($"Đã tìm thấy file: {zipFileName}", "Cyan");
                 UpdateStatus("Đang tải Ventoy windows.zip...", "Cyan");
-                await DownloadWithProgressAsync(ventoyZipDownloadUrl, zipPath, "Ventoy");
+                await DownloadWithProgressAsync(finalVentoyDownloadUrl, zipPath, "Ventoy");
 
                 UpdateStatus("Đang giải nén Ventoy...", "Cyan");
                 Directory.CreateDirectory(versionFolderPath);
@@ -347,6 +354,49 @@ namespace GMTPC.Tool
                 {
                     string fileName = $"ventoy-{match.Groups["ver"].Value}-windows.zip";
                     return Tuple.Create(NormalizeSourceForgeDownloadUrl(match.Groups["href"].Value), fileName);
+                }
+            }
+
+            return null;
+        }
+
+        private async Task<string> ResolveVentoyFinalDownloadUrlAsync(string ventoyZipDownloadUrl)
+        {
+            if (string.IsNullOrEmpty(ventoyZipDownloadUrl))
+            {
+                return null;
+            }
+
+            if (ventoyZipDownloadUrl.IndexOf("downloads.sourceforge.net", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return ventoyZipDownloadUrl;
+            }
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("GMTPC-Tool");
+                string html = await client.GetStringAsync(ventoyZipDownloadUrl);
+
+                Match metaRefreshMatch = Regex.Match(
+                    html ?? string.Empty,
+                    @"<meta[^>]+http-equiv\s*=\s*[""']refresh[""'][^>]+content\s*=\s*[""'][^""']*url\s*=\s*(?<url>[^""'>\s]+)",
+                    RegexOptions.IgnoreCase);
+                if (metaRefreshMatch.Success)
+                {
+                    string metaRefreshUrl = NormalizeSourceForgeDownloadUrl(metaRefreshMatch.Groups["url"].Value);
+                    if (!string.IsNullOrEmpty(metaRefreshUrl))
+                    {
+                        return metaRefreshUrl;
+                    }
+                }
+
+                Match directDownloadMatch = Regex.Match(
+                    html ?? string.Empty,
+                    @"href\s*=\s*[""'](?<url>https?:\/\/downloads\.sourceforge\.net\/[^""']+)[""']",
+                    RegexOptions.IgnoreCase);
+                if (directDownloadMatch.Success)
+                {
+                    return directDownloadMatch.Groups["url"].Value.Replace("&amp;", "&");
                 }
             }
 

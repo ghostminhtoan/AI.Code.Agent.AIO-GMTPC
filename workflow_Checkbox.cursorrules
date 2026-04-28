@@ -18,6 +18,7 @@ Mục tiêu của bạn là tuân thủ TUYỆT ĐỐI kiến trúc Partial Clas
 - Defender exclusion luôn được tạo cho %LocalAppdata%\GMTPC\GMTPC Tools\, còn các thư mục khác thì làm theo VÍ DỤ:
 nếu chọn ổ D thì sẽ tự tạo  defender exclusion cho D:\Temp Folder, khi đang ở ổ D:\ và chọn ổ E:\ thì sẽ xóa defender exclusion D:\Temp Folder rồi tạo E:\Temp Folder và tạo defender exclusion cho E:\Temp Folder. Trong toàn bộ trường hợp đổi qua đổi lại sẽ không bao giờ xóa defender exclusion của %LocalAppdata%\GMTPC\GMTPC Tools\
 - File trong tab Windows Mod MMT luôn luôn tải file về ổ C:\ và sẽ không bao giờ bị xóa kể cả sau khi tắt project.
+- Ventoy trong tab Windows Mod MMT là flow probe 2 tầng: tìm version cao nhất ở SourceForge, rồi probe file `ventoy-...windows.zip`, giải nén ra `C:\Ventoy`, và chạy `ventoy2disk.exe`.
 </global_rules>
 
 <file_architecture>

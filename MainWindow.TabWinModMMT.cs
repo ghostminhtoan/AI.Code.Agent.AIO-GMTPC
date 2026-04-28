@@ -12,11 +12,12 @@ using HtmlAgilityPack;
 
 namespace GMTPC.Tool
 {
-    // =============================================================================
-    // MainWindow.TabWinModMMT.cs
-    // Updated: 2026-04-22 - Added WinPE to HDD admin PowerShell button
-    // Updated: 2026-03-17 - Changed download URLs to new links without boot.windowsRE
-    // =============================================================================
+// =============================================================================
+// MainWindow.TabWinModMMT.cs
+// Updated: 2026-04-28 - Added Ventoy SourceForge probe/install flow and checkbox wiring
+// Updated: 2026-04-22 - Added WinPE to HDD admin PowerShell button
+// Updated: 2026-03-17 - Changed download URLs to new links without boot.windowsRE
+// =============================================================================
     public partial class MainWindow
     {
         // GitHub download URLs for Win 10 LTSC IOT 21H2 (3 parts)
@@ -32,6 +33,7 @@ namespace GMTPC.Tool
         private const string WIN10_22H2_2024_DEC_PART4_URL = "https://github.com/ghostminhtoan/MMT/releases/download/windows/win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso.004";
         private const string WIN10_22H2_2024_DEC_PART5_URL = "https://github.com/ghostminhtoan/MMT/releases/download/windows/win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso.005";
         private const string WIN10_22H2_2024_DEC_FINAL_NAME = "win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso";
+        private const string VENTOY_EXTRACT_ROOT = @"C:\Ventoy";
 
         // WintoHDD - Use InstallWithPromptAsync for Yes/No dialog with NTFS Compression check
         private async Task InstallWintoHDDAsync()
@@ -152,6 +154,20 @@ namespace GMTPC.Tool
             UpdateInstallButtonState();
         }
 
+        private void ChkVentoy_Click(object sender, RoutedEventArgs e)
+        {
+            if (ChkVentoy.IsChecked == true)
+            {
+                UpdateStatus("Đã chọn: Ventoy", "Green");
+            }
+            else
+            {
+                UpdateStatus("Đã hủy chọn: Ventoy", "Yellow");
+            }
+
+            UpdateInstallButtonState();
+        }
+
         private void ChkWin10LtscIot21H2_Click(object sender, RoutedEventArgs e)
         {
             UpdateInstallButtonState();
@@ -187,6 +203,258 @@ namespace GMTPC.Tool
             {
                 UpdateStatus($"Lỗi khi chạy WinPE to HDD: {ex.Message}", "Red");
             }
+        }
+
+        private async Task InstallVentoyAsync()
+        {
+            try
+            {
+                Directory.CreateDirectory(VENTOY_EXTRACT_ROOT);
+
+                UpdateStatus("Đang probe version Ventoy mới nhất...", "Cyan");
+                string latestVersionFolderUrl = await GetLatestVentoyVersionFolderUrlAsync();
+                if (string.IsNullOrEmpty(latestVersionFolderUrl))
+                {
+                    UpdateStatus("Không tìm thấy version Ventoy mới nhất!", "Red");
+                    return;
+                }
+
+                string latestVersionName = GetVentoyVersionNameFromUrl(latestVersionFolderUrl);
+                UpdateStatus($"Đã chọn Ventoy {latestVersionName}", "Green");
+
+                UpdateStatus("Đang probe file Ventoy windows.zip...", "Cyan");
+                Tuple<string, string> ventoyZipDownloadInfo = await GetVentoyWindowsZipDownloadInfoAsync(latestVersionFolderUrl);
+                if (ventoyZipDownloadInfo == null || string.IsNullOrEmpty(ventoyZipDownloadInfo.Item1))
+                {
+                    UpdateStatus("Không tìm thấy file Ventoy windows.zip!", "Red");
+                    return;
+                }
+
+                string ventoyZipDownloadUrl = ventoyZipDownloadInfo.Item1;
+                string zipFileName = ventoyZipDownloadInfo.Item2;
+                if (string.IsNullOrEmpty(zipFileName))
+                {
+                    zipFileName = $"ventoy-{latestVersionName.TrimStart('v')}-windows.zip";
+                }
+
+                string versionFolderPath = Path.Combine(VENTOY_EXTRACT_ROOT, latestVersionName);
+                string zipPath = Path.Combine(VENTOY_EXTRACT_ROOT, zipFileName);
+
+                if (Directory.Exists(versionFolderPath))
+                {
+                    try
+                    {
+                        Directory.Delete(versionFolderPath, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        UpdateStatus($"Không xóa được folder Ventoy cũ: {ex.Message}", "Orange");
+                    }
+                }
+
+                UpdateStatus("Đang tải Ventoy windows.zip...", "Cyan");
+                await DownloadWithProgressAsync(ventoyZipDownloadUrl, zipPath, "Ventoy");
+
+                UpdateStatus("Đang giải nén Ventoy...", "Cyan");
+                Directory.CreateDirectory(versionFolderPath);
+                ZipFile.ExtractToDirectory(zipPath, versionFolderPath);
+
+                string ventoyExePath = FindVentoy2DiskExe(versionFolderPath);
+                if (string.IsNullOrEmpty(ventoyExePath))
+                {
+                    UpdateStatus("Không tìm thấy ventoy2disk.exe sau khi giải nén!", "Red");
+                    return;
+                }
+
+                UpdateStatus("Đang mở Ventoy2Disk với quyền administrator...", "Cyan");
+                ProcessStartInfo startInfo = new ProcessStartInfo
+                {
+                    FileName = ventoyExePath,
+                    WorkingDirectory = Path.GetDirectoryName(ventoyExePath),
+                    UseShellExecute = true,
+                    Verb = "runas"
+                };
+
+                Process process = Process.Start(startInfo);
+                if (process != null)
+                {
+                    UpdateStatus("Ventoy2Disk đã được mở!", "Green");
+                }
+            }
+            catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223)
+            {
+                UpdateStatus("Đã hủy mở Ventoy2Disk.", "Yellow");
+            }
+            catch (Exception ex)
+            {
+                UpdateStatus($"Lỗi khi cài đặt Ventoy: {ex.Message}", "Red");
+            }
+        }
+
+        private async Task<string> GetLatestVentoyVersionFolderUrlAsync()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("GMTPC-Tool");
+                string html = await client.GetStringAsync(VENTOY_SOURCEFORGE_FILES_URL);
+
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(html);
+
+                Version bestVersion = null;
+                string bestUrl = null;
+
+                var nodes = doc.DocumentNode.SelectNodes("//a[@href]");
+                if (nodes == null)
+                {
+                    return null;
+                }
+
+                foreach (var node in nodes)
+                {
+                    string text = HtmlEntity.DeEntitize(node.InnerText ?? string.Empty).Trim();
+                    if (!Regex.IsMatch(text, @"^v\d+\.\d+\.\d+$"))
+                    {
+                        continue;
+                    }
+
+                    Version version = ParseVentoyVersion(text);
+                    if (version == null)
+                    {
+                        continue;
+                    }
+
+                    if (bestVersion == null || version.CompareTo(bestVersion) > 0)
+                    {
+                        string href = HtmlEntity.DeEntitize(node.GetAttributeValue("href", string.Empty)).Trim();
+                        bestVersion = version;
+                        bestUrl = NormalizeSourceForgeUrl(href);
+                    }
+                }
+
+                return bestUrl;
+            }
+        }
+
+        private async Task<Tuple<string, string>> GetVentoyWindowsZipDownloadInfoAsync(string versionFolderUrl)
+        {
+            if (string.IsNullOrEmpty(versionFolderUrl))
+            {
+                return null;
+            }
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("GMTPC-Tool");
+                string html = await client.GetStringAsync(versionFolderUrl);
+
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(html);
+
+                var nodes = doc.DocumentNode.SelectNodes("//a[@href]");
+                if (nodes == null)
+                {
+                    return null;
+                }
+
+                foreach (var node in nodes)
+                {
+                    string text = HtmlEntity.DeEntitize(node.InnerText ?? string.Empty).Trim();
+                    if (!Regex.IsMatch(text, @"^ventoy-.*windows\.zip$", RegexOptions.IgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    string href = HtmlEntity.DeEntitize(node.GetAttributeValue("href", string.Empty)).Trim();
+                    return Tuple.Create(NormalizeSourceForgeDownloadUrl(href), text);
+                }
+            }
+
+            return null;
+        }
+
+        private static Version ParseVentoyVersion(string versionName)
+        {
+            Match match = Regex.Match(versionName ?? string.Empty, @"^v(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)$");
+            if (!match.Success)
+            {
+                return null;
+            }
+
+            return new Version(
+                int.Parse(match.Groups["major"].Value),
+                int.Parse(match.Groups["minor"].Value),
+                int.Parse(match.Groups["patch"].Value));
+        }
+
+        private static string GetVentoyVersionNameFromUrl(string versionFolderUrl)
+        {
+            if (string.IsNullOrEmpty(versionFolderUrl))
+            {
+                return string.Empty;
+            }
+
+            string trimmed = versionFolderUrl.TrimEnd('/');
+            int lastSlashIndex = trimmed.LastIndexOf('/');
+            return lastSlashIndex >= 0 ? trimmed.Substring(lastSlashIndex + 1) : trimmed;
+        }
+
+        private static string NormalizeSourceForgeUrl(string href)
+        {
+            if (string.IsNullOrEmpty(href))
+            {
+                return href;
+            }
+
+            string url = href;
+            if (url.StartsWith("//", StringComparison.Ordinal))
+            {
+                url = "https:" + url;
+            }
+            else if (url.StartsWith("/", StringComparison.Ordinal))
+            {
+                url = "https://sourceforge.net" + url;
+            }
+
+            return url;
+        }
+
+        private static string NormalizeSourceForgeDownloadUrl(string href)
+        {
+            string url = NormalizeSourceForgeUrl(href);
+            if (string.IsNullOrEmpty(url))
+            {
+                return url;
+            }
+
+            if (!url.EndsWith("/download", StringComparison.OrdinalIgnoreCase))
+            {
+                url = url.TrimEnd('/') + "/download";
+            }
+
+            return url;
+        }
+
+        private static string FindVentoy2DiskExe(string rootFolder)
+        {
+            if (string.IsNullOrEmpty(rootFolder) || !Directory.Exists(rootFolder))
+            {
+                return null;
+            }
+
+            string[] candidates = Directory.GetFiles(rootFolder, "ventoy2disk.exe", SearchOption.AllDirectories);
+            if (candidates != null && candidates.Length > 0)
+            {
+                return candidates[0];
+            }
+
+            candidates = Directory.GetFiles(rootFolder, "Ventoy2Disk.exe", SearchOption.AllDirectories);
+            if (candidates != null && candidates.Length > 0)
+            {
+                return candidates[0];
+            }
+
+            return null;
         }
 
         private async Task InstallWin10LtscIot21H2Async()

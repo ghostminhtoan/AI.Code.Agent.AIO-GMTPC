@@ -4,6 +4,7 @@
 //            SelectNoneAllTabs, Install, Pause, Resume, Refresh Color,
 //            BtnDownloadPage, DPI controls
 // Cập nhật gần đây:
+//   - 2026-04-28: Added Ventoy to Windows Mod MMT selection, hover, and copy-link flows
 //   - 2026-04-25: Locked manual DPI changes to each tab's auto-fit ceiling until the next tab selection resets and recomputes it
 //   - 2026-04-25: Kept window max height independent from DPI so sparse tabs clamp manual zoom before becoming oversized
 //   - 2026-04-25: Added Brave to Browser tab selection, install, hover, and download-link cache flows
@@ -481,6 +482,7 @@ namespace GMTPC.Tool
                 {
                     ChkWin10LtscIot21H2.IsChecked = true;
                     ChkWin10_22H2_2024_December.IsChecked = true;
+                    ChkVentoy.IsChecked = true;
                     ChkWintoHDD.IsChecked = true;
                 }
             }
@@ -608,6 +610,7 @@ namespace GMTPC.Tool
                 {
                     ChkWin10LtscIot21H2.IsChecked = false;
                     ChkWin10_22H2_2024_December.IsChecked = false;
+                    ChkVentoy.IsChecked = false;
                     ChkWintoHDD.IsChecked = false;
                 }
             }
@@ -703,6 +706,7 @@ namespace GMTPC.Tool
             // Bỏ chọn checkbox trong tab Windows Mod MMT
             ChkWin10LtscIot21H2.IsChecked = false;
             ChkWin10_22H2_2024_December.IsChecked = false;
+            ChkVentoy.IsChecked = false;
             ChkWintoHDD.IsChecked = false;
 
             UpdateInstallButtonState();
@@ -789,6 +793,7 @@ namespace GMTPC.Tool
             if (ChkWin11_26H1.IsChecked == true) tasks.Add((InstallWin11_26H1Async, ChkWin11_26H1));
             if (ChkWin10LtscIot21H2.IsChecked == true) tasks.Add((InstallWin10LtscIot21H2Async, ChkWin10LtscIot21H2));
             if (ChkWin10_22H2_2024_December.IsChecked == true) tasks.Add((InstallWin10_22H2_2024_DecemberAsync, ChkWin10_22H2_2024_December));
+            if (ChkVentoy.IsChecked == true) tasks.Add((InstallVentoyAsync, ChkVentoy));
             if (ChkWintoHDD.IsChecked == true) tasks.Add((InstallWintoHDDAsync, ChkWintoHDD));
 
             CheckBox currentTaskCheckBox = null;
@@ -992,6 +997,9 @@ namespace GMTPC.Tool
                 _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/game/JUMP.FORCE_LinkNeverDie.Com.part10.rar");
                 _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/game/JUMP.FORCE_LinkNeverDie.Com.part11.rar");
             }
+
+            if (ChkVentoy?.IsChecked == true)
+                _cachedDownloadLinks.Add(VENTOY_SOURCEFORGE_FILES_URL);
 
             if (ChkWintoHDD?.IsChecked == true)
                 _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/WinPE/wintohdd.exe");
@@ -1237,7 +1245,7 @@ namespace GMTPC.Tool
                 ChkSamuraiMaiden, ChkChrome, ChkCocCoc, ChkEdge,
                 ChkBrave,
                 ChkUltraviewer, ChkTeamViewerQS, ChkTeamViewerFull, ChkAnyDesk, ChkVMWare162Lite,
-                ChkWin11_26H1, ChkWin10LtscIot21H2, ChkWin10_22H2_2024_December,
+                ChkWin11_26H1, ChkWin10LtscIot21H2, ChkWin10_22H2_2024_December, ChkVentoy,
                 // ChkWin10ProWorkstations22H2 removed
             };
 
@@ -1443,6 +1451,9 @@ namespace GMTPC.Tool
                                "https://github.com/ghostminhtoan/MMT/releases/download/windows/win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso.003\n" +
                                "https://github.com/ghostminhtoan/MMT/releases/download/windows/win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso.004\n" +
                                "https://github.com/ghostminhtoan/MMT/releases/download/windows/win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso.005";
+                        break;
+                    case "ChkVentoy":
+                        link = VENTOY_SOURCEFORGE_FILES_URL;
                         break;
                     case "ChkInstallZalo":
                         link = "https://zalo.me/download/zalo-pc?utm=90000";

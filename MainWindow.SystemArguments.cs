@@ -11,6 +11,8 @@ namespace GMTPC.Tool
 {
     /*
  * AI Summary:
+ * Date: 2026-04-28
+ * - Added VENTOY_SOURCEFORGE_FILES_URL for the Windows Mod MMT Ventoy probe/install flow
  * Date: 2026-04-25 (2)
  * - Added Brave browser download URL, install arguments, and Browser-tab install wiring
  * Date: 2026-04-25
@@ -102,10 +104,11 @@ namespace GMTPC.Tool
         // ===================================================================
         // TabWinModMMT — WintoHDD
         // TabItem Header: "Windows Mod MMT"
-        // Checkbox: ChkWintoHDD
+        // Checkbox: ChkWintoHDD, ChkVentoy
         // ===================================================================
         private const string WINTOHDD_DOWNLOAD_URL = "https://github.com/ghostminhtoan/MMT/releases/download/WinPE/wintohdd.exe";
         private const string WINTOHDD_INSTALL_ARGUMENTS = "/S";
+        private const string VENTOY_SOURCEFORGE_FILES_URL = "https://sourceforge.net/projects/ventoy/files/";
 
         // ===================================================================
         // TabGaming — Jump Force (11 parts)
@@ -687,7 +690,8 @@ namespace GMTPC.Tool
                              ChkWin11_26H1.IsChecked == true ||
                              ChkWin10LtscIot21H2.IsChecked == true ||
                              ChkWin10_22H2_2024_December.IsChecked == true ||
-                             // Windows Mod MMT - WintoHDD
+                             // Windows Mod MMT - Ventoy/WintoHDD
+                             ChkVentoy.IsChecked == true ||
                              ChkWintoHDD.IsChecked == true ||
                              // Multimedia - Advanced Codec Pack
                              ChkAdvancedCodecPack.IsChecked == true ||

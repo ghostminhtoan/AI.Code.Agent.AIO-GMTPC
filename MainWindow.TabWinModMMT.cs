@@ -397,10 +397,17 @@ namespace GMTPC.Tool
                 return null;
             }
 
-            string[] ventoyFolders = Directory.GetDirectories(versionFolderPath, "ventoy-*", SearchOption.TopDirectoryOnly);
+            string[] ventoyFolders = Directory.GetDirectories(versionFolderPath, "*", SearchOption.TopDirectoryOnly);
             if (ventoyFolders != null && ventoyFolders.Length > 0)
             {
-                return ventoyFolders[0];
+                foreach (string folder in ventoyFolders)
+                {
+                    string folderName = Path.GetFileName(folder.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+                    if (Regex.IsMatch(folderName ?? string.Empty, @"^ventoy-\d+\.\d+\.\d+$", RegexOptions.IgnoreCase))
+                    {
+                        return folder;
+                    }
+                }
             }
 
             string[] subDirectories = Directory.GetDirectories(versionFolderPath, "*", SearchOption.TopDirectoryOnly);

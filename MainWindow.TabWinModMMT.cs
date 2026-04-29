@@ -33,7 +33,8 @@ namespace GMTPC.Tool
         private const string WIN10_22H2_2024_DEC_PART4_URL = "https://github.com/ghostminhtoan/MMT/releases/download/windows/win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso.004";
         private const string WIN10_22H2_2024_DEC_PART5_URL = "https://github.com/ghostminhtoan/MMT/releases/download/windows/win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso.005";
         private const string WIN10_22H2_2024_DEC_FINAL_NAME = "win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso";
-        private const string VENTOY_EXTRACT_ROOT = @"C:\";
+        private const string VENTOY_EXTRACT_ROOT = @"C:\Ventoy";
+        private const string VENTOY_FINAL_ROOT = @"C:\";
         private const string VENTOY_GITHUB_RELEASES_API_URL = "https://api.github.com/repos/ventoy/Ventoy/releases/latest";
 
         // WintoHDD - Use InstallWithPromptAsync for Yes/No dialog with NTFS Compression check
@@ -229,6 +230,8 @@ namespace GMTPC.Tool
 
                 string versionFolderPath = Path.Combine(VENTOY_EXTRACT_ROOT, latestVersionFolderName);
                 string zipPath = Path.Combine(VENTOY_EXTRACT_ROOT, zipFileName);
+                string finalVentoyFolderName = string.Empty;
+                string finalVentoyFolderPath = string.Empty;
 
                 if (Directory.Exists(versionFolderPath))
                 {
@@ -242,17 +245,71 @@ namespace GMTPC.Tool
                     }
                 }
 
-                UpdateStatus("Đang tải Ventoy windows.zip trực tiếp vào ổ C:\\...", "Cyan");
+                UpdateStatus("Đang tải Ventoy windows.zip vào C:\\Ventoy...", "Cyan");
                 await DownloadWithProgressAsync(ventoyZipDownloadUrl, zipPath, "Ventoy");
 
                 UpdateStatus("Đang giải nén Ventoy...", "Cyan");
                 Directory.CreateDirectory(versionFolderPath);
                 ZipFile.ExtractToDirectory(zipPath, versionFolderPath);
 
-                string ventoyExePath = FindVentoy2DiskExe(versionFolderPath);
+                UpdateStatus("Đang xóa file zip Ventoy...", "Cyan");
+                if (File.Exists(zipPath))
+                {
+                    File.Delete(zipPath);
+                }
+
+                string ventoySourceFolderPath = FindVentoyPayloadFolder(versionFolderPath);
+                if (string.IsNullOrEmpty(ventoySourceFolderPath))
+                {
+                    throw new InvalidOperationException("Không tìm thấy folder Ventoy sau khi giải nén.");
+                }
+
+                finalVentoyFolderName = Path.GetFileName(ventoySourceFolderPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+                finalVentoyFolderPath = Path.Combine(VENTOY_FINAL_ROOT, finalVentoyFolderName);
+
+                if (Directory.Exists(finalVentoyFolderPath))
+                {
+                    try
+                    {
+                        Directory.Delete(finalVentoyFolderPath, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        UpdateStatus($"Không xóa được folder Ventoy cũ ở ổ C: {ex.Message}", "Orange");
+                    }
+                }
+
+                UpdateStatus($"Đang chuyển folder Ventoy ra ổ C:\\{finalVentoyFolderName}...", "Cyan");
+                Directory.Move(ventoySourceFolderPath, finalVentoyFolderPath);
+
+                try
+                {
+                    if (Directory.Exists(versionFolderPath))
+                    {
+                        Directory.Delete(versionFolderPath, true);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    UpdateStatus($"Không xóa được folder tạm Ventoy: {ex.Message}", "Orange");
+                }
+
+                try
+                {
+                    if (Directory.Exists(VENTOY_EXTRACT_ROOT))
+                    {
+                        Directory.Delete(VENTOY_EXTRACT_ROOT, true);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    UpdateStatus($"Không xóa được C:\\Ventoy: {ex.Message}", "Orange");
+                }
+
+                string ventoyExePath = FindVentoy2DiskExe(finalVentoyFolderPath);
                 if (string.IsNullOrEmpty(ventoyExePath))
                 {
-                    throw new InvalidOperationException("Không tìm thấy ventoy2disk.exe sau khi giải nén.");
+                    throw new InvalidOperationException("Không tìm thấy ventoy2disk.exe sau khi chuyển folder.");
                 }
 
                 UpdateStatus("Đang mở Ventoy2Disk với quyền administrator...", "Cyan");
@@ -268,21 +325,8 @@ namespace GMTPC.Tool
                 if (process != null)
                 {
                     UpdateStatus("Ventoy2Disk đã được mở!", "Green");
-                    UpdateStatus("Đợi Ventoy2Disk tắt để dọn file zip...", "Cyan");
+                    UpdateStatus("Đợi Ventoy2Disk tắt để dọn folder tạm...", "Cyan");
                     await WaitForProcessExitAsync(process);
-
-                    if (File.Exists(zipPath))
-                    {
-                        try
-                        {
-                            File.Delete(zipPath);
-                            UpdateStatus($"Đã xóa file zip Ventoy: {Path.GetFileName(zipPath)}", "Gray");
-                        }
-                        catch (Exception ex)
-                        {
-                            UpdateStatus($"Không xóa được file zip Ventoy: {ex.Message}", "Orange");
-                        }
-                    }
                 }
             }
             catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223)
@@ -344,6 +388,33 @@ namespace GMTPC.Tool
             }
 
             return tcs.Task;
+        }
+
+        private static string FindVentoyPayloadFolder(string versionFolderPath)
+        {
+            if (string.IsNullOrEmpty(versionFolderPath) || !Directory.Exists(versionFolderPath))
+            {
+                return null;
+            }
+
+            string[] ventoyFolders = Directory.GetDirectories(versionFolderPath, "ventoy-*", SearchOption.TopDirectoryOnly);
+            if (ventoyFolders != null && ventoyFolders.Length > 0)
+            {
+                return ventoyFolders[0];
+            }
+
+            string[] subDirectories = Directory.GetDirectories(versionFolderPath, "*", SearchOption.TopDirectoryOnly);
+            if (subDirectories != null && subDirectories.Length == 1)
+            {
+                return subDirectories[0];
+            }
+
+            if (File.Exists(Path.Combine(versionFolderPath, "ventoy2disk.exe")) || File.Exists(Path.Combine(versionFolderPath, "Ventoy2Disk.exe")))
+            {
+                return versionFolderPath;
+            }
+
+            return null;
         }
 
         private static Version ParseVentoyVersion(string versionName)

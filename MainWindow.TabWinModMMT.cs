@@ -1,4 +1,4 @@
-// AI Summary: 2026-04-28 - Added Ventoy SourceForge probe/install flow and checkbox wiring
+// AI Summary: 2026-04-29 - Switched Ventoy install flow to GitHub Releases and checkbox wiring
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -14,7 +14,7 @@ namespace GMTPC.Tool
 {
 // =============================================================================
 // MainWindow.TabWinModMMT.cs
-// Updated: 2026-04-28 - Added Ventoy SourceForge probe/install flow and checkbox wiring
+// Updated: 2026-04-29 - Switched Ventoy install flow to GitHub Releases and checkbox wiring
 // Updated: 2026-04-22 - Added WinPE to HDD admin PowerShell button
 // Updated: 2026-03-17 - Changed download URLs to new links without boot.windowsRE
 // =============================================================================
@@ -34,6 +34,7 @@ namespace GMTPC.Tool
         private const string WIN10_22H2_2024_DEC_PART5_URL = "https://github.com/ghostminhtoan/MMT/releases/download/windows/win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso.005";
         private const string WIN10_22H2_2024_DEC_FINAL_NAME = "win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso";
         private const string VENTOY_EXTRACT_ROOT = @"C:\Ventoy";
+        private const string VENTOY_GITHUB_RELEASES_API_URL = "https://api.github.com/repos/ventoy/Ventoy/releases/latest";
 
         // WintoHDD - Use InstallWithPromptAsync for Yes/No dialog with NTFS Compression check
         private async Task InstallWintoHDDAsync()
@@ -211,38 +212,22 @@ namespace GMTPC.Tool
             {
                 Directory.CreateDirectory(VENTOY_EXTRACT_ROOT);
 
-                UpdateStatus("Đang probe version Ventoy mới nhất...", "Cyan");
-                string latestVersionFolderUrl = await GetLatestVentoyVersionFolderUrlAsync();
-                if (string.IsNullOrEmpty(latestVersionFolderUrl))
+                UpdateStatus("Đang probe Ventoy release mới nhất trên GitHub...", "Cyan");
+                Tuple<string, string, string> ventoyReleaseInfo = await GetLatestVentoyReleaseAssetAsync();
+                if (ventoyReleaseInfo == null || string.IsNullOrEmpty(ventoyReleaseInfo.Item1) || string.IsNullOrEmpty(ventoyReleaseInfo.Item2))
                 {
-                    throw new InvalidOperationException("Không tìm thấy version Ventoy mới nhất.");
+                    throw new InvalidOperationException("Không tìm thấy Ventoy release mới nhất.");
                 }
 
-                string latestVersionName = GetVentoyVersionNameFromUrl(latestVersionFolderUrl);
+                string latestVentoyTag = ventoyReleaseInfo.Item1;
+                string ventoyZipDownloadUrl = ventoyReleaseInfo.Item2;
+                string zipFileName = ventoyReleaseInfo.Item3;
+                string latestVersionName = latestVentoyTag;
+                string latestVersionFolderName = latestVentoyTag.TrimStart('v');
                 UpdateStatus($"Đã chọn Ventoy {latestVersionName}", "Green");
+                UpdateStatus($"Đã tìm thấy file: {zipFileName}", "Cyan");
 
-                UpdateStatus("Đang probe file Ventoy windows.zip...", "Cyan");
-                Tuple<string, string> ventoyZipDownloadInfo = await GetVentoyWindowsZipDownloadInfoAsync(latestVersionFolderUrl);
-                if (ventoyZipDownloadInfo == null || string.IsNullOrEmpty(ventoyZipDownloadInfo.Item1))
-                {
-                    throw new InvalidOperationException("Không tìm thấy file Ventoy windows.zip.");
-                }
-
-                string ventoyZipDownloadUrl = ventoyZipDownloadInfo.Item1;
-                string zipFileName = ventoyZipDownloadInfo.Item2;
-                if (string.IsNullOrEmpty(zipFileName))
-                {
-                    zipFileName = $"ventoy-{latestVersionName.TrimStart('v')}-windows.zip";
-                }
-
-                UpdateStatus("Đang probe nút Download cuối cùng của Ventoy...", "Cyan");
-                string finalVentoyDownloadUrl = await ResolveVentoyFinalDownloadUrlAsync(ventoyZipDownloadUrl);
-                if (string.IsNullOrEmpty(finalVentoyDownloadUrl))
-                {
-                    throw new InvalidOperationException("Không tìm thấy nút Download cuối cùng của Ventoy.");
-                }
-
-                string versionFolderPath = Path.Combine(VENTOY_EXTRACT_ROOT, latestVersionName);
+                string versionFolderPath = Path.Combine(VENTOY_EXTRACT_ROOT, latestVersionFolderName);
                 string zipPath = Path.Combine(VENTOY_EXTRACT_ROOT, zipFileName);
 
                 if (Directory.Exists(versionFolderPath))
@@ -257,9 +242,8 @@ namespace GMTPC.Tool
                     }
                 }
 
-                UpdateStatus($"Đã tìm thấy file: {zipFileName}", "Cyan");
                 UpdateStatus("Đang tải Ventoy windows.zip...", "Cyan");
-                await DownloadWithProgressAsync(finalVentoyDownloadUrl, zipPath, "Ventoy");
+                await DownloadWithProgressAsync(ventoyZipDownloadUrl, zipPath, "Ventoy");
 
                 UpdateStatus("Đang giải nén Ventoy...", "Cyan");
                 Directory.CreateDirectory(versionFolderPath);
@@ -296,111 +280,31 @@ namespace GMTPC.Tool
             }
         }
 
-        private async Task<string> GetLatestVentoyVersionFolderUrlAsync()
+        private async Task<Tuple<string, string, string>> GetLatestVentoyReleaseAssetAsync()
         {
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.UserAgent.ParseAdd("GMTPC-Tool");
-                string html = await client.GetStringAsync(VENTOY_SOURCEFORGE_FILES_URL);
+                client.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github+json");
+                string json = await client.GetStringAsync(VENTOY_GITHUB_RELEASES_API_URL);
 
-                Version bestVersion = null;
-                string bestUrl = null;
-
-                MatchCollection matches = Regex.Matches(html ?? string.Empty, @"href=""(?<href>[^""]*/files/v(?<ver>\d+\.\d+\.\d+)/?)""", RegexOptions.IgnoreCase);
-                if (matches == null || matches.Count == 0)
+                Match tagMatch = Regex.Match(json ?? string.Empty, @"""tag_name""\s*:\s*""(?<tag>v\d+\.\d+\.\d+)""", RegexOptions.IgnoreCase);
+                if (!tagMatch.Success)
                 {
                     return null;
                 }
 
-                foreach (Match match in matches)
-                {
-                    string versionText = "v" + match.Groups["ver"].Value;
-                    Version version = ParseVentoyVersion(versionText);
-                    if (version == null)
-                    {
-                        continue;
-                    }
-
-                    if (bestVersion == null || version.CompareTo(bestVersion) > 0)
-                    {
-                        bestVersion = version;
-                        bestUrl = NormalizeSourceForgeUrl(match.Groups["href"].Value);
-                    }
-                }
-
-                return bestUrl;
-            }
-        }
-
-        private async Task<Tuple<string, string>> GetVentoyWindowsZipDownloadInfoAsync(string versionFolderUrl)
-        {
-            if (string.IsNullOrEmpty(versionFolderUrl))
-            {
-                return null;
-            }
-
-            using (HttpClient client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.UserAgent.ParseAdd("GMTPC-Tool");
-                string html = await client.GetStringAsync(versionFolderUrl);
-
-                MatchCollection matches = Regex.Matches(html ?? string.Empty, @"href=""(?<href>[^""]*ventoy-(?<ver>\d+\.\d+\.\d+)-windows\.zip[^""]*)""", RegexOptions.IgnoreCase);
-                if (matches == null || matches.Count == 0)
+                Match assetMatch = Regex.Match(
+                    json ?? string.Empty,
+                    @"""name""\s*:\s*""(?<name>ventoy-(?<ver>\d+\.\d+\.\d+)-windows\.zip)""[\s\S]*?""browser_download_url""\s*:\s*""(?<url>https:\/\/github\.com\/ventoy\/Ventoy\/releases\/download\/[^""]+)""",
+                    RegexOptions.IgnoreCase);
+                if (!assetMatch.Success)
                 {
                     return null;
                 }
 
-                foreach (Match match in matches)
-                {
-                    string fileName = $"ventoy-{match.Groups["ver"].Value}-windows.zip";
-                    return Tuple.Create(NormalizeSourceForgeDownloadUrl(match.Groups["href"].Value), fileName);
-                }
+                return Tuple.Create(tagMatch.Groups["tag"].Value, assetMatch.Groups["url"].Value, assetMatch.Groups["name"].Value);
             }
-
-            return null;
-        }
-
-        private async Task<string> ResolveVentoyFinalDownloadUrlAsync(string ventoyZipDownloadUrl)
-        {
-            if (string.IsNullOrEmpty(ventoyZipDownloadUrl))
-            {
-                return null;
-            }
-
-            if (ventoyZipDownloadUrl.IndexOf("downloads.sourceforge.net", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                return ventoyZipDownloadUrl;
-            }
-
-            using (HttpClient client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.UserAgent.ParseAdd("GMTPC-Tool");
-                string html = await client.GetStringAsync(ventoyZipDownloadUrl);
-
-                Match metaRefreshMatch = Regex.Match(
-                    html ?? string.Empty,
-                    @"<meta[^>]+http-equiv\s*=\s*[""']refresh[""'][^>]+content\s*=\s*[""'][^""']*url\s*=\s*(?<url>[^""'>\s]+)",
-                    RegexOptions.IgnoreCase);
-                if (metaRefreshMatch.Success)
-                {
-                    string metaRefreshUrl = NormalizeSourceForgeDownloadUrl(metaRefreshMatch.Groups["url"].Value);
-                    if (!string.IsNullOrEmpty(metaRefreshUrl))
-                    {
-                        return metaRefreshUrl;
-                    }
-                }
-
-                Match directDownloadMatch = Regex.Match(
-                    html ?? string.Empty,
-                    @"href\s*=\s*[""'](?<url>https?:\/\/downloads\.sourceforge\.net\/[^""']+)[""']",
-                    RegexOptions.IgnoreCase);
-                if (directDownloadMatch.Success)
-                {
-                    return directDownloadMatch.Groups["url"].Value.Replace("&amp;", "&");
-                }
-            }
-
-            return null;
         }
 
         private static Version ParseVentoyVersion(string versionName)

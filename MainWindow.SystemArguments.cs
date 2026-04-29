@@ -13,7 +13,7 @@ namespace GMTPC.Tool
     /*
  * AI Summary:
  * Date: 2026-04-28
- * - Added VENTOY_SOURCEFORGE_FILES_URL for the Windows Mod MMT Ventoy probe/install flow
+ * - Updated VENTOY_SOURCEFORGE_FILES_URL for the Windows Mod MMT Ventoy GitHub Releases flow
  * Date: 2026-04-25 (2)
  * - Added Brave browser download URL, install arguments, and Browser-tab install wiring
  * Date: 2026-04-25
@@ -109,7 +109,7 @@ namespace GMTPC.Tool
         // ===================================================================
         private const string WINTOHDD_DOWNLOAD_URL = "https://github.com/ghostminhtoan/MMT/releases/download/WinPE/wintohdd.exe";
         private const string WINTOHDD_INSTALL_ARGUMENTS = "/S";
-        private const string VENTOY_SOURCEFORGE_FILES_URL = "https://sourceforge.net/projects/ventoy/files/";
+        private const string VENTOY_SOURCEFORGE_FILES_URL = "https://github.com/ventoy/Ventoy/releases";
 
         // ===================================================================
         // TabGaming — Jump Force (11 parts)

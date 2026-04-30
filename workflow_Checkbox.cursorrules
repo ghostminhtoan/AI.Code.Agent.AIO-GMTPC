@@ -4,6 +4,7 @@
 <!-- AI Summary: 2026-04-24 - Added mandatory rule to always git add/commit/push root GMTPC.Tool.exe after build -->
 <!-- AI Summary: 2026-03-29 - Added mandatory UpdateInstallButtonState() rule to prevent Install button interaction issues -->
 
+<!-- AI Summary: 2026-04-30 - Standardized build workflow to Release Any CPU, copy GMTPC.Tool.exe to root, and push the root exe -->
 <system_context>
 Bạn là một AI Code Agent chuyên nghiệp, làm việc trên dự án "MMT Tools" (WPF, .NET 4.8, C# 7.3).
 Mục tiêu của bạn là tuân thủ TUYỆT ĐỐI kiến trúc Partial Classes của dự án và các quy trình làm việc được định nghĩa dưới đây.
@@ -15,7 +16,7 @@ Mục tiêu của bạn là tuân thủ TUYỆT ĐỐI kiến trúc Partial Clas
 - KHÔNG BAO GIỜ viết code vào `MainWindow.xaml.cs`.
 - Luôn lưu file ở định dạng UTF-8.
 - Luôn thêm/cập nhật khối comment "AI Summary" ở đầu MỌI file bạn chỉnh sửa (Ghi rõ ngày cập nhật và tóm tắt thao tác).
-- Luôn luôn taskkill /im GMTPC.Tool.exe /F rồi build vào \bin\Release\, khi gặp lỗi và warning thì tự động sửa lỗi cho đến khi nào hết lỗi và warning thì mới được ngưng. Sau khi build xong thì copy exe từ \bin\Release\ ra root folder. BẮT BUỘC phải `git add GMTPC.Tool.exe` ở root, commit file exe này cùng với các file code liên quan, rồi `git push`. Không được kết thúc task nếu `GMTPC.Tool.exe` ở root chưa được push lên repo.
+- Luôn luôn taskkill /im GMTPC.Tool.exe /F rồi build ở chế độ `Release` với platform `Any CPU`, khi gặp lỗi và warning thì tự động sửa lỗi cho đến khi nào hết lỗi và warning thì mới được ngưng. Sau khi build xong thì copy exe từ `bin\Release\net48\` ra root folder. BẮT BUỘC phải `git add GMTPC.Tool.exe` ở root, commit file exe này cùng với các file code liên quan, rồi `git push`. Không được kết thúc task nếu `GMTPC.Tool.exe` ở root chưa được push lên repo.
 - Temp folder mặc định là %LocalAppdata%\GMTPC\GMTPC Tools\ là (folder hệ thống), nếu đổi temp folder thì sẽ không bao giờ bị xóa. Còn nếu ở thư mục của ổ khác thì bị xóa. Ví dụ như khi tôi đang ở ổ C, chọn ổ D thì sẽ không xóa (folder hệ thống) rồi tạo ổ D:\Tempfolder, nếu đang ổ D:\ mà chọn ổ E:\ thì sẽ xóa D:\Temp Folder rồi tạo E:\Temp Folder.
 - Defender exclusion luôn được tạo cho %LocalAppdata%\GMTPC\GMTPC Tools\, còn các thư mục khác thì làm theo VÍ DỤ:
 nếu chọn ổ D thì sẽ tự tạo  defender exclusion cho D:\Temp Folder, khi đang ở ổ D:\ và chọn ổ E:\ thì sẽ xóa defender exclusion D:\Temp Folder rồi tạo E:\Temp Folder và tạo defender exclusion cho E:\Temp Folder. Trong toàn bộ trường hợp đổi qua đổi lại sẽ không bao giờ xóa defender exclusion của %LocalAppdata%\GMTPC\GMTPC Tools\
@@ -183,7 +184,7 @@ nếu chọn ổ D thì sẽ tự tạo  defender exclusion cho D:\Temp Folder, 
             <step number="6" target_file="Build_Local">
                 - Chạy lệnh build: `dotnet build` hoặc `msbuild` (tùy project).
                 - Xác nhận build thành công 100%, không có lỗi hoặc warning nghiêm trọng.
-                - Copy exe từ \bin\Release\ ra root folder.
+                - Copy exe từ `bin\Release\net48\` ra root folder.
                 - BẮT BUỘC kiểm tra `GMTPC.Tool.exe` ở root đã được cập nhật sau build và sẵn sàng để stage.
             </step>
 
@@ -192,7 +193,7 @@ nếu chọn ổ D thì sẽ tự tạo  defender exclusion cho D:\Temp Folder, 
                   + `git add GMTPC.Tool.exe`
                   + `git add .`
                   + `git commit -m "[Checkbox] Create [Y] on Tab [X]"` (hoặc cho phép nhập commit message)
-                  + `git pull --rebase origin main`
+                  + `git pull --rebase origin $(git branch --show-current)`
                   + `git push`
                 - Nếu có nhiều thay đổi, gom commit theo nhóm hợp lý.
                 - BẮT BUỘC verify sau push: `git show --stat HEAD -- GMTPC.Tool.exe` phải hiển thị file exe ở root nếu build vừa tạo binary mới.
@@ -299,7 +300,7 @@ nếu chọn ổ D thì sẽ tự tạo  defender exclusion cho D:\Temp Folder, 
             <step number="6" target_file="Build_Local">
                 - Chạy lệnh build: `dotnet build` hoặc `msbuild` (tùy project).
                 - Xác nhận build thành công 100%, không có lỗi hoặc warning nghiêm trọng.
-                - Copy exe từ \bin\Release\ ra root folder.
+                - Copy exe từ `bin\Release\net48\` ra root folder.
                 - BẮT BUỘC kiểm tra `GMTPC.Tool.exe` ở root đã được cập nhật sau build và sẵn sàng để stage.
             </step>
 
@@ -308,7 +309,7 @@ nếu chọn ổ D thì sẽ tự tạo  defender exclusion cho D:\Temp Folder, 
                   + `git add GMTPC.Tool.exe`
                   + `git add .`
                   + `git commit -m "[Checkbox] Edit [Y] on Tab [X]"` (hoặc cho phép nhập commit message)
-                  + `git pull --rebase origin main`
+                  + `git pull --rebase origin $(git branch --show-current)`
                   + `git push`
                 - Nếu có nhiều thay đổi, gom commit theo nhóm hợp lý.
                 - BẮT BUỘC verify sau push: `git show --stat HEAD -- GMTPC.Tool.exe` phải hiển thị file exe ở root nếu build vừa tạo binary mới.

@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- AI Summary: 2026-04-30 - Enforced Release Any CPU builds and auto-copied GMTPC.Tool.exe to the repo root -->
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net48</TargetFramework>
@@ -8,8 +9,8 @@
     <AssemblyName>GMTPC.Tool</AssemblyName>
     <ApplicationIcon>idm 3.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Platforms>AnyCPU;x64</Platforms>
-    <PlatformTarget>x64</PlatformTarget>
+    <Platforms>AnyCPU</Platforms>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <Deterministic>true</Deterministic>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
@@ -20,6 +21,15 @@
       <BuildNumber>$([System.DateTime]::Now.ToString(yyyy-MM-dd / HH:mm:ss))</BuildNumber>
     </PropertyGroup>
     <Exec Command="echo // Auto-generated build number&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot; &amp;&amp; echo namespace GMTPC.Tool&gt;&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot; &amp;&amp; echo {&gt;&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot; &amp;&amp; echo     public static class BuildInfo&gt;&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot; &amp;&amp; echo     {&gt;&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot; &amp;&amp; echo         public const string BUILD_NUMBER = &quot;$(BuildNumber)&quot;;&gt;&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot; &amp;&amp; echo     }&gt;&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot; &amp;&amp; echo }&gt;&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot;" />
+  </Target>
+
+  <Target Name="EnforceReleaseAnyCPU" BeforeTargets="BeforeBuild">
+    <Error Condition="'$(Configuration)' != 'Release'" Text="GMTPC.Tool must be built in Release configuration." />
+    <Error Condition="'$(Platform)' != 'Any CPU' and '$(Platform)' != 'AnyCPU'" Text="GMTPC.Tool must be built with Any CPU platform." />
+  </Target>
+
+  <Target Name="CopyReleaseExeToRoot" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(ProjectDir)GMTPC.Tool.exe" />
   </Target>
 
   <ItemGroup>

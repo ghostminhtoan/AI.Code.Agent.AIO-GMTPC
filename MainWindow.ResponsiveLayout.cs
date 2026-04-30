@@ -896,7 +896,7 @@ namespace GMTPC.Tool
             {
                 if (MainTabControl?.SelectedItem is TabItem selectedTab)
                 {
-                    return selectedTab.Content as ScrollViewer;
+                    return FindScrollViewerInTabContent(selectedTab.Content);
                 }
             }
             catch
@@ -906,14 +906,58 @@ namespace GMTPC.Tool
             return null;
         }
 
+        private ScrollViewer FindScrollViewerInTabContent(object content)
+        {
+            if (content is ScrollViewer scrollViewer)
+            {
+                return scrollViewer;
+            }
+
+            if (content is TabControl tabControl && tabControl.SelectedItem is TabItem selectedChildTab)
+            {
+                return FindScrollViewerInTabContent(selectedChildTab.Content);
+            }
+
+            return null;
+        }
+
         private WrapPanel GetSelectedInstallPanel()
         {
             try
             {
-                return GetSelectedTabScrollViewer()?.Content as WrapPanel;
+                ScrollViewer selectedScrollViewer = GetSelectedTabScrollViewer();
+                if (selectedScrollViewer?.Content is WrapPanel wrapPanel)
+                {
+                    return wrapPanel;
+                }
+
+                if (MainTabControl?.SelectedItem is TabItem selectedTab)
+                {
+                    return FindWrapPanelInTabContent(selectedTab.Content);
+                }
             }
             catch
             {
+            }
+
+            return null;
+        }
+
+        private WrapPanel FindWrapPanelInTabContent(object content)
+        {
+            if (content is WrapPanel wrapPanel)
+            {
+                return wrapPanel;
+            }
+
+            if (content is ScrollViewer scrollViewer && scrollViewer.Content is WrapPanel innerWrapPanel)
+            {
+                return innerWrapPanel;
+            }
+
+            if (content is TabControl tabControl && tabControl.SelectedItem is TabItem selectedChildTab)
+            {
+                return FindWrapPanelInTabContent(selectedChildTab.Content);
             }
 
             return null;

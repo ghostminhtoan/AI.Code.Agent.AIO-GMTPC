@@ -4,7 +4,7 @@
 <!-- AI Summary: 2026-04-25 - Moved build number display to the top for all tabs, removed Edge workspace button, and added Brave browser checkbox -->
 <!-- AI Summary: 2026-04-25 - Tuned tab spacer sizes so sparse tabs keep full checkboxes while dense tabs retain Subtitle-like fit -->
 <!-- AI Summary: 2026-04-25 - Rebalanced hidden tab spacers so Office/Multimedia/Remote Desktop clamp earlier while Driver/Browser/Windows tabs can scale larger -->
-<!-- AI Summary: 2026-04-28 - Added Ventoy checkbox to Windows Mod MMT with SourceForge probe-based download flow -->
+<!-- AI Summary: 2026-04-30 - Added Ventoy checkbox to Windows Tools with GitHub Releases-based download flow -->
 <Window x:Class="GMTPC.Tool.MainWindow"
          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -615,23 +615,92 @@
                         </WrapPanel>
                     </ScrollViewer>
                 </TabItem>
-                <TabItem Header="Windows - Microsoft">
-                    <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled" Background="#FF1F1F1F">
-                        <WrapPanel x:Name="WindowsPanel" Orientation="Horizontal" HorizontalAlignment="Stretch" Style="{StaticResource ResponsiveWrapPanelStyle}">
-                            <CheckBox x:Name="ChkWin11_26H1" Content="Win 11 - 26H1 - 2026 Feb - server archive.org" Width="300" Height="34" Click="ChkWin11_26H1_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
-                        </WrapPanel>
-                    </ScrollViewer>
-                </TabItem>
-                <TabItem Header="Windows Mod MMT">
-                    <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled" Background="#FF1F1F1F">
-                        <WrapPanel x:Name="WindowsModPanel" Orientation="Horizontal" HorizontalAlignment="Stretch" Style="{StaticResource ResponsiveWrapPanelStyle}">
-                            <CheckBox x:Name="ChkWin10LtscIot21H2" Content="Win 10 LTSC IoT 21H2 - No Defender - Office - MMTPC 3.0" Width="420" Height="34" Click="ChkWin10LtscIot21H2_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
-                            <CheckBox x:Name="ChkWin10_22H2_2024_December" Content="Win 10 22h2 2024 DECEMBER - Office.365 - win 10 MMTPC 4.0" Width="420" Height="34" Click="ChkWin10_22H2_2024_December_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
-                            <CheckBox x:Name="ChkVentoy" Content="Ventoy" Width="200" Height="34" Click="ChkVentoy_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
-                            <CheckBox x:Name="ChkWintoHDD" Content="WintoHDD" Width="200" Height="34" Click="ChkWintoHDD_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
-                            <Button x:Name="BtnWinPEToHDD" Content="WinPE to HDD" Width="200" Height="28" Click="BtnWinPEToHDD_Click" Margin="2"/>
-                        </WrapPanel>
-                    </ScrollViewer>
+                <TabItem Header="Windows">
+                    <TabControl Background="#FF1F1F1F" BorderBrush="#FF7A7A7A" Margin="0">
+                        <TabControl.Resources>
+                            <Style TargetType="TabItem">
+                                <Setter Property="Background" Value="#FF2B2B2B"/>
+                                <Setter Property="Foreground" Value="NavajoWhite"/>
+                                <Setter Property="FontSize" Value="10.5"/>
+                                <Setter Property="Padding" Value="5,2"/>
+                                <Setter Property="MinHeight" Value="21"/>
+                                <Setter Property="MinWidth" Value="50"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="TabItem">
+                                            <Border Name="Border" Background="{TemplateBinding Background}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="1,1,1,0"
+                                                    CornerRadius="3,3,0,0"
+                                                    Margin="0,0,-1,0">
+                                                <ContentPresenter x:Name="ContentSite"
+                                                                  VerticalAlignment="Center"
+                                                                  HorizontalAlignment="Center"
+                                                                  ContentSource="Header"
+                                                                  Margin="5,2"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter TargetName="Border" Property="Background" Value="#FF1F1F1F"/>
+                                                    <Setter Property="Foreground" Value="#FFFFFFFF"/>
+                                                </Trigger>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="Border" Property="Background" Value="#FF3E3E3E"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </TabControl.Resources>
+                        <TabControl.Template>
+                            <ControlTemplate TargetType="TabControl">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <TabPanel x:Name="HeaderPanel"
+                                              Grid.Row="0"
+                                              Panel.ZIndex="1"
+                                              IsItemsHost="True"
+                                              KeyboardNavigation.TabIndex="1"
+                                              Background="Transparent"/>
+                                    <Border x:Name="ContentPanel"
+                                            Grid.Row="1"
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            KeyboardNavigation.TabIndex="2"
+                                            KeyboardNavigation.TabNavigation="Local"
+                                            KeyboardNavigation.DirectionalNavigation="Contained">
+                                        <ContentPresenter x:Name="PART_SelectedContentHost"
+                                                          ContentSource="SelectedContent"
+                                                          Margin="{TemplateBinding Padding}"
+                                                          ContentTemplate="{TemplateBinding SelectedContentTemplate}"/>
+                                    </Border>
+                                </Grid>
+                            </ControlTemplate>
+                        </TabControl.Template>
+                        <TabItem Header="Windows - Microsoft">
+                            <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled" Background="#FF1F1F1F">
+                                <WrapPanel x:Name="WindowsPanel" Orientation="Horizontal" HorizontalAlignment="Stretch" Style="{StaticResource ResponsiveWrapPanelStyle}">
+                                    <CheckBox x:Name="ChkWin11_26H1" Content="Win 11 - 26H1 - 2026 Feb - server archive.org" Width="300" Height="34" Click="ChkWin11_26H1_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
+                                </WrapPanel>
+                            </ScrollViewer>
+                        </TabItem>
+                        <TabItem Header="Windows Tools">
+                            <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled" Background="#FF1F1F1F">
+                                <WrapPanel x:Name="WindowsToolsPanel" Orientation="Horizontal" HorizontalAlignment="Stretch" Style="{StaticResource ResponsiveWrapPanelStyle}">
+                                    <CheckBox x:Name="ChkWin10LtscIot21H2" Content="Win 10 LTSC IoT 21H2 - No Defender - Office - MMTPC 3.0" Width="420" Height="34" Click="ChkWin10LtscIot21H2_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
+                                    <CheckBox x:Name="ChkWin10_22H2_2024_December" Content="Win 10 22h2 2024 DECEMBER - Office.365 - win 10 MMTPC 4.0" Width="420" Height="34" Click="ChkWin10_22H2_2024_December_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
+                                    <CheckBox x:Name="ChkVentoy" Content="Ventoy" Width="200" Height="34" Click="ChkVentoy_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
+                                    <CheckBox x:Name="ChkWintoHDD" Content="WintoHDD" Width="200" Height="34" Click="ChkWintoHDD_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
+                                    <Button x:Name="BtnWinPEToHDD" Content="WinPE to HDD" Width="200" Height="28" Click="BtnWinPEToHDD_Click" Margin="2"/>
+                                </WrapPanel>
+                            </ScrollViewer>
+                        </TabItem>
+                    </TabControl>
                 </TabItem>
                 <!-- System Information tab moved to first position; duplicate removed -->
             </TabControl>

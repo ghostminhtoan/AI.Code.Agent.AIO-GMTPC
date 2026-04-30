@@ -1,4 +1,4 @@
-// AI Summary: 2026-04-28 - Added VentoySourceForgeFiles URL and Ventoy checkbox state wiring
+﻿// AI Summary: 2026-04-28 - Added VentoySourceForgeFiles URL and Ventoy checkbox state wiring
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -13,7 +13,7 @@ namespace GMTPC.Tool
     /*
  * AI Summary:
  * Date: 2026-04-28
- * - Updated VENTOY_SOURCEFORGE_FILES_URL for the Windows Mod MMT Ventoy GitHub Releases flow
+ * - Updated VENTOY_RELEASES_URL for the Windows Tools Ventoy GitHub Releases flow
  * Date: 2026-04-25 (2)
  * - Added Brave browser download URL, install arguments, and Browser-tab install wiring
  * Date: 2026-04-25
@@ -41,16 +41,16 @@ namespace GMTPC.Tool
  */
 // =======================================================================
 // MainWindow.SystemArguments.cs
-// Chứa toàn bộ code phức tạp liên quan đến:
-//   - InstallXxxAsync() có MessageBox, nhiều nhánh argument, key dialog
-//   - BtnXxx_Click dành riêng cho một app cụ thể
-//   - ShowXxxKeyDialog() và các helper dialog
+// Chá»©a toÃ n bá»™ code phá»©c táº¡p liÃªn quan Ä‘áº¿n:
+//   - InstallXxxAsync() cÃ³ MessageBox, nhiá»u nhÃ¡nh argument, key dialog
+//   - BtnXxx_Click dÃ nh riÃªng cho má»™t app cá»¥ thá»ƒ
+//   - ShowXxxKeyDialog() vÃ  cÃ¡c helper dialog
 //   - Logic activate / crack
 // =======================================================================
     public partial class MainWindow
     {
         // ===================================================================
-        // TabPopular — Links (B) and Arguments (C)
+        // TabPopular â€” Links (B) and Arguments (C)
         // TabItem Header: "Popular"
         // Checkboxes: ChkInstallIDM, ChkInstallWinRAR, ChkInstallBID,
         //             ChkActivateWindows, ChkPauseWindowsUpdate, ChkVcredist,
@@ -103,16 +103,16 @@ namespace GMTPC.Tool
         private const string THEME_REGISTRY_VALUE = "AppsUseLightTheme";
 
         // ===================================================================
-        // TabWinModMMT — WintoHDD
-        // TabItem Header: "Windows Mod MMT"
+        // TabWindows â€” WintoHDD
+        // TabItem Header: "Windows"
         // Checkbox: ChkWintoHDD, ChkVentoy
         // ===================================================================
         private const string WINTOHDD_DOWNLOAD_URL = "https://github.com/ghostminhtoan/MMT/releases/download/WinPE/wintohdd.exe";
         private const string WINTOHDD_INSTALL_ARGUMENTS = "/S";
-        private const string VENTOY_SOURCEFORGE_FILES_URL = "https://github.com/ventoy/Ventoy/releases";
+        private const string VENTOY_RELEASES_URL = "https://github.com/ventoy/Ventoy/releases";
 
         // ===================================================================
-        // TabGaming — Jump Force (11 parts)
+        // TabGaming â€” Jump Force (11 parts)
         // TabItem Header: "Gaming"
         // Checkbox: ChkJumpForce
         // ===================================================================
@@ -130,7 +130,7 @@ namespace GMTPC.Tool
         private const string JUMP_FORCE_FINAL_NAME = "JUMP.FORCE_LinkNeverDie.Com.iso";
 
         // ===================================================================
-        // TabGaming — Ghost of Tsushima
+        // TabGaming â€” Ghost of Tsushima
         // TabItem Header: "Gaming"
         // Checkbox: ChkGhostOfTsushima
         // ===================================================================
@@ -166,7 +166,7 @@ namespace GMTPC.Tool
         private const string GHOST_OF_TSUSHIMA_PART29_URL = "https://github.com/ghostminhtoan/MMT/releases/download/game/Ghost.of.Tsushima_LinkNeverDie.Com.part29.rar";
 
         // ===================================================================
-        // TabOffice — Links (B) and Arguments (C)
+        // TabOffice â€” Links (B) and Arguments (C)
         // TabItem Header: "Office"
         // Checkboxes: ChkActivateOffice, ChkOfficeToolPlus, ChkOfficeSoftmaker,
         //             ChkGMTPCFonts, ChkNotepadPlusPlus
@@ -183,7 +183,7 @@ namespace GMTPC.Tool
         private const string SUBTITLE_EDIT_INSTALL_ARGUMENTS = "/passive";
 
         // ===================================================================
-        // TabSubtitle — Links (B) and Arguments (C)
+        // TabSubtitle â€” Links (B) and Arguments (C)
         // TabItem Header: "Subtitle"
         // Checkboxes: ChkBoilsoftVideoSplitter, ChkVibe, ChkMKVToolNix, ChkSubtitleDraftGMTPC, ChkDownloadSampleVideo
         // ===================================================================
@@ -206,7 +206,7 @@ namespace GMTPC.Tool
         private const string SAMPLE_VIDEO_DOWNLOAD_URL = "https://github.com/ghostminhtoan/Subtitle-draft-GMTPC/releases/download/subtitle.materials/ReZero.Starting.Life.in.Another.World.S04E01.WEB-DL.1080p.AVC.AAC.Dual.Audio-FBI.mkv";
 
         // ===================================================================
-        // TabDriver — Links (B) and Arguments (C)
+        // TabDriver â€” Links (B) and Arguments (C)
         // TabItem Header: "Driver"
         // Checkboxes: Chk3DPChip, Chk3DPNet
         // ===================================================================
@@ -219,7 +219,7 @@ namespace GMTPC.Tool
         private const string DPNET_INSTALL_ARGUMENTS = "/S";
 
         // ===================================================================
-        // TabBrowser — Links (B) and Arguments (C)
+        // TabBrowser â€” Links (B) and Arguments (C)
         // TabItem Header: "Browser"
         // Checkboxes: ChkChrome, ChkCocCoc, ChkEdge, ChkBrave
         // ===================================================================
@@ -240,7 +240,7 @@ namespace GMTPC.Tool
         private const string BRAVE_INSTALL_ARGUMENTS = "";
 
         // ===================================================================
-        // TabMultimedia — Advanced Codec Pack
+        // TabMultimedia â€” Advanced Codec Pack
         // TabItem Header: "Multimedia"
         // Checkboxes: ChkAdvancedCodecPack
         // ===================================================================
@@ -248,7 +248,7 @@ namespace GMTPC.Tool
         private const string ADVANCEDCODECPACK_INSTALL_ARGUMENTS = "/S /V/qn";
 
         // ===================================================================
-        // TabSystem — PowerISO
+        // TabSystem â€” PowerISO
         // TabItem Header: "System"
         // Checkboxes: ChkPowerISO, ChkTeraCopy, ChkVPN1111
         // ===================================================================
@@ -267,7 +267,7 @@ namespace GMTPC.Tool
         {
             try
             {
-                UpdateStatus("Đang tải Zalo...", "Cyan");
+                UpdateStatus("Äang táº£i Zalo...", "Cyan");
                 string zaloPath = Path.Combine(GetGMTPCFolder(), "ZaloSetup.exe");
                 await DownloadWithProgressAsync(ZALO_DOWNLOAD_URL, zaloPath, "Zalo");
 
@@ -278,7 +278,7 @@ namespace GMTPC.Tool
                     SpeedTextBlock.Text = "";
                 });
 
-                UpdateStatus("Đang cài đặt Zalo (silent)...", "Yellow");
+                UpdateStatus("Äang cÃ i Ä‘áº·t Zalo (silent)...", "Yellow");
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = zaloPath,
@@ -290,7 +290,7 @@ namespace GMTPC.Tool
                 if (process != null)
                 {
                     await Task.Run(() => process.WaitForExit());
-                    UpdateStatus("Cài đặt Zalo hoàn tất!", "Green");
+                    UpdateStatus("CÃ i Ä‘áº·t Zalo hoÃ n táº¥t!", "Green");
                 }
 
                 if (File.Exists(zaloPath))
@@ -300,7 +300,7 @@ namespace GMTPC.Tool
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài đặt Zalo: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i Ä‘áº·t Zalo: {ex.Message}", "Red");
             }
         }
 
@@ -308,7 +308,7 @@ namespace GMTPC.Tool
         {
             try
             {
-                UpdateStatus("Đang tải Neat Download Manager...", "Cyan");
+                UpdateStatus("Äang táº£i Neat Download Manager...", "Cyan");
                 string neatDMPath = Path.Combine(GetGMTPCFolder(), "NeatDM_setup.exe");
                 await DownloadWithProgressAsync(NEATDM_DOWNLOAD_URL, neatDMPath, "Neat Download Manager");
 
@@ -319,7 +319,7 @@ namespace GMTPC.Tool
                     SpeedTextBlock.Text = "";
                 });
 
-                UpdateStatus("Đang cài đặt Neat Download Manager (silent)...", "Yellow");
+                UpdateStatus("Äang cÃ i Ä‘áº·t Neat Download Manager (silent)...", "Yellow");
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = neatDMPath,
@@ -331,7 +331,7 @@ namespace GMTPC.Tool
                 if (process != null)
                 {
                     await Task.Run(() => process.WaitForExit());
-                    UpdateStatus("Cài đặt Neat Download Manager hoàn tất!", "Green");
+                    UpdateStatus("CÃ i Ä‘áº·t Neat Download Manager hoÃ n táº¥t!", "Green");
                 }
 
                 if (File.Exists(neatDMPath))
@@ -339,7 +339,7 @@ namespace GMTPC.Tool
                     File.Delete(neatDMPath);
                 }
 
-                UpdateStatus("Đang mở Neat Download Manager...", "Cyan");
+                UpdateStatus("Äang má»Ÿ Neat Download Manager...", "Cyan");
                 string neatDMExePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Neat Download Manager", "NeatDM.exe");
                 if (File.Exists(neatDMExePath))
                 {
@@ -350,7 +350,7 @@ namespace GMTPC.Tool
                     });
                 }
 
-                UpdateStatus("Đang mở trang extension Neat Download Manager...", "Cyan");
+                UpdateStatus("Äang má»Ÿ trang extension Neat Download Manager...", "Cyan");
                 Process.Start(new ProcessStartInfo
                 {
                     FileName = "cmd",
@@ -361,7 +361,7 @@ namespace GMTPC.Tool
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài đặt Neat Download Manager: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i Ä‘áº·t Neat Download Manager: {ex.Message}", "Red");
             }
         }
 
@@ -369,7 +369,7 @@ namespace GMTPC.Tool
         {
             try
             {
-                UpdateStatus("Đang tải PowerISO...", "Cyan");
+                UpdateStatus("Äang táº£i PowerISO...", "Cyan");
                 string powerISOPath = Path.Combine(GetGMTPCFolder(), "PowerISO.exe");
                 await DownloadWithProgressAsync(POWERISO_DOWNLOAD_URL, powerISOPath, "PowerISO");
 
@@ -380,7 +380,7 @@ namespace GMTPC.Tool
                     SpeedTextBlock.Text = "";
                 });
 
-                UpdateStatus("Đang cài đặt PowerISO (silent)...", "Yellow");
+                UpdateStatus("Äang cÃ i Ä‘áº·t PowerISO (silent)...", "Yellow");
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = powerISOPath,
@@ -392,7 +392,7 @@ namespace GMTPC.Tool
                 if (process != null)
                 {
                     await Task.Run(() => process.WaitForExit());
-                    UpdateStatus("Cài đặt PowerISO hoàn tất!", "Green");
+                    UpdateStatus("CÃ i Ä‘áº·t PowerISO hoÃ n táº¥t!", "Green");
                 }
 
                 if (File.Exists(powerISOPath))
@@ -402,12 +402,12 @@ namespace GMTPC.Tool
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài đặt PowerISO: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i Ä‘áº·t PowerISO: {ex.Message}", "Red");
             }
         }
 
         // ===================================================================
-        // TabSystem — Google Drive
+        // TabSystem â€” Google Drive
         // TabItem Header: "System"
         // Checkbox: ChkGoogleDrive
         // ===================================================================
@@ -415,7 +415,7 @@ namespace GMTPC.Tool
         {
             try
             {
-                UpdateStatus("Đang tải Google Drive...", "Cyan");
+                UpdateStatus("Äang táº£i Google Drive...", "Cyan");
                 string googleDrivePath = Path.Combine(GetGMTPCFolder(), "GoogleDriveSetup.exe");
                 await DownloadWithProgressAsync("https://dl.google.com/drive-file-stream/GoogleDriveSetup.exe", googleDrivePath, "Google Drive");
 
@@ -426,7 +426,7 @@ namespace GMTPC.Tool
                     SpeedTextBlock.Text = "";
                 });
 
-                UpdateStatus("Đang cài đặt Google Drive...", "Yellow");
+                UpdateStatus("Äang cÃ i Ä‘áº·t Google Drive...", "Yellow");
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = googleDrivePath,
@@ -438,7 +438,7 @@ namespace GMTPC.Tool
                 if (process != null)
                 {
                     await Task.Run(() => process.WaitForExit());
-                    UpdateStatus("Cài đặt Google Drive hoàn tất!", "Green");
+                    UpdateStatus("CÃ i Ä‘áº·t Google Drive hoÃ n táº¥t!", "Green");
                 }
 
                 if (File.Exists(googleDrivePath))
@@ -448,12 +448,12 @@ namespace GMTPC.Tool
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài đặt Google Drive: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i Ä‘áº·t Google Drive: {ex.Message}", "Red");
             }
         }
 
         // ===================================================================
-        // TabSystem — FolderSize
+        // TabSystem â€” FolderSize
         // TabItem Header: "System"
         // Checkbox: ChkFolderSize
         // ===================================================================
@@ -461,7 +461,7 @@ namespace GMTPC.Tool
         {
             try
             {
-                UpdateStatus("Đang tải FolderSize...", "Cyan");
+                UpdateStatus("Äang táº£i FolderSize...", "Cyan");
                 string folderSizePath = Path.Combine(GetGMTPCFolder(), "FolderSize-2.6-x64.msi");
                 await DownloadWithProgressAsync("https://github.com/ghostminhtoan/MMT/releases/download/v1.0/FolderSize-2.6-x64.msi", folderSizePath, "FolderSize");
 
@@ -472,7 +472,7 @@ namespace GMTPC.Tool
                     SpeedTextBlock.Text = "";
                 });
 
-                UpdateStatus("Đang cài đặt FolderSize (yêu cầu quyền)...", "Yellow");
+                UpdateStatus("Äang cÃ i Ä‘áº·t FolderSize (yÃªu cáº§u quyá»n)...", "Yellow");
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = "msiexec",
@@ -484,7 +484,7 @@ namespace GMTPC.Tool
                 if (process != null)
                 {
                     await Task.Run(() => process.WaitForExit());
-                    UpdateStatus("Cài đặt FolderSize hoàn tất!", "Green");
+                    UpdateStatus("CÃ i Ä‘áº·t FolderSize hoÃ n táº¥t!", "Green");
                 }
 
                 if (File.Exists(folderSizePath))
@@ -494,22 +494,22 @@ namespace GMTPC.Tool
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài đặt FolderSize: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i Ä‘áº·t FolderSize: {ex.Message}", "Red");
             }
         }
 
         // ===================================================================
-        // TabSystem — Checkbox Click Handlers
+        // TabSystem â€” Checkbox Click Handlers
         // ===================================================================
         private void ChkMMTApps_Click(object sender, RoutedEventArgs e)
         {
             if (ChkMMTApps.IsChecked == true)
             {
-                UpdateStatus("Đã chọn: MMT Apps", "Green");
+                UpdateStatus("ÄÃ£ chá»n: MMT Apps", "Green");
             }
             else
             {
-                UpdateStatus("Đã hủy chọn: MMT Apps", "Yellow");
+                UpdateStatus("ÄÃ£ há»§y chá»n: MMT Apps", "Yellow");
             }
 
             UpdateInstallButtonState();
@@ -519,11 +519,11 @@ namespace GMTPC.Tool
         {
             if (ChkDISMPP.IsChecked == true)
             {
-                UpdateStatus("Đã chọn: DISM++", "Green");
+                UpdateStatus("ÄÃ£ chá»n: DISM++", "Green");
             }
             else
             {
-                UpdateStatus("Đã hủy chọn: DISM++", "Yellow");
+                UpdateStatus("ÄÃ£ há»§y chá»n: DISM++", "Yellow");
             }
 
             UpdateInstallButtonState();
@@ -533,11 +533,11 @@ namespace GMTPC.Tool
         {
             if (ChkComfortClipboardPro.IsChecked == true)
             {
-                UpdateStatus("Đã chọn: Comfort Clipboard Pro", "Green");
+                UpdateStatus("ÄÃ£ chá»n: Comfort Clipboard Pro", "Green");
             }
             else
             {
-                UpdateStatus("Đã hủy chọn: Comfort Clipboard Pro", "Yellow");
+                UpdateStatus("ÄÃ£ há»§y chá»n: Comfort Clipboard Pro", "Yellow");
             }
 
             UpdateInstallButtonState();
@@ -547,11 +547,11 @@ namespace GMTPC.Tool
         {
             if (ChkFolderSize.IsChecked == true)
             {
-                UpdateStatus("Đã chọn: FolderSize", "Green");
+                UpdateStatus("ÄÃ£ chá»n: FolderSize", "Green");
             }
             else
             {
-                UpdateStatus("Đã hủy chọn: FolderSize", "Yellow");
+                UpdateStatus("ÄÃ£ há»§y chá»n: FolderSize", "Yellow");
             }
 
             UpdateInstallButtonState();
@@ -561,11 +561,11 @@ namespace GMTPC.Tool
         {
             if (ChkPowerISO.IsChecked == true)
             {
-                UpdateStatus("Đã chọn: PowerISO", "Green");
+                UpdateStatus("ÄÃ£ chá»n: PowerISO", "Green");
             }
             else
             {
-                UpdateStatus("Đã hủy chọn: PowerISO", "Yellow");
+                UpdateStatus("ÄÃ£ há»§y chá»n: PowerISO", "Yellow");
             }
 
             UpdateInstallButtonState();
@@ -575,11 +575,11 @@ namespace GMTPC.Tool
         {
             if (ChkGoogleDrive.IsChecked == true)
             {
-                UpdateStatus("Đã chọn: Google Drive", "Green");
+                UpdateStatus("ÄÃ£ chá»n: Google Drive", "Green");
             }
             else
             {
-                UpdateStatus("Đã hủy chọn: Google Drive", "Yellow");
+                UpdateStatus("ÄÃ£ há»§y chá»n: Google Drive", "Yellow");
             }
 
             UpdateInstallButtonState();
@@ -589,22 +589,22 @@ namespace GMTPC.Tool
         {
             if (ChkNetLimiter.IsChecked == true)
             {
-                UpdateStatus("Đã chọn: NetLimiter", "Green");
+                UpdateStatus("ÄÃ£ chá»n: NetLimiter", "Green");
             }
             else
             {
-                UpdateStatus("Đã hủy chọn: NetLimiter", "Yellow");
+                UpdateStatus("ÄÃ£ há»§y chá»n: NetLimiter", "Yellow");
             }
 
             UpdateInstallButtonState();
         }
 
         // ===================================================================
-        // Common — UpdateInstallButtonState
+        // Common â€” UpdateInstallButtonState
         // ===================================================================
         private void UpdateInstallButtonState()
         {
-            // Kiểm tra xem có ít nhất một checkbox nào được chọn không
+            // Kiá»ƒm tra xem cÃ³ Ã­t nháº¥t má»™t checkbox nÃ o Ä‘Æ°á»£c chá»n khÃ´ng
             bool hasChecked = ChkInstallIDM.IsChecked == true ||
                              ChkInstallNeatDM.IsChecked == true ||
                              ChkActivateWindows.IsChecked == true ||
@@ -613,62 +613,62 @@ namespace GMTPC.Tool
                              ChkPauseWindowsUpdate.IsChecked == true ||
                              ChkInstallWinRAR.IsChecked == true ||
                              ChkInstallBID.IsChecked == true ||
-                             // Thêm các checkbox mới cho tab Runtime
+                             // ThÃªm cÃ¡c checkbox má»›i cho tab Runtime
                              ChkVcredist.IsChecked == true ||
                              ChkDirectX.IsChecked == true ||
-                             // Thêm checkbox cho Java và OpenAL
+                             // ThÃªm checkbox cho Java vÃ  OpenAL
                              ChkJava.IsChecked == true ||
                              ChkOpenAL.IsChecked == true ||
-                             // Thêm checkbox cho Driver
+                             // ThÃªm checkbox cho Driver
                              Chk3DPChip.IsChecked == true ||
                              Chk3DPNet.IsChecked == true ||
                              // Google Chrome
                              ChkChrome.IsChecked == true ||
-                             // Cốc Cốc
+                             // Cá»‘c Cá»‘c
                              ChkCocCoc.IsChecked == true ||
                              // Microsoft Edge
                              ChkEdge.IsChecked == true ||
                              // Brave
                              ChkBrave.IsChecked == true ||
                              ChkRevoUninstaller.IsChecked == true ||
-                             // Thêm checkbox cho Zalo
+                             // ThÃªm checkbox cho Zalo
                              ChkInstallZalo.IsChecked == true ||
-                             // Thêm checkbox cho MMT Apps
+                             // ThÃªm checkbox cho MMT Apps
                              ChkMMTApps.IsChecked == true ||
-                             // Thêm checkbox cho DISM++
+                             // ThÃªm checkbox cho DISM++
                              ChkDISMPP.IsChecked == true ||
-                             // Thêm checkbox cho Comfort Clipboard Pro
+                             // ThÃªm checkbox cho Comfort Clipboard Pro
                              ChkComfortClipboardPro.IsChecked == true ||
-                             // Thêm checkbox cho Office Softmaker
+                             // ThÃªm checkbox cho Office Softmaker
                              ChkOfficeSoftmaker.IsChecked == true ||
-                             // Thêm checkbox cho GMTPC Fonts
+                             // ThÃªm checkbox cho GMTPC Fonts
                              ChkGMTPCFonts.IsChecked == true ||
-                             // Thêm checkbox cho Notepad++
+                             // ThÃªm checkbox cho Notepad++
                              ChkNotepadPlusPlus.IsChecked == true ||
-                             // Thêm checkbox cho Subtitle Edit
+                             // ThÃªm checkbox cho Subtitle Edit
                              ChkSubtitleEdit.IsChecked == true ||
-                             // Thêm checkbox cho VidCoder (Tab Subtitle)
+                             // ThÃªm checkbox cho VidCoder (Tab Subtitle)
                              ChkVidCoder.IsChecked == true ||
-                             // Thêm checkbox cho Boilsoft Video Splitter (Tab Subtitle)
+                             // ThÃªm checkbox cho Boilsoft Video Splitter (Tab Subtitle)
                              ChkBoilsoftVideoSplitter.IsChecked == true ||
-                             // Thêm checkbox cho Vibe (Tab Subtitle)
+                             // ThÃªm checkbox cho Vibe (Tab Subtitle)
                              ChkVibe.IsChecked == true ||
-                             // Thêm checkbox cho MKVToolNix MKVCleaver (Tab Subtitle)
+                             // ThÃªm checkbox cho MKVToolNix MKVCleaver (Tab Subtitle)
                              ChkMKVToolNix.IsChecked == true ||
-                             // Thêm checkbox cho Subtitle Draft GMTPC (Tab Subtitle)
+                             // ThÃªm checkbox cho Subtitle Draft GMTPC (Tab Subtitle)
                              ChkSubtitleDraftGMTPC.IsChecked == true ||
                              ChkDownloadSampleVideo.IsChecked == true ||
-                             // Thêm checkbox cho AOMEI Partition Assistant
+                             // ThÃªm checkbox cho AOMEI Partition Assistant
                              ChkAomeiPartitionAssistant.IsChecked == true ||
-                             // Thêm checkbox cho PowerISO
+                             // ThÃªm checkbox cho PowerISO
                              ChkPowerISO.IsChecked == true ||
-                             // Thêm checkbox cho Google Drive
+                             // ThÃªm checkbox cho Google Drive
                              ChkGoogleDrive.IsChecked == true ||
-                             // Thêm checkbox cho NetLimiter
+                             // ThÃªm checkbox cho NetLimiter
                              ChkNetLimiter.IsChecked == true ||
                              // FolderSize
                              ChkFolderSize.IsChecked == true ||
-                             // Thêm checkbox cho Gaming tab
+                             // ThÃªm checkbox cho Gaming tab
                              ChkDiskGenius.IsChecked == true ||
                              ChkProcessLasso.IsChecked == true ||
                              ChkThrottlestop.IsChecked == true ||
@@ -691,7 +691,7 @@ namespace GMTPC.Tool
                              ChkWin11_26H1.IsChecked == true ||
                              ChkWin10LtscIot21H2.IsChecked == true ||
                              ChkWin10_22H2_2024_December.IsChecked == true ||
-                             // Windows Mod MMT - Ventoy/WintoHDD
+                             // Windows - Ventoy/WintoHDD
                              ChkVentoy.IsChecked == true ||
                              ChkWintoHDD.IsChecked == true ||
                              // Multimedia - Advanced Codec Pack
@@ -702,14 +702,14 @@ namespace GMTPC.Tool
                              // Gaming - Jump Force
                              ChkJumpForce.IsChecked == true;
 
-            // Bao gồm checkbox cho Tạo WinRE và WinPE
+            // Bao gá»“m checkbox cho Táº¡o WinRE vÃ  WinPE
 
-            // Cập nhật trạng thái của nút Install
+            // Cáº­p nháº­t tráº¡ng thÃ¡i cá»§a nÃºt Install
             BtnInstall.IsEnabled = hasChecked;
         }
 
         // ===================================================================
-        // Common — Add/Remove Defender Exclusion Path
+        // Common â€” Add/Remove Defender Exclusion Path
         // ===================================================================
         private void AddDefenderExclusionPath(string exclusionPath)
         {
@@ -731,7 +731,7 @@ namespace GMTPC.Tool
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi thêm exclusion: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi thÃªm exclusion: {ex.Message}", "Red");
             }
         }
 
@@ -755,12 +755,12 @@ namespace GMTPC.Tool
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi xóa exclusion: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi xÃ³a exclusion: {ex.Message}", "Red");
             }
         }
 
         // ===================================================================
-        // TabSystem — DISM++
+        // TabSystem â€” DISM++
         // TabItem Header: "System"
         // Checkbox: ChkDISMPP
         // ===================================================================
@@ -768,11 +768,11 @@ namespace GMTPC.Tool
         {
             try
             {
-                UpdateStatus("Đang tải DISM++...", "Cyan");
+                UpdateStatus("Äang táº£i DISM++...", "Cyan");
                 string dismppPath = Path.Combine(GetGMTPCFolder(), "DISM++.exe");
                 await DownloadWithProgressAsync("https://github.com/ghostminhtoan/MMT/releases/download/WinPE/DISM++.exe", dismppPath, "DISM++ Installer");
 
-                MessageBoxResult result = MessageBox.Show("Yes = Cài đặt tự động vào ổ C\nNo = Cài vào ổ khác", " Cài đặt tự động DISM++", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                MessageBoxResult result = MessageBox.Show("Yes = CÃ i Ä‘áº·t tá»± Ä‘á»™ng vÃ o á»• C\nNo = CÃ i vÃ o á»• khÃ¡c", " CÃ i Ä‘áº·t tá»± Ä‘á»™ng DISM++", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
@@ -783,15 +783,15 @@ namespace GMTPC.Tool
                 if (result == MessageBoxResult.Yes)
                 {
                     startInfo.Arguments = "/s";
-                    UpdateStatus("Cài đặt DISM++ vào ổ C...", "Yellow");
+                    UpdateStatus("CÃ i Ä‘áº·t DISM++ vÃ o á»• C...", "Yellow");
                 }
                 else if (result == MessageBoxResult.No)
                 {
-                    UpdateStatus("Cài DISM++ vào ổ khác...", "Yellow");
+                    UpdateStatus("CÃ i DISM++ vÃ o á»• khÃ¡c...", "Yellow");
                 }
                 else
                 {
-                    UpdateStatus("Đã hủy cài đặt DISM++", "Yellow");
+                    UpdateStatus("ÄÃ£ há»§y cÃ i Ä‘áº·t DISM++", "Yellow");
                     if (File.Exists(dismppPath)) File.Delete(dismppPath);
                     return;
                 }
@@ -800,20 +800,20 @@ namespace GMTPC.Tool
                 if (process != null)
                 {
                     await Task.Run(() => process.WaitForExit());
-                    UpdateStatus(process.ExitCode == 0 ? "Cài đặt DISM++ thành công!" : $"Cài đặt DISM++ thất bại. Mã lỗi: {process.ExitCode}", process.ExitCode == 0 ? "Green" : "Red");
+                    UpdateStatus(process.ExitCode == 0 ? "CÃ i Ä‘áº·t DISM++ thÃ nh cÃ´ng!" : $"CÃ i Ä‘áº·t DISM++ tháº¥t báº¡i. MÃ£ lá»—i: {process.ExitCode}", process.ExitCode == 0 ? "Green" : "Red");
                 }
 
                 if (File.Exists(dismppPath)) File.Delete(dismppPath);
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài đặt DISM++: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i Ä‘áº·t DISM++: {ex.Message}", "Red");
             }
         }
 
 
         // ===================================================================
-        // TabSystem — NetLimiter
+        // TabSystem â€” NetLimiter
         // TabItem Header: "System"
         // Checkbox: ChkNetLimiter
         // ===================================================================
@@ -821,11 +821,11 @@ namespace GMTPC.Tool
         {
             try
             {
-                UpdateStatus("Đang tải NetLimiter...", "Cyan");
+                UpdateStatus("Äang táº£i NetLimiter...", "Cyan");
                 string netLimiterPath = Path.Combine(GetGMTPCFolder(), "NetLimiter.exe");
                 await DownloadWithProgressAsync("https://github.com/ghostminhtoan/MMT/releases/download/v1.0/netlimiter-4.1.12.0.exe", netLimiterPath, "NetLimiter");
 
-                UpdateStatus("Đang cài đặt NetLimiter...", "Yellow");
+                UpdateStatus("Äang cÃ i Ä‘áº·t NetLimiter...", "Yellow");
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = netLimiterPath,
@@ -837,7 +837,7 @@ namespace GMTPC.Tool
                 if (process != null)
                 {
                     await Task.Run(() => process.WaitForExit());
-                    UpdateStatus("Cài đặt NetLimiter hoàn tất!", "Green");
+                    UpdateStatus("CÃ i Ä‘áº·t NetLimiter hoÃ n táº¥t!", "Green");
 
                     await Dispatcher.InvokeAsync(() => ShowNetLimiterKeyDialog());
                 }
@@ -846,7 +846,7 @@ namespace GMTPC.Tool
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài đặt NetLimiter: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i Ä‘áº·t NetLimiter: {ex.Message}", "Red");
             }
         }
 
@@ -884,7 +884,7 @@ namespace GMTPC.Tool
                     Foreground = new SolidColorBrush(Color.FromRgb(230, 230, 230)),
                     BorderBrush = new SolidColorBrush(Color.FromRgb(122, 122, 122))
                 };
-                copyNameBtn.Click += (s, e) => { Clipboard.SetText(nameBox.Text); UpdateStatus("Đã copy: Vladimir Putin #2", "Green"); };
+                copyNameBtn.Click += (s, e) => { Clipboard.SetText(nameBox.Text); UpdateStatus("ÄÃ£ copy: Vladimir Putin #2", "Green"); };
                 line1.Children.Add(nameBox);
                 line1.Children.Add(copyNameBtn);
                 mainPanel.Children.Add(line1);
@@ -906,7 +906,7 @@ namespace GMTPC.Tool
                     Foreground = new SolidColorBrush(Color.FromRgb(230, 230, 230)),
                     BorderBrush = new SolidColorBrush(Color.FromRgb(122, 122, 122))
                 };
-                copyKeyBtn.Click += (s, e) => { Clipboard.SetText(keyBox.Text); UpdateStatus("Đã copy: XLEVD-PNASB-6A3BD-Z72GJ-SPAH7", "Green"); };
+                copyKeyBtn.Click += (s, e) => { Clipboard.SetText(keyBox.Text); UpdateStatus("ÄÃ£ copy: XLEVD-PNASB-6A3BD-Z72GJ-SPAH7", "Green"); };
                 line2.Children.Add(keyBox);
                 line2.Children.Add(copyKeyBtn);
                 mainPanel.Children.Add(line2);
@@ -916,7 +916,7 @@ namespace GMTPC.Tool
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi hiển thị dialog key: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i hiá»ƒn thá»‹ dialog key: {ex.Message}", "Red");
             }
         }
 
@@ -924,18 +924,18 @@ namespace GMTPC.Tool
         {
             try
             {
-                UpdateStatus("Mở cửa sổ kích hoạt NetLimiter...", "Cyan");
+                UpdateStatus("Má»Ÿ cá»­a sá»• kÃ­ch hoáº¡t NetLimiter...", "Cyan");
                 ShowNetLimiterKeyDialog();
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi mở NetLimiter Key Dialog: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi má»Ÿ NetLimiter Key Dialog: {ex.Message}", "Red");
             }
         }
 
 
         // ===================================================================
-        // TabSystem — Comfort Clipboard Pro
+        // TabSystem â€” Comfort Clipboard Pro
         // TabItem Header: "System"
         // Checkbox: ChkComfortClipboardPro
         // ===================================================================
@@ -943,19 +943,19 @@ namespace GMTPC.Tool
         {
             try
             {
-                UpdateStatus("Đang tải Comfort Clipboard Pro...", "Cyan");
+                UpdateStatus("Äang táº£i Comfort Clipboard Pro...", "Cyan");
                 string comfortClipboardPath = Path.Combine(GetGMTPCFolder(), "Comfort.Clipboard.Pro.7.0.2.exe");
                 await DownloadWithProgressAsync("https://github.com/ghostminhtoan/MMT/releases/download/v1.0/Comfort.Clipboard.Pro.7.0.2.exe", comfortClipboardPath, "Comfort Clipboard Pro Installer");
 
-                MessageBoxResult result = MessageBox.Show("Yes = Cài đặt tự động vào ổ C\nNo = Cài vào ổ khác", " Cài đặt tự động Comfort Clipboard Pro", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                MessageBoxResult result = MessageBox.Show("Yes = CÃ i Ä‘áº·t tá»± Ä‘á»™ng vÃ o á»• C\nNo = CÃ i vÃ o á»• khÃ¡c", " CÃ i Ä‘áº·t tá»± Ä‘á»™ng Comfort Clipboard Pro", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
                 ProcessStartInfo startInfo = new ProcessStartInfo { FileName = comfortClipboardPath, UseShellExecute = true };
 
-                if (result == MessageBoxResult.Yes) { startInfo.Arguments = "/passive"; UpdateStatus("Cài đặt tự động vào ổ C", "Yellow"); }
-                else if (result == MessageBoxResult.No) { UpdateStatus("Cài vào ổ khác...", "Yellow"); }
+                if (result == MessageBoxResult.Yes) { startInfo.Arguments = "/passive"; UpdateStatus("CÃ i Ä‘áº·t tá»± Ä‘á»™ng vÃ o á»• C", "Yellow"); }
+                else if (result == MessageBoxResult.No) { UpdateStatus("CÃ i vÃ o á»• khÃ¡c...", "Yellow"); }
                 else
                 {
-                    UpdateStatus("Đã hủy cài đặt Comfort Clipboard Pro", "Yellow");
+                    UpdateStatus("ÄÃ£ há»§y cÃ i Ä‘áº·t Comfort Clipboard Pro", "Yellow");
                     if (File.Exists(comfortClipboardPath)) File.Delete(comfortClipboardPath);
                     return;
                 }
@@ -964,20 +964,20 @@ namespace GMTPC.Tool
                 if (process != null)
                 {
                     await Task.Run(() => process.WaitForExit());
-                    UpdateStatus(process.ExitCode == 0 ? "Cài đặt Comfort Clipboard Pro thành công!" : $"Thất bại. Mã lỗi: {process.ExitCode}", process.ExitCode == 0 ? "Green" : "Red");
+                    UpdateStatus(process.ExitCode == 0 ? "CÃ i Ä‘áº·t Comfort Clipboard Pro thÃ nh cÃ´ng!" : $"Tháº¥t báº¡i. MÃ£ lá»—i: {process.ExitCode}", process.ExitCode == 0 ? "Green" : "Red");
                 }
 
                 if (File.Exists(comfortClipboardPath)) File.Delete(comfortClipboardPath);
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài đặt Comfort Clipboard Pro: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i Ä‘áº·t Comfort Clipboard Pro: {ex.Message}", "Red");
             }
         }
 
 
         // ===================================================================
-        // TabSystem — MMT Apps
+        // TabSystem â€” MMT Apps
         // TabItem Header: "System"
         // Checkbox: ChkMMTApps
         // ===================================================================
@@ -985,19 +985,19 @@ namespace GMTPC.Tool
         {
             try
             {
-                UpdateStatus("Đang tải MMT.Apps.exe...", "Cyan");
+                UpdateStatus("Äang táº£i MMT.Apps.exe...", "Cyan");
                 string mmtAppsPath = Path.Combine(GetGMTPCFolder(), "MMT.Apps.exe");
                 await DownloadWithProgressAsync("https://github.com/ghostminhtoan/MMT/releases/download/v1.0/MMT.Apps.exe", mmtAppsPath, "MMT Apps Installer");
 
-                MessageBoxResult result = MessageBox.Show("Yes = Cài đặt tự động vào ổ C\nNo = Cài vào ổ khác", "Cài đặt tự động MMT Apps", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                MessageBoxResult result = MessageBox.Show("Yes = CÃ i Ä‘áº·t tá»± Ä‘á»™ng vÃ o á»• C\nNo = CÃ i vÃ o á»• khÃ¡c", "CÃ i Ä‘áº·t tá»± Ä‘á»™ng MMT Apps", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
                 ProcessStartInfo startInfo = new ProcessStartInfo { FileName = mmtAppsPath, UseShellExecute = true };
 
-                if (result == MessageBoxResult.Yes) { startInfo.Arguments = "/passive"; UpdateStatus("Cài đặt tự động vào ổ C", "Yellow"); }
-                else if (result == MessageBoxResult.No) { UpdateStatus("Cài vào ổ khác...", "Yellow"); }
+                if (result == MessageBoxResult.Yes) { startInfo.Arguments = "/passive"; UpdateStatus("CÃ i Ä‘áº·t tá»± Ä‘á»™ng vÃ o á»• C", "Yellow"); }
+                else if (result == MessageBoxResult.No) { UpdateStatus("CÃ i vÃ o á»• khÃ¡c...", "Yellow"); }
                 else
                 {
-                    UpdateStatus("Đã hủy cài đặt MMT Apps", "Yellow");
+                    UpdateStatus("ÄÃ£ há»§y cÃ i Ä‘áº·t MMT Apps", "Yellow");
                     if (File.Exists(mmtAppsPath)) File.Delete(mmtAppsPath);
                     return;
                 }
@@ -1006,20 +1006,20 @@ namespace GMTPC.Tool
                 if (process != null)
                 {
                     await Task.Run(() => process.WaitForExit());
-                    UpdateStatus(process.ExitCode == 0 ? "Cài đặt MMT Apps thành công!" : $"Thất bại. Mã lỗi: {process.ExitCode}", process.ExitCode == 0 ? "Green" : "Red");
+                    UpdateStatus(process.ExitCode == 0 ? "CÃ i Ä‘áº·t MMT Apps thÃ nh cÃ´ng!" : $"Tháº¥t báº¡i. MÃ£ lá»—i: {process.ExitCode}", process.ExitCode == 0 ? "Green" : "Red");
                 }
 
                 if (File.Exists(mmtAppsPath)) File.Delete(mmtAppsPath);
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài đặt MMT Apps: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i Ä‘áº·t MMT Apps: {ex.Message}", "Red");
             }
         }
 
 
         // ===================================================================
-        // TabSystem — Defender Control
+        // TabSystem â€” Defender Control
         // TabItem Header: "System"
         // Button: BtnDefenderControl
         // ===================================================================
@@ -1027,7 +1027,7 @@ namespace GMTPC.Tool
         {
             try
             {
-                UpdateStatus("Bắt đầu quá trình Defender Control...", "Cyan");
+                UpdateStatus("Báº¯t Ä‘áº§u quÃ¡ trÃ¬nh Defender Control...", "Cyan");
 
                 AddDefenderExclusionPath(Path.GetTempPath());
                 AddDefenderExclusionPath(Path.Combine(Environment.GetEnvironmentVariable("programfiles(x86)"), "DefenderControl"));
@@ -1039,7 +1039,7 @@ namespace GMTPC.Tool
                     await Task.Run(() => client.DownloadFile(vbsUrl, vbsPath));
                 }
 
-                UpdateStatus("Đang chạy windefend off.vbs...", "Cyan");
+                UpdateStatus("Äang cháº¡y windefend off.vbs...", "Cyan");
                 Process vbsProcess = Process.Start(new ProcessStartInfo
                 {
                     FileName = "cscript.exe", Arguments = $"\"{vbsPath}\"",
@@ -1050,7 +1050,7 @@ namespace GMTPC.Tool
                 if (File.Exists(vbsPath)) File.Delete(vbsPath);
 
                 MessageBoxResult result = MessageBox.Show(
-                    "Nếu đã tắt tamper protection thì bấm Yes để tải Defender Control về",
+                    "Náº¿u Ä‘Ã£ táº¯t tamper protection thÃ¬ báº¥m Yes Ä‘á»ƒ táº£i Defender Control vá»",
                     "Defender Control", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Yes)
@@ -1073,17 +1073,17 @@ namespace GMTPC.Tool
                     RemoveDefenderExclusionPath(Path.GetTempPath());
                 }
 
-                UpdateStatus("Hoàn thành quá trình Defender Control!", "Green");
+                UpdateStatus("HoÃ n thÃ nh quÃ¡ trÃ¬nh Defender Control!", "Green");
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i: {ex.Message}", "Red");
             }
         }
 
 
         // ===================================================================
-        // TabSystem — Backup Restore Mklink MMT
+        // TabSystem â€” Backup Restore Mklink MMT
         // TabItem Header: "System"
         // Button: BtnBackupRestoreMklinkMMT
         // ===================================================================
@@ -1095,24 +1095,24 @@ namespace GMTPC.Tool
                 string filePath = Path.Combine(desktopPath, "backup.restore.mklink.MMT.xlsx");
                 string downloadUrl = "https://github.com/ghostminhtoan/MMT/releases/download/v1.0/backup.restore.mklink.MMT.xlsx";
 
-                UpdateStatus("Đang tải file backup.restore.mklink.MMT.xlsx...", "Cyan");
+                UpdateStatus("Äang táº£i file backup.restore.mklink.MMT.xlsx...", "Cyan");
                 using (WebClient client = new WebClient())
                 {
                     await client.DownloadFileTaskAsync(downloadUrl, filePath);
                 }
 
-                UpdateStatus("Đã tải về desktop", "Green");
-                MessageBox.Show("Đã tải về desktop", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                UpdateStatus("ÄÃ£ táº£i vá» desktop", "Green");
+                MessageBox.Show("ÄÃ£ táº£i vá» desktop", "ThÃ´ng bÃ¡o", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi tải file: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi táº£i file: {ex.Message}", "Red");
             }
         }
 
 
         // ===================================================================
-        // TabPartition — Disk Genius
+        // TabPartition â€” Disk Genius
         // TabItem Header: "Partition"
         // Checkbox: ChkDiskGenius
         // ===================================================================
@@ -1120,19 +1120,19 @@ namespace GMTPC.Tool
         {
             try
             {
-                UpdateStatus("Đang tải Disk Genius...", "Cyan");
+                UpdateStatus("Äang táº£i Disk Genius...", "Cyan");
                 string diskGeniusPath = Path.Combine(GetGMTPCFolder(), "DiskGenius.exe");
                 await DownloadWithProgressAsync("https://github.com/ghostminhtoan/MMT/releases/download/WinPE/Disk.Genius.exe", diskGeniusPath, "Disk Genius");
 
-                MessageBoxResult result = MessageBox.Show("Yes = Cài đặt tự động vào ổ C\nNo = Cài vào ổ khác", "Cài đặt Disk Genius", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                MessageBoxResult result = MessageBox.Show("Yes = CÃ i Ä‘áº·t tá»± Ä‘á»™ng vÃ o á»• C\nNo = CÃ i vÃ o á»• khÃ¡c", "CÃ i Ä‘áº·t Disk Genius", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
                 ProcessStartInfo startInfo = new ProcessStartInfo { FileName = diskGeniusPath, UseShellExecute = true };
 
-                if (result == MessageBoxResult.Yes) { startInfo.Arguments = "/s"; UpdateStatus("Cài đặt Disk Genius vào ổ C...", "Yellow"); }
-                else if (result == MessageBoxResult.No) { UpdateStatus("Cài Disk Genius vào ổ khác...", "Yellow"); }
+                if (result == MessageBoxResult.Yes) { startInfo.Arguments = "/s"; UpdateStatus("CÃ i Ä‘áº·t Disk Genius vÃ o á»• C...", "Yellow"); }
+                else if (result == MessageBoxResult.No) { UpdateStatus("CÃ i Disk Genius vÃ o á»• khÃ¡c...", "Yellow"); }
                 else
                 {
-                    UpdateStatus("Đã hủy cài đặt Disk Genius", "Yellow");
+                    UpdateStatus("ÄÃ£ há»§y cÃ i Ä‘áº·t Disk Genius", "Yellow");
                     if (File.Exists(diskGeniusPath)) File.Delete(diskGeniusPath);
                     return;
                 }
@@ -1141,20 +1141,20 @@ namespace GMTPC.Tool
                 if (process != null)
                 {
                     await Task.Run(() => process.WaitForExit());
-                    UpdateStatus("Cài đặt Disk Genius hoàn tất!", "Green");
+                    UpdateStatus("CÃ i Ä‘áº·t Disk Genius hoÃ n táº¥t!", "Green");
                 }
 
                 if (File.Exists(diskGeniusPath)) File.Delete(diskGeniusPath);
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài đặt Disk Genius: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i Ä‘áº·t Disk Genius: {ex.Message}", "Red");
             }
         }
 
 
         // ===================================================================
-        // TabPartition — AOMEI Partition Assistant
+        // TabPartition â€” AOMEI Partition Assistant
         // TabItem Header: "Partition"
         // Checkbox: ChkAomeiPartitionAssistant
         // ===================================================================
@@ -1162,40 +1162,40 @@ namespace GMTPC.Tool
         {
             try
             {
-                UpdateStatus("Đang tải AOMEI Partition Assistant...", "Cyan");
+                UpdateStatus("Äang táº£i AOMEI Partition Assistant...", "Cyan");
                 string filePath = Path.Combine(GetGMTPCFolder(), "AOMEI.Partition.Assistant.exe");
                 await DownloadWithProgressAsync("https://github.com/ghostminhtoan/MMT/releases/download/WinPE/AOMEI.Partition.Assistant.exe", filePath, "AOMEI Partition Assistant");
 
-                MessageBoxResult result = MessageBox.Show("Yes = Cài đặt tự động vào ổ C\nNo = Cài vào ổ khác", "Cài đặt AOMEI Partition Assistant", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                MessageBoxResult result = MessageBox.Show("Yes = CÃ i Ä‘áº·t tá»± Ä‘á»™ng vÃ o á»• C\nNo = CÃ i vÃ o á»• khÃ¡c", "CÃ i Ä‘áº·t AOMEI Partition Assistant", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Cancel)
                 {
-                    UpdateStatus("Đã hủy cài đặt AOMEI Partition Assistant", "Yellow");
+                    UpdateStatus("ÄÃ£ há»§y cÃ i Ä‘áº·t AOMEI Partition Assistant", "Yellow");
                     if (File.Exists(filePath)) File.Delete(filePath);
                     return;
                 }
 
                 ProcessStartInfo startInfo = new ProcessStartInfo { FileName = filePath, UseShellExecute = true };
-                if (result == MessageBoxResult.Yes) { startInfo.Arguments = "/passive"; UpdateStatus("Cài đặt AOMEI vào ổ C...", "Yellow"); }
-                else { UpdateStatus("Cài AOMEI vào ổ khác...", "Yellow"); }
+                if (result == MessageBoxResult.Yes) { startInfo.Arguments = "/passive"; UpdateStatus("CÃ i Ä‘áº·t AOMEI vÃ o á»• C...", "Yellow"); }
+                else { UpdateStatus("CÃ i AOMEI vÃ o á»• khÃ¡c...", "Yellow"); }
 
                 Process process = Process.Start(startInfo);
                 if (process != null)
                 {
                     await Task.Run(() => process.WaitForExit());
-                    UpdateStatus("Cài đặt AOMEI Partition Assistant hoàn tất!", "Green");
+                    UpdateStatus("CÃ i Ä‘áº·t AOMEI Partition Assistant hoÃ n táº¥t!", "Green");
                 }
 
                 if (File.Exists(filePath)) File.Delete(filePath);
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài đặt AOMEI Partition Assistant: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i Ä‘áº·t AOMEI Partition Assistant: {ex.Message}", "Red");
             }
         }
 
         // ===================================================================
-        // TabMultimedia — Advanced Codec Pack
+        // TabMultimedia â€” Advanced Codec Pack
         // TabItem Header: "Multimedia"
         // Checkbox: ChkAdvancedCodecPack
         // ===================================================================
@@ -1203,7 +1203,7 @@ namespace GMTPC.Tool
         {
             try
             {
-                UpdateStatus("Đang tải Advanced Codec Pack...", "Cyan");
+                UpdateStatus("Äang táº£i Advanced Codec Pack...", "Cyan");
                 string codecPath = Path.Combine(GetGMTPCFolder(), "ADVANCED_Codec_Pack.exe");
                 await DownloadWithProgressAsync(ADVANCEDCODECPACK_DOWNLOAD_URL, codecPath, "Advanced Codec Pack");
 
@@ -1214,7 +1214,7 @@ namespace GMTPC.Tool
                     SpeedTextBlock.Text = "";
                 });
 
-                UpdateStatus("Đang cài đặt Advanced Codec Pack (silent)...", "Yellow");
+                UpdateStatus("Äang cÃ i Ä‘áº·t Advanced Codec Pack (silent)...", "Yellow");
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = codecPath,
@@ -1226,19 +1226,19 @@ namespace GMTPC.Tool
                 if (process != null)
                 {
                     await Task.Run(() => process.WaitForExit());
-                    UpdateStatus("Advanced Codec Pack đã hoàn tất.", "Green");
+                    UpdateStatus("Advanced Codec Pack Ä‘Ã£ hoÃ n táº¥t.", "Green");
                 }
 
                 if (File.Exists(codecPath)) File.Delete(codecPath);
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài Advanced Codec Pack: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i Advanced Codec Pack: {ex.Message}", "Red");
             }
         }
 
         // ===================================================================
-        // TabSystem — TeraCopy
+        // TabSystem â€” TeraCopy
         // TabItem Header: "System"
         // Checkbox: ChkTeraCopy
         // ===================================================================
@@ -1248,10 +1248,10 @@ namespace GMTPC.Tool
             {
                 // Add Windows Defender exclusion for %TEMP%\TeraCopy before download
                 string tempTeraCopyFolder = Path.Combine(Path.GetTempPath(), "TeraCopy");
-                UpdateStatus($"Đang thêm Windows Defender exclusion: {tempTeraCopyFolder}...", "Yellow");
+                UpdateStatus($"Äang thÃªm Windows Defender exclusion: {tempTeraCopyFolder}...", "Yellow");
                 AddDefenderExclusion(tempTeraCopyFolder);
 
-                UpdateStatus("Đang tải TeraCopy...", "Cyan");
+                UpdateStatus("Äang táº£i TeraCopy...", "Cyan");
                 string teraPath = Path.Combine(GetGMTPCFolder(), "TeraCopy.Pro.v3.17.0.0.exe");
                 await DownloadWithProgressAsync(TERACOPY_DOWNLOAD_URL, teraPath, "TeraCopy");
 
@@ -1262,7 +1262,7 @@ namespace GMTPC.Tool
                     SpeedTextBlock.Text = "";
                 });
 
-                UpdateStatus("Đang cài đặt TeraCopy (silent)...", "Yellow");
+                UpdateStatus("Äang cÃ i Ä‘áº·t TeraCopy (silent)...", "Yellow");
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = teraPath,
@@ -1274,23 +1274,23 @@ namespace GMTPC.Tool
                 if (process != null)
                 {
                     await Task.Run(() => process.WaitForExit());
-                    UpdateStatus("TeraCopy đã hoàn tất.", "Green");
+                    UpdateStatus("TeraCopy Ä‘Ã£ hoÃ n táº¥t.", "Green");
                 }
 
                 if (File.Exists(teraPath)) File.Delete(teraPath);
 
                 // Remove Windows Defender exclusion after installation
-                UpdateStatus("Đang xóa Windows Defender exclusion...", "Yellow");
+                UpdateStatus("Äang xÃ³a Windows Defender exclusion...", "Yellow");
                 RemoveDefenderExclusion(tempTeraCopyFolder);
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài TeraCopy: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i TeraCopy: {ex.Message}", "Red");
             }
         }
 
         // ===================================================================
-        // TabSystem — VPN 1111 (Cloudflare)
+        // TabSystem â€” VPN 1111 (Cloudflare)
         // TabItem Header: "System"
         // Checkbox: ChkVPN1111
         // ===================================================================
@@ -1298,7 +1298,7 @@ namespace GMTPC.Tool
         {
             try
             {
-                UpdateStatus("Đang tải VPN 1111...", "Cyan");
+                UpdateStatus("Äang táº£i VPN 1111...", "Cyan");
                 string vpnPath = Path.Combine(GetGMTPCFolder(), "VPN1111.msi");
                 await DownloadWithProgressAsync(VPN1111_DOWNLOAD_URL, vpnPath, "VPN 1111");
 
@@ -1309,7 +1309,7 @@ namespace GMTPC.Tool
                     SpeedTextBlock.Text = "";
                 });
 
-                UpdateStatus("Đang cài đặt VPN 1111 (passive)...", "Yellow");
+                UpdateStatus("Äang cÃ i Ä‘áº·t VPN 1111 (passive)...", "Yellow");
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = "msiexec.exe",
@@ -1321,14 +1321,14 @@ namespace GMTPC.Tool
                 if (process != null)
                 {
                     await Task.Run(() => process.WaitForExit());
-                    UpdateStatus("VPN 1111 đã hoàn tất.", "Green");
+                    UpdateStatus("VPN 1111 Ä‘Ã£ hoÃ n táº¥t.", "Green");
                 }
 
                 if (File.Exists(vpnPath)) File.Delete(vpnPath);
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài VPN 1111: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i VPN 1111: {ex.Message}", "Red");
             }
         }
 
@@ -1366,18 +1366,18 @@ namespace GMTPC.Tool
                         process.WaitForExit();
                         if (process.ExitCode == 0)
                         {
-                            UpdateStatus($"Đã thêm exclusion: {path}", "Green");
+                            UpdateStatus($"ÄÃ£ thÃªm exclusion: {path}", "Green");
                         }
                         else
                         {
-                            UpdateStatus($"Không thể thêm exclusion (cần quyền Admin). Tiếp tục cài đặt...", "Yellow");
+                            UpdateStatus($"KhÃ´ng thá»ƒ thÃªm exclusion (cáº§n quyá»n Admin). Tiáº¿p tá»¥c cÃ i Ä‘áº·t...", "Yellow");
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi thêm Defender exclusion: {ex.Message}. Tiếp tục...", "Yellow");
+                UpdateStatus($"Lá»—i khi thÃªm Defender exclusion: {ex.Message}. Tiáº¿p tá»¥c...", "Yellow");
             }
         }
 
@@ -1406,20 +1406,21 @@ namespace GMTPC.Tool
                         process.WaitForExit();
                         if (process.ExitCode == 0)
                         {
-                            UpdateStatus($"Đã xóa exclusion: {path}", "Green");
+                            UpdateStatus($"ÄÃ£ xÃ³a exclusion: {path}", "Green");
                         }
                         else
                         {
-                            UpdateStatus($"Không thể xóa exclusion (cần quyền Admin).", "Yellow");
+                            UpdateStatus($"KhÃ´ng thá»ƒ xÃ³a exclusion (cáº§n quyá»n Admin).", "Yellow");
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi xóa Defender exclusion: {ex.Message}", "Yellow");
+                UpdateStatus($"Lá»—i khi xÃ³a Defender exclusion: {ex.Message}", "Yellow");
             }
         }
 
     }
 }
+

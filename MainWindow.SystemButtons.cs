@@ -4,7 +4,7 @@
 //            SelectNoneAllTabs, Install, Pause, Resume, Refresh Color,
 //            BtnDownloadPage, DPI controls
 // Cập nhật gần đây:
-//   - 2026-04-28: Added Ventoy to Windows Mod MMT selection, hover, and copy-link flows
+//   - 2026-04-28: Added Ventoy to Windows Tools selection, hover, and copy-link flows
 //   - 2026-04-25: Locked manual DPI changes to each tab's auto-fit ceiling until the next tab selection resets and recomputes it
 //   - 2026-04-25: Kept window max height independent from DPI so sparse tabs clamp manual zoom before becoming oversized
 //   - 2026-04-25: Added Brave to Browser tab selection, install, hover, and download-link cache flows
@@ -28,7 +28,7 @@
 //                 theo AI_WORKFLOW.md
 //   - 2026-03-08: Thêm MouseRightButtonUp cho BtnDownloadPage để copy link
 //   - 2026-03-09: Removed ChkAdvancedCodec, ChkTeracopy, ChkVPN1111 references
-// AI Summary: 2026-04-28 - Added Ventoy to Windows Mod MMT selection, hover, and copy-link flows
+// AI Summary: 2026-04-28 - Added Ventoy to Windows Tools selection, hover, and copy-link flows
 // =======================================================================
 using System;
 using System.Collections.Generic;
@@ -475,12 +475,9 @@ namespace GMTPC.Tool
                     Chk3DPChip.IsChecked = true;
                     Chk3DPNet.IsChecked = true;
                 }
-                else if (tabHeader == "Windows - Microsoft")
+                else if (tabHeader == "Windows")
                 {
                     ChkWin11_26H1.IsChecked = true;
-                }
-                else if (tabHeader == "Windows Mod MMT")
-                {
                     ChkWin10LtscIot21H2.IsChecked = true;
                     ChkWin10_22H2_2024_December.IsChecked = true;
                     ChkVentoy.IsChecked = true;
@@ -603,12 +600,9 @@ namespace GMTPC.Tool
                     Chk3DPChip.IsChecked = false;
                     Chk3DPNet.IsChecked = false;
                 }
-                else if (tabHeader == "Windows - Microsoft")
+                else if (tabHeader == "Windows")
                 {
                     ChkWin11_26H1.IsChecked = false;
-                }
-                else if (tabHeader == "Windows Mod MMT")
-                {
                     ChkWin10LtscIot21H2.IsChecked = false;
                     ChkWin10_22H2_2024_December.IsChecked = false;
                     ChkVentoy.IsChecked = false;
@@ -704,7 +698,7 @@ namespace GMTPC.Tool
             // Bỏ chọn checkbox trong tab Windows - Microsoft
             ChkWin11_26H1.IsChecked = false;
 
-            // Bỏ chọn checkbox trong tab Windows Mod MMT
+            // Bỏ chọn checkbox trong tab Windows Tools
             ChkWin10LtscIot21H2.IsChecked = false;
             ChkWin10_22H2_2024_December.IsChecked = false;
             ChkVentoy.IsChecked = false;
@@ -1000,7 +994,7 @@ namespace GMTPC.Tool
             }
 
             if (ChkVentoy?.IsChecked == true)
-                _cachedDownloadLinks.Add(VENTOY_SOURCEFORGE_FILES_URL);
+                _cachedDownloadLinks.Add(VENTOY_RELEASES_URL);
 
             if (ChkWintoHDD?.IsChecked == true)
                 _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/WinPE/wintohdd.exe");
@@ -1454,7 +1448,7 @@ namespace GMTPC.Tool
                                "https://github.com/ghostminhtoan/MMT/releases/download/windows/win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso.005";
                         break;
                     case "ChkVentoy":
-                        link = VENTOY_SOURCEFORGE_FILES_URL;
+                        link = VENTOY_RELEASES_URL;
                         break;
                     case "ChkInstallZalo":
                         link = "https://zalo.me/download/zalo-pc?utm=90000";
@@ -1481,3 +1475,4 @@ namespace GMTPC.Tool
         }
     }
 }
+

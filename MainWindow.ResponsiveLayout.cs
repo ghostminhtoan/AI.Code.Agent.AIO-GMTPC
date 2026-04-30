@@ -271,7 +271,7 @@ namespace GMTPC.Tool
                     continue;
                 }
 
-                bool longTextPanel = panel == WindowsPanel || panel == WindowsModPanel;
+                bool longTextPanel = panel == WindowsPanel || panel == WindowsToolsPanel;
                 double desiredItemWidth = longTextPanel ? (denseLandscape ? 270 : 300) : (denseLandscape ? 190 : (zoomedOutLandscape ? 245 : 205));
                 int columns = isMonitorPortrait ? 2 : 4;
                 columns = Math.Max(1, Math.Min(maxColumns, columns));
@@ -303,20 +303,20 @@ namespace GMTPC.Tool
             yield return BrowserPanel;
             yield return RemoteDesktopPanel;
             yield return WindowsPanel;
-            yield return WindowsModPanel;
+            yield return WindowsToolsPanel;
         }
 
         private bool ApplySparseWindowsPanelSizing(WrapPanel panel, double monitorWidth, bool isCompact)
         {
-            bool isWindowsTab = panel == WindowsPanel && IsSelectedTab("Windows - Microsoft");
-            bool isWindowsModTab = panel == WindowsModPanel && IsSelectedTab("Windows Mod MMT");
-            if (!isWindowsTab && !isWindowsModTab) return false;
+            bool isWindowsTab = panel == WindowsPanel && IsSelectedTab("Windows");
+            bool isWindowsToolsTab = panel == WindowsToolsPanel && IsSelectedTab("Windows");
+            if (!isWindowsTab && !isWindowsToolsTab) return false;
 
             double scaledViewportWidth = GetSelectedTabLogicalViewportWidth(monitorWidth);
             double available = Math.Max(240, scaledViewportWidth - (isCompact ? 16 : 24));
             bool isLandscape = !IsPortrait(GetCurrentMonitorWorkAreaDip()) && !isCompact;
             int targetColumns = isLandscape ? 4 : (isWindowsTab ? 1 : 2);
-            int itemCount = isWindowsTab ? 1 : 4;
+            int itemCount = isWindowsTab ? 1 : 5;
             int columns = Math.Max(1, Math.Min(targetColumns, itemCount));
             double gap = 8;
             double itemSlotWidth = Math.Floor((available - ((columns - 1) * gap)) / columns);
@@ -385,10 +385,11 @@ namespace GMTPC.Tool
                 return;
             }
 
-            if (panel == WindowsModPanel)
+            if (panel == WindowsToolsPanel)
             {
                 if (ChkWin10LtscIot21H2 != null) ChkWin10LtscIot21H2.Width = childWidth;
                 if (ChkWin10_22H2_2024_December != null) ChkWin10_22H2_2024_December.Width = childWidth;
+                if (ChkVentoy != null) ChkVentoy.Width = Math.Max(200, childWidth);
                 if (ChkWintoHDD != null) ChkWintoHDD.Width = childWidth;
                 if (BtnWinPEToHDD != null) BtnWinPEToHDD.Width = childWidth;
             }
@@ -396,9 +397,8 @@ namespace GMTPC.Tool
 
         private void ApplySparseTabSizing(bool isCompact)
         {
-            bool isWindowsTab = IsSelectedTab("Windows - Microsoft");
-            bool isWindowsModTab = IsSelectedTab("Windows Mod MMT");
-            bool isSparseWindowsTab = isWindowsTab || isWindowsModTab;
+            bool isWindowsTab = IsSelectedTab("Windows");
+            bool isSparseWindowsTab = isWindowsTab;
             double panelMinHeight = isCompact ? 54 : 68;
 
             if (TabHostBorder != null)
@@ -412,10 +412,10 @@ namespace GMTPC.Tool
                 WindowsPanel.VerticalAlignment = isWindowsTab ? VerticalAlignment.Center : VerticalAlignment.Top;
             }
 
-            if (WindowsModPanel != null)
+            if (WindowsToolsPanel != null)
             {
-                WindowsModPanel.MinHeight = isWindowsModTab ? panelMinHeight : 0;
-                WindowsModPanel.VerticalAlignment = isWindowsModTab ? VerticalAlignment.Center : VerticalAlignment.Top;
+                WindowsToolsPanel.MinHeight = isWindowsTab ? panelMinHeight : 0;
+                WindowsToolsPanel.VerticalAlignment = isWindowsTab ? VerticalAlignment.Center : VerticalAlignment.Top;
             }
         }
 
@@ -484,7 +484,7 @@ namespace GMTPC.Tool
         private bool ShouldSkipAutoFitScale()
         {
             if (IsSystemInformationTabSelected()) return true;
-            return !(IsSelectedTab("Windows - Microsoft") || IsSelectedTab("Windows Mod MMT"));
+            return !IsSelectedTab("Windows");
         }
 
         private void KeepWindowInsideCurrentMonitor()
@@ -743,7 +743,7 @@ namespace GMTPC.Tool
 
         private bool IsCurrentScaleOverflowingForTabFit(Rect workArea)
         {
-            if (IsSelectedTab("Windows - Microsoft") || IsSelectedTab("Windows Mod MMT"))
+            if (IsSelectedTab("Windows"))
             {
                 return HasSparseWindowsTabOverflow();
             }
@@ -833,7 +833,7 @@ namespace GMTPC.Tool
 
         private bool HasSparseWindowsTabOverflow()
         {
-            if (!IsSelectedTab("Windows - Microsoft") && !IsSelectedTab("Windows Mod MMT")) return false;
+            if (!IsSelectedTab("Windows")) return false;
 
             try
             {
@@ -851,7 +851,7 @@ namespace GMTPC.Tool
                     return true;
                 }
 
-                WrapPanel selectedPanel = IsSelectedTab("Windows - Microsoft") ? WindowsPanel : WindowsModPanel;
+                WrapPanel selectedPanel = WindowsToolsPanel != null && WindowsToolsPanel.ActualWidth > 0 ? WindowsToolsPanel : WindowsPanel;
                 if (selectedPanel == null || selectedPanel.ActualWidth <= 0 || selectedPanel.ActualHeight <= 0) return false;
                 ScrollViewer selectedScrollViewer = GetSelectedTabScrollViewer();
                 if (selectedScrollViewer == null || selectedScrollViewer.ActualWidth <= 0 || selectedScrollViewer.ActualHeight <= 0) return false;

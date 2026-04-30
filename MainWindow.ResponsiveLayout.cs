@@ -74,7 +74,26 @@ namespace GMTPC.Tool
         private void MainTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.Source != MainTabControl) return;
+            QueueSelectedTabScaleWorkflow();
+        }
 
+        private void WindowsTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.Source != WindowsTabControl) return;
+            QueueSelectedTabScaleWorkflow();
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded, new Action(() =>
+            {
+                ScrollViewer selectedScrollViewer = GetSelectedTabScrollViewer();
+                if (selectedScrollViewer != null)
+                {
+                    selectedScrollViewer.ScrollToTop();
+                    selectedScrollViewer.ScrollToLeftEnd();
+                }
+            }));
+        }
+
+        private void QueueSelectedTabScaleWorkflow()
+        {
             int requestId = ++_tabScaleFitRequestId;
             _suppressResponsiveAutoFitQueue = true;
             CancellationTokenSource previousCts = Interlocked.Exchange(ref _tabScaleFitDelayCts, new CancellationTokenSource());
@@ -88,23 +107,6 @@ namespace GMTPC.Tool
             {
                 if (requestId != _tabScaleFitRequestId) return;
                 _ = StartSelectedTabScaleWorkflowAsync(requestId, _tabScaleFitDelayCts.Token);
-            }));
-        }
-
-        private void WindowsTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (e.Source != WindowsTabControl) return;
-
-            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded, new Action(() =>
-            {
-                ScrollViewer selectedScrollViewer = GetSelectedTabScrollViewer();
-                if (selectedScrollViewer != null)
-                {
-                    selectedScrollViewer.ScrollToTop();
-                    selectedScrollViewer.ScrollToLeftEnd();
-                }
-
-                ApplyResponsiveLayout();
             }));
         }
 

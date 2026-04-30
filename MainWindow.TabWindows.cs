@@ -3,7 +3,7 @@
     // =======================================================================
     // MainWindow.TabWindows.cs
     // Windows parent tab container
-    // Updated: 2026-04-30 - Split Windows into Microsoft and Windows Tools
+    // Updated: 2026-04-30 - Split Windows into Microsoft and Windows Mod MMT
     // =======================================================================
     public partial class MainWindow
     {

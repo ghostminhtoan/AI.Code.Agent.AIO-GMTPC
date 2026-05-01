@@ -1,4 +1,4 @@
-// AI Summary: 2026-04-23 - Added GPU hardware encode/decode capability detection for NVIDIA, Intel, and AMD.
+﻿// AI Summary: 2026-05-01 - Refined GPU dedicated memory display and added real-time CPU clock tracking with 0.5s refresh.
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,12 +16,15 @@ using System.Windows.Input;
 using System.Net.Http;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Threading;
 using System.Text;
 
 namespace GMTPC.Tool
 {
     public partial class MainWindow
     {
+        private DispatcherTimer _systemInfoRefreshTimer;
+
         private void PopulateSystemInfo()
         {
             try
@@ -30,6 +33,7 @@ namespace GMTPC.Tool
                 TbCPU.Text = BuildCpuInfo();
                 TbRAM.Text = BuildRamInfo();
                 TbMainboard.Text = BuildMainboardInfo();
+                EnsureSystemInfoRefreshTimer();
             }
             catch (Exception ex)
             {
@@ -48,7 +52,7 @@ namespace GMTPC.Tool
                 AppendLine(sb, $"=== GPU {index} ===");
                 AppendLine(sb, "Tên", GetValue(gpu, "Name"));
                 AppendLine(sb, "Driver Version", GetValue(gpu, "DriverVersion"));
-                AppendLine(sb, "VRAM", FormatBytes(GetUlongValue(gpu, "AdapterRAM")));
+                AppendLine(sb, "Dedicated GPU Memory", FormatDedicatedGpuMemory(GetUlongValue(gpu, "AdapterRAM")));
                 AppendLine(sb, "Video Processor", GetValue(gpu, "VideoProcessor"));
                 AppendGpuCodecInfo(sb, GetValue(gpu, "Name"), GetValue(gpu, "VideoProcessor"));
                 AppendLine(sb, "Độ phân giải", FormatResolution(gpu));
@@ -102,19 +106,21 @@ namespace GMTPC.Tool
         private string BuildCpuInfo()
         {
             StringBuilder sb = new StringBuilder();
+            ProcessorClockSnapshot clock = GetProcessorClockSnapshot();
             int index = 1;
 
             foreach (ManagementObject cpu in QueryWmi("Win32_Processor"))
             {
                 AppendLine(sb, $"=== CPU {index} ===");
-                AppendLine(sb, "Tên", GetValue(cpu, "Name"));
-                AppendLine(sb, "Hãng sản xuất", GetValue(cpu, "Manufacturer"));
-                AppendLine(sb, "Kiến trúc", GetArchitectureName(GetValue(cpu, "Architecture")));
+                AppendLine(sb, "TÃªn", GetValue(cpu, "Name"));
+                AppendLine(sb, "HÃ£ng sáº£n xuáº¥t", GetValue(cpu, "Manufacturer"));
+                AppendLine(sb, "Kiáº¿n trÃºc", GetArchitectureName(GetValue(cpu, "Architecture")));
                 AppendLine(sb, "Socket", GetValue(cpu, "SocketDesignation"));
-                AppendLine(sb, "Số nhân", GetValue(cpu, "NumberOfCores"));
-                AppendLine(sb, "Số luồng", GetValue(cpu, "NumberOfLogicalProcessors"));
-                AppendLine(sb, "Xung nhịp hiện tại", AppendUnit(GetValue(cpu, "CurrentClockSpeed"), "MHz"));
-                AppendLine(sb, "Xung nhịp tối đa", AppendUnit(GetValue(cpu, "MaxClockSpeed"), "MHz"));
+                AppendLine(sb, "Sá»‘ nhÃ¢n", GetValue(cpu, "NumberOfCores"));
+                AppendLine(sb, "Sá»‘ luá»“ng", GetValue(cpu, "NumberOfLogicalProcessors"));
+                AppendLine(sb, "Base clock", AppendUnit(clock.BaseClockMhz.ToString(), "MHz"));
+                AppendLine(sb, "Turbo clock", AppendUnit(clock.TurboClockMhz.ToString(), "MHz"));
+                AppendLine(sb, "Current clock", AppendUnit(clock.CurrentClockMhz.ToString(), "MHz"));
                 AppendLine(sb, "Cache L2", AppendUnit(GetValue(cpu, "L2CacheSize"), "KB"));
                 AppendLine(sb, "Cache L3", AppendUnit(GetValue(cpu, "L3CacheSize"), "KB"));
                 AppendLine(sb, "Virtualization", GetValue(cpu, "VirtualizationFirmwareEnabled"));
@@ -124,6 +130,115 @@ namespace GMTPC.Tool
             }
 
             return sb.Length > 0 ? sb.ToString().TrimEnd() : "Unknown";
+        }
+
+        private void EnsureSystemInfoRefreshTimer()
+        {
+            if (_systemInfoRefreshTimer != null)
+            {
+                return;
+            }
+
+            _systemInfoRefreshTimer = new DispatcherTimer(DispatcherPriority.Background)
+            {
+                Interval = TimeSpan.FromMilliseconds(500)
+            };
+            _systemInfoRefreshTimer.Tick += SystemInfoRefreshTimer_Tick;
+            _systemInfoRefreshTimer.Start();
+        }
+
+        private void SystemInfoRefreshTimer_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                TbCPU.Text = BuildCpuInfo();
+            }
+            catch
+            {
+            }
+        }
+
+        private ProcessorClockSnapshot GetProcessorClockSnapshot()
+        {
+            ProcessorClockSnapshot snapshot = new ProcessorClockSnapshot();
+
+            try
+            {
+                int processorCount = Math.Max(1, Environment.ProcessorCount);
+                int structSize = Marshal.SizeOf(typeof(PROCESSOR_POWER_INFORMATION));
+                IntPtr buffer = Marshal.AllocHGlobal(structSize * processorCount);
+
+                try
+                {
+                    int status = CallNtPowerInformation(11, IntPtr.Zero, 0, buffer, structSize * processorCount);
+                    if (status == 0)
+                    {
+                        ulong currentSum = 0;
+                        uint maxMhz = 0;
+                        uint turboMhz = 0;
+
+                        for (int i = 0; i < processorCount; i++)
+                        {
+                            IntPtr itemPtr = IntPtr.Add(buffer, i * structSize);
+                            PROCESSOR_POWER_INFORMATION item = (PROCESSOR_POWER_INFORMATION)Marshal.PtrToStructure(itemPtr, typeof(PROCESSOR_POWER_INFORMATION));
+
+                            if (item.MaxMhz > maxMhz)
+                            {
+                                maxMhz = item.MaxMhz;
+                            }
+
+                            if (item.MhzLimit > turboMhz)
+                            {
+                                turboMhz = item.MhzLimit;
+                            }
+
+                            currentSum += item.CurrentMhz;
+                        }
+
+                        snapshot.BaseClockMhz = maxMhz;
+                        snapshot.TurboClockMhz = turboMhz > maxMhz ? turboMhz : maxMhz;
+                        snapshot.CurrentClockMhz = (uint)Math.Round(currentSum / (double)processorCount);
+                    }
+                }
+                finally
+                {
+                    Marshal.FreeHGlobal(buffer);
+                }
+            }
+            catch
+            {
+            }
+
+            if (snapshot.BaseClockMhz == 0 || snapshot.CurrentClockMhz == 0)
+            {
+                try
+                {
+                    ManagementObject cpu = FirstOrDefault(QueryWmi("Win32_Processor"));
+                    snapshot.BaseClockMhz = (uint)GetUlongValue(cpu, "MaxClockSpeed");
+                    snapshot.CurrentClockMhz = (uint)GetUlongValue(cpu, "CurrentClockSpeed");
+                    snapshot.TurboClockMhz = snapshot.BaseClockMhz;
+                }
+                catch
+                {
+                }
+            }
+
+            if (snapshot.BaseClockMhz == 0)
+            {
+                snapshot.BaseClockMhz = snapshot.CurrentClockMhz;
+            }
+
+            if (snapshot.TurboClockMhz < snapshot.BaseClockMhz)
+            {
+                snapshot.TurboClockMhz = snapshot.BaseClockMhz;
+            }
+
+            if (snapshot.CurrentClockMhz == 0)
+            {
+                snapshot.CurrentClockMhz = snapshot.BaseClockMhz;
+            }
+
+            return snapshot;
         }
 
         private string BuildRamInfo()
@@ -397,6 +512,32 @@ namespace GMTPC.Tool
             double gb = bytes / (1024.0 * 1024.0 * 1024.0);
             return $"{gb:F2} GB";
         }
+
+        private string FormatDedicatedGpuMemory(ulong bytes)
+        {
+            return bytes > 0 ? FormatBytes(bytes) : "Unknown";
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct PROCESSOR_POWER_INFORMATION
+        {
+            public uint Number;
+            public uint MaxMhz;
+            public uint CurrentMhz;
+            public uint MhzLimit;
+            public uint MaxIdleState;
+            public uint CurrentIdleState;
+        }
+
+        private struct ProcessorClockSnapshot
+        {
+            public uint BaseClockMhz;
+            public uint TurboClockMhz;
+            public uint CurrentClockMhz;
+        }
+
+        [DllImport("powrprof.dll", SetLastError = true)]
+        private static extern int CallNtPowerInformation(int InformationLevel, IntPtr InputBuffer, int InputBufferLength, IntPtr OutputBuffer, int OutputBufferLength);
 
         private Button _btnRestartBios;
 

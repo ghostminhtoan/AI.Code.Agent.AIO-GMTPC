@@ -18,6 +18,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Threading;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace GMTPC.Tool
 {
@@ -26,8 +27,9 @@ namespace GMTPC.Tool
         private DispatcherTimer _systemInfoRefreshTimer;
         private string _cpuInfoTemplate;
         private uint _cpuBaseClockMhz;
-        private uint _cpuTurboObservedMhz;
+        private uint _cpuTurboClockMhz;
         private bool _cpuClockRefreshInProgress;
+        private static readonly HttpClient _cpuSpecClient = CreateCpuSpecClient();
 
         private void PopulateSystemInfo()
         {
@@ -56,7 +58,7 @@ namespace GMTPC.Tool
                 AppendLine(sb, $"=== GPU {index} ===");
                 AppendLine(sb, "Tên", GetValue(gpu, "Name"));
                 AppendLine(sb, "Driver Version", GetValue(gpu, "DriverVersion"));
-                AppendLine(sb, "Dedicated GPU Memory", FormatDedicatedGpuMemory(GetUlongValue(gpu, "AdapterRAM")));
+                AppendLine(sb, "Display memory (VRAM)", FormatGpuMemory(gpu));
                 AppendLine(sb, "Video Processor", GetValue(gpu, "VideoProcessor"));
                 AppendGpuCodecInfo(sb, GetValue(gpu, "Name"), GetValue(gpu, "VideoProcessor"));
                 AppendLine(sb, "Độ phân giải", FormatResolution(gpu));
@@ -121,8 +123,8 @@ namespace GMTPC.Tool
                 AppendLine(sb, "Socket", GetValue(cpu, "SocketDesignation"));
                 AppendLine(sb, "Số nhân", GetValue(cpu, "NumberOfCores"));
                 AppendLine(sb, "Số luồng", GetValue(cpu, "NumberOfLogicalProcessors"));
-                AppendLine(sb, "Xung cơ bản", "{BASE_CLOCK}");
-                AppendLine(sb, "Xung turbo", "{TURBO_CLOCK}");
+                AppendLine(sb, "Base clock", "{BASE_CLOCK}");
+                AppendLine(sb, "Turbo clock", "{TURBO_CLOCK}");
                 AppendLine(sb, "Xung hiện tại", "{CURRENT_CLOCK}");
                 AppendLine(sb, "Cache L2", AppendUnit(GetValue(cpu, "L2CacheSize"), "KB"));
                 AppendLine(sb, "Cache L3", AppendUnit(GetValue(cpu, "L3CacheSize"), "KB"));
@@ -138,18 +140,14 @@ namespace GMTPC.Tool
         private void InitializeCpuInfoCache()
         {
             _cpuBaseClockMhz = GetCpuBaseClockMhz();
-            _cpuTurboObservedMhz = _cpuBaseClockMhz;
+            _cpuTurboClockMhz = 0;
             _cpuInfoTemplate = BuildCpuInfoTemplate();
             TbCPU.Text = RenderCpuInfoTemplate(GetCurrentCpuClockMhz());
+            _ = LoadCpuTurboClockAsync();
         }
 
         private string RenderCpuInfoTemplate(uint currentClockMhz)
         {
-            if (currentClockMhz > _cpuTurboObservedMhz)
-            {
-                _cpuTurboObservedMhz = currentClockMhz;
-            }
-
             if (string.IsNullOrWhiteSpace(_cpuInfoTemplate))
             {
                 return "Unknown";
@@ -157,7 +155,7 @@ namespace GMTPC.Tool
 
             return _cpuInfoTemplate
                 .Replace("{BASE_CLOCK}", AppendUnit(_cpuBaseClockMhz.ToString(), "MHz"))
-                .Replace("{TURBO_CLOCK}", AppendUnit(_cpuTurboObservedMhz.ToString(), "MHz"))
+                .Replace("{TURBO_CLOCK}", _cpuTurboClockMhz > 0 ? AppendUnit(_cpuTurboClockMhz.ToString(), "MHz") : "Loading...")
                 .Replace("{CURRENT_CLOCK}", AppendUnit(currentClockMhz.ToString(), "MHz"));
         }
 
@@ -224,40 +222,147 @@ namespace GMTPC.Tool
             return 0;
         }
 
+        private async Task LoadCpuTurboClockAsync()
+        {
+            try
+            {
+                string cpuName = GetCpuModelName();
+                if (string.IsNullOrWhiteSpace(cpuName))
+                {
+                    return;
+                }
+
+                uint turboClock = await Task.Run(() => TryResolveTurboClockFromWeb(cpuName));
+                if (turboClock > 0)
+                {
+                    _cpuTurboClockMhz = turboClock;
+                    if (!string.IsNullOrWhiteSpace(_cpuInfoTemplate))
+                    {
+                        Dispatcher.Invoke(() => TbCPU.Text = RenderCpuInfoTemplate(GetCurrentCpuClockMhz()));
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        private string GetCpuModelName()
+        {
+            try
+            {
+                ManagementObject cpu = FirstOrDefault(QueryWmi("Win32_Processor"));
+                string name = GetValue(cpu, "Name");
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    return name;
+                }
+            }
+            catch
+            {
+            }
+
+            return null;
+        }
+
+        private uint TryResolveTurboClockFromWeb(string cpuName)
+        {
+            try
+            {
+                string slug = BuildChaynikamCpuSlug(cpuName);
+                if (string.IsNullOrWhiteSpace(slug))
+                {
+                    return 0;
+                }
+
+                string url = $"https://www.chaynikam.info/en/{slug}.html";
+                string html = _cpuSpecClient.GetStringAsync(url).GetAwaiter().GetResult();
+                if (string.IsNullOrWhiteSpace(html))
+                {
+                    return 0;
+                }
+
+                Match match = Regex.Match(html, @"Turbo Boost\s*</td>\s*<td class=""tdc2"">\s*([0-9]+)\s*MHz", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                if (match.Success && uint.TryParse(match.Groups[1].Value, out uint turboMhz))
+                {
+                    return turboMhz;
+                }
+
+                match = Regex.Match(html, @"Turbo Boost\s*</td>\s*<td class=""tdc2"">\s*([0-9]+(?:\.[0-9]+)?)\s*GHz", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                if (match.Success && double.TryParse(match.Groups[1].Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double turboGhz))
+                {
+                    return (uint)Math.Round(turboGhz * 1000.0);
+                }
+            }
+            catch
+            {
+            }
+
+            return 0;
+        }
+
+        private string BuildChaynikamCpuSlug(string cpuName)
+        {
+            if (string.IsNullOrWhiteSpace(cpuName))
+            {
+                return null;
+            }
+
+            string cleaned = cpuName;
+            cleaned = Regex.Replace(cleaned, @"\s*@\s*[0-9.]+\s*GHz", "", RegexOptions.IgnoreCase);
+            cleaned = cleaned.Replace("(R)", "").Replace("(TM)", "");
+            cleaned = Regex.Replace(cleaned, @"\bCPU\b", "", RegexOptions.IgnoreCase);
+            cleaned = Regex.Replace(cleaned, @"\s+", " ").Trim();
+
+            if (cleaned.StartsWith("Intel ", StringComparison.OrdinalIgnoreCase))
+            {
+                cleaned = cleaned.Substring(6).Trim();
+            }
+            else if (cleaned.StartsWith("AMD ", StringComparison.OrdinalIgnoreCase))
+            {
+                cleaned = cleaned.Substring(4).Trim();
+            }
+
+            cleaned = cleaned.Replace(' ', '_');
+            cleaned = cleaned.Replace("(", "").Replace(")", "");
+            cleaned = Regex.Replace(cleaned, @"_+", "_");
+            cleaned = cleaned.Trim('_');
+            return cleaned;
+        }
+
         private uint GetCurrentCpuClockMhz()
         {
             try
             {
-                int processorCount = Math.Max(1, Environment.ProcessorCount);
-                int structSize = Marshal.SizeOf(typeof(PROCESSOR_POWER_INFORMATION));
-                IntPtr buffer = Marshal.AllocHGlobal(structSize * processorCount);
-
-                try
+                uint baseClock = _cpuBaseClockMhz > 0 ? _cpuBaseClockMhz : GetCpuBaseClockMhz();
+                if (baseClock == 0)
                 {
-                    int status = CallNtPowerInformation(11, IntPtr.Zero, 0, buffer, structSize * processorCount);
-                    if (status != 0)
-                    {
-                        return 0;
-                    }
-
-                    ulong currentSum = 0;
-                    int validCount = 0;
-                    for (int i = 0; i < processorCount; i++)
-                    {
-                        IntPtr itemPtr = IntPtr.Add(buffer, i * structSize);
-                        PROCESSOR_POWER_INFORMATION item = (PROCESSOR_POWER_INFORMATION)Marshal.PtrToStructure(itemPtr, typeof(PROCESSOR_POWER_INFORMATION));
-                        if (item.CurrentMhz > 0)
-                        {
-                            currentSum += item.CurrentMhz;
-                            validCount++;
-                        }
-                    }
-
-                    return validCount > 0 ? (uint)Math.Round(currentSum / (double)validCount) : 0;
+                    return 0;
                 }
-                finally
+
+                double processorPerformance = GetProcessorPerformancePercent();
+                if (processorPerformance <= 0)
                 {
-                    Marshal.FreeHGlobal(buffer);
+                    return baseClock;
+                }
+
+                return (uint)Math.Round(baseClock * (processorPerformance / 100.0));
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        private double GetProcessorPerformancePercent()
+        {
+            try
+            {
+                using (PerformanceCounter counter = new PerformanceCounter("Processor Information", "% Processor Performance", "_Total", true))
+                {
+                    counter.NextValue();
+                    Thread.Sleep(100);
+                    return counter.NextValue();
                 }
             }
             catch
@@ -538,24 +643,106 @@ namespace GMTPC.Tool
             return $"{gb:F2} GB";
         }
 
-        private string FormatDedicatedGpuMemory(ulong bytes)
+        private string FormatGpuMemory(ManagementObject gpu)
         {
-            return bytes > 0 ? FormatBytes(bytes) : "Unknown";
+            ulong registryBytes = GetGpuDedicatedMemoryFromRegistry(gpu);
+            if (registryBytes > 0)
+            {
+                return FormatBytes(registryBytes);
+            }
+
+            ulong adapterBytes = GetUlongValue(gpu, "AdapterRAM");
+            if (adapterBytes > 0)
+            {
+                return FormatBytes(adapterBytes);
+            }
+
+            return "Unknown";
         }
 
-        [StructLayout(LayoutKind.Sequential)]
-        private struct PROCESSOR_POWER_INFORMATION
+        private ulong GetGpuDedicatedMemoryFromRegistry(ManagementObject gpu)
         {
-            public uint Number;
-            public uint MaxMhz;
-            public uint CurrentMhz;
-            public uint MhzLimit;
-            public uint MaxIdleState;
-            public uint CurrentIdleState;
+            try
+            {
+                string pnpDeviceId = GetValue(gpu, "PNPDeviceID");
+                if (string.IsNullOrWhiteSpace(pnpDeviceId))
+                {
+                    return 0;
+                }
+
+                using (RegistryKey classRoot = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}"))
+                {
+                    if (classRoot == null)
+                    {
+                        return 0;
+                    }
+
+                    foreach (string subKeyName in classRoot.GetSubKeyNames())
+                    {
+                        try
+                        {
+                            using (RegistryKey subKey = classRoot.OpenSubKey(subKeyName))
+                            {
+                                if (subKey == null)
+                                {
+                                    continue;
+                                }
+
+                                string driverDesc = subKey.GetValue("DriverDesc") as string;
+                                string matchingDeviceId = subKey.GetValue("MatchingDeviceId") as string;
+                                if (!RegistryValueMatchesGpu(pnpDeviceId, driverDesc, matchingDeviceId))
+                                {
+                                    continue;
+                                }
+
+                                object memoryValue = subKey.GetValue("HardwareInformation.qwMemorySize");
+                                if (memoryValue is long longValue && longValue > 0)
+                                {
+                                    return (ulong)longValue;
+                                }
+
+                                if (memoryValue is byte[] bytes && bytes.Length >= 8)
+                                {
+                                    return BitConverter.ToUInt64(bytes, 0);
+                                }
+                            }
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+            return 0;
         }
 
-        [DllImport("powrprof.dll", SetLastError = true)]
-        private static extern int CallNtPowerInformation(int InformationLevel, IntPtr InputBuffer, int InputBufferLength, IntPtr OutputBuffer, int OutputBufferLength);
+        private bool RegistryValueMatchesGpu(string pnpDeviceId, string driverDesc, string matchingDeviceId)
+        {
+            if (!string.IsNullOrWhiteSpace(driverDesc) && pnpDeviceId.IndexOf(driverDesc, StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return true;
+            }
+
+            if (!string.IsNullOrWhiteSpace(matchingDeviceId) && pnpDeviceId.IndexOf(matchingDeviceId, StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return true;
+            }
+
+            string pnpPrefix = pnpDeviceId.Split(new[] { '&' }, 2)[0];
+            return !string.IsNullOrWhiteSpace(driverDesc) && driverDesc.IndexOf(pnpPrefix, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private static HttpClient CreateCpuSpecClient()
+        {
+            HttpClient client = new HttpClient();
+            client.Timeout = TimeSpan.FromSeconds(15);
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) GMTPC.Tool/1.0");
+            return client;
+        }
 
         private Button _btnRestartBios;
 

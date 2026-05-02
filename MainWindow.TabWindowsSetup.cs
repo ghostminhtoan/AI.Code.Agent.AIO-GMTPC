@@ -1,4 +1,4 @@
-﻿// AI Summary: 2026-05-02 - Windows Mod MMT tab: Ventoy flow moved to MainWindow.SystemArchiveFlow.cs and checkbox wiring remains here
+﻿// AI Summary: 2026-05-02 - Windows setup tab: Ventoy flow moved to MainWindow.SystemArchiveFlow.cs and checkbox wiring remains here
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -13,8 +13,8 @@ using System.Windows.Controls;
 namespace GMTPC.Tool
 {
 // =============================================================================
-// MainWindow.TabWinModMMT.cs
-// Windows Mod MMT
+// MainWindow.TabWindowsSetup.cs
+// Windows setup
 // Updated: 2026-05-02 - Ventoy archive flow moved to MainWindow.SystemArchiveFlow.cs
 // Updated: 2026-04-22 - Added WinPE to HDD admin PowerShell button
 // Updated: 2026-03-17 - Changed download URLs to new links without boot.windowsRE
@@ -384,4 +384,5 @@ namespace GMTPC.Tool
         }
     }
 }
+
 

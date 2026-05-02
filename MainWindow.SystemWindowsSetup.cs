@@ -64,21 +64,34 @@ namespace GMTPC.Tool
                 UpdateStatus($"Đã chọn MemReduct {latestMemReductVersion} ({latestMemReductTag})", "Green");
                 UpdateStatus($"Đang tải {memReductFileName}...", "Cyan");
                 await DownloadWithProgressAsync(memReductDownloadUrl, memReductPath, "MemReduct");
+                if (!File.Exists(memReductPath))
+                {
+                    throw new FileNotFoundException($"Không tìm thấy file đã tải: {memReductPath}");
+                }
 
                 UpdateStatus("Đang cài đặt MemReduct (silent)...", "Yellow");
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = memReductPath,
                     Arguments = MEMREDUCT_INSTALL_ARGUMENTS,
-                    UseShellExecute = true
+                    UseShellExecute = true,
+                    WorkingDirectory = Path.GetDirectoryName(memReductPath),
+                    Verb = "runas"
                 };
 
                 Process process = Process.Start(startInfo);
-                if (process != null)
+                if (process == null)
                 {
-                    await Task.Run(() => process.WaitForExit());
-                    UpdateStatus("MemReduct đã hoàn tất.", "Green");
+                    throw new InvalidOperationException("Không thể khởi chạy trình cài đặt MemReduct.");
                 }
+
+                await Task.Run(() => process.WaitForExit());
+                if (process.ExitCode != 0)
+                {
+                    throw new InvalidOperationException($"Trình cài đặt MemReduct kết thúc với mã lỗi {process.ExitCode}.");
+                }
+
+                UpdateStatus("MemReduct đã hoàn tất.", "Green");
 
                 if (File.Exists(memReductPath))
                 {
@@ -88,6 +101,7 @@ namespace GMTPC.Tool
             catch (Exception ex)
             {
                 UpdateStatus($"Lỗi khi cài đặt MemReduct: {ex.Message}", "Red");
+                throw;
             }
         }
 

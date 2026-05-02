@@ -798,6 +798,8 @@ namespace GMTPC.Tool
             if (ChkWintoHDD.IsChecked == true) tasks.Add((InstallWintoHDDAsync, ChkWintoHDD));
 
             CheckBox currentTaskCheckBox = null;
+            bool hadError = false;
+            bool wasCancelled = false;
             try
             {
                 foreach (var taskInfo in tasks)
@@ -807,6 +809,7 @@ namespace GMTPC.Tool
                     if (_cancellationTokenSource.Token.IsCancellationRequested)
                     {
                         UpdateStatus("Quá trình cài đặt đã bị dừng.", "Red");
+                        wasCancelled = true;
                         break;
                     }
 
@@ -825,6 +828,7 @@ namespace GMTPC.Tool
                             taskInfo.CheckBox.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Red);
                         }
                         UpdateStatus("Quá trình cài đặt đã bị dừng.", "Red");
+                        wasCancelled = true;
                         break;
                     }
 
@@ -837,6 +841,7 @@ namespace GMTPC.Tool
             }
             catch (OperationCanceledException)
             {
+                wasCancelled = true;
                 if (currentTaskCheckBox != null)
                 {
                     currentTaskCheckBox.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Red);
@@ -845,6 +850,7 @@ namespace GMTPC.Tool
             }
             catch (Exception ex)
             {
+                hadError = true;
                 UpdateStatus($"Đã xảy ra lỗi: {ex.Message}", "Red");
             }
             finally
@@ -852,7 +858,18 @@ namespace GMTPC.Tool
                 BtnStop.IsEnabled = false;
                 BtnPause.IsEnabled = false;
                 UpdateInstallButtonState();
-                UpdateStatus("Hoàn tất tất cả các tác vụ.", "Green");
+                if (hadError)
+                {
+                    UpdateStatus("Đã hoàn tất hàng đợi tác vụ, nhưng có lỗi trong quá trình cài đặt.", "Red");
+                }
+                else if (wasCancelled)
+                {
+                    UpdateStatus("Đã dừng hàng đợi tác vụ.", "Yellow");
+                }
+                else
+                {
+                    UpdateStatus("Hoàn tất tất cả các tác vụ.", "Green");
+                }
                 
                 // Đặt lại trạng thái không còn cài đặt
                 SetInstallingState(false);

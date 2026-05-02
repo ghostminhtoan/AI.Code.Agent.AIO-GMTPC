@@ -1,4 +1,5 @@
 ﻿// AI Summary: 2026-05-02 - Windows setup tab: Ventoy flow moved to MainWindow.SystemArchiveFlow.cs and checkbox wiring remains here
+// AI Summary: 2026-05-02 - Renamed the Windows Setup partial and added MemReduct latest-release install flow
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -13,8 +14,9 @@ using System.Windows.Controls;
 namespace GMTPC.Tool
 {
 // =============================================================================
-// MainWindow.TabWindowsSetup.cs
-// Windows setup
+// MainWindow.SystemWindowsSetup.cs
+// Windows Setup
+// Updated: 2026-05-02 - Added MemReduct latest-release install flow
 // Updated: 2026-05-02 - Ventoy archive flow moved to MainWindow.SystemArchiveFlow.cs
 // Updated: 2026-04-22 - Added WinPE to HDD admin PowerShell button
 // Updated: 2026-03-17 - Changed download URLs to new links without boot.windowsRE
@@ -34,6 +36,100 @@ namespace GMTPC.Tool
         private const string WIN10_22H2_2024_DEC_PART4_URL = "https://github.com/ghostminhtoan/MMT/releases/download/windows/win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso.004";
         private const string WIN10_22H2_2024_DEC_PART5_URL = "https://github.com/ghostminhtoan/MMT/releases/download/windows/win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso.005";
         private const string WIN10_22H2_2024_DEC_FINAL_NAME = "win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso";
+        // MemReduct - GitHub Releases latest asset lookup
+        private async Task InstallMemReductAsync()
+        {
+            try
+            {
+                UpdateStatus("Đang tìm MemReduct release mới nhất trên GitHub...", "Cyan");
+                Tuple<string, string, string> memReductReleaseInfo = await GetLatestMemReductReleaseAssetAsync();
+                if (memReductReleaseInfo == null ||
+                    string.IsNullOrEmpty(memReductReleaseInfo.Item1) ||
+                    string.IsNullOrEmpty(memReductReleaseInfo.Item2) ||
+                    string.IsNullOrEmpty(memReductReleaseInfo.Item3))
+                {
+                    throw new InvalidOperationException("Không tìm thấy MemReduct release mới nhất.");
+                }
+
+                string latestMemReductTag = memReductReleaseInfo.Item1;
+                string memReductDownloadUrl = memReductReleaseInfo.Item2;
+                string memReductFileName = memReductReleaseInfo.Item3;
+                string latestMemReductVersion = latestMemReductTag.TrimStart('v');
+
+                string gmtPCFolder = GetGMTPCFolder();
+                string memReductPath = Path.Combine(gmtPCFolder, memReductFileName);
+
+                UpdateStatus($"Đã chọn MemReduct {latestMemReductVersion}", "Green");
+                UpdateStatus($"Đang tải {memReductFileName}...", "Cyan");
+                await DownloadWithProgressAsync(memReductDownloadUrl, memReductPath, "MemReduct");
+
+                UpdateStatus("Đang cài đặt MemReduct (silent)...", "Yellow");
+                ProcessStartInfo startInfo = new ProcessStartInfo
+                {
+                    FileName = memReductPath,
+                    Arguments = MEMREDUCT_INSTALL_ARGUMENTS,
+                    UseShellExecute = true
+                };
+
+                Process process = Process.Start(startInfo);
+                if (process != null)
+                {
+                    await Task.Run(() => process.WaitForExit());
+                    UpdateStatus("MemReduct đã hoàn tất.", "Green");
+                }
+
+                if (File.Exists(memReductPath))
+                {
+                    File.Delete(memReductPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                UpdateStatus($"Lỗi khi cài đặt MemReduct: {ex.Message}", "Red");
+            }
+        }
+
+        private void ChkMemReduct_Click(object sender, RoutedEventArgs e)
+        {
+            if (ChkMemReduct.IsChecked == true)
+            {
+                UpdateStatus("Đã chọn: MemReduct", "Green");
+            }
+            else
+            {
+                UpdateStatus("Đã hủy chọn: MemReduct", "Yellow");
+            }
+
+            UpdateInstallButtonState();
+        }
+
+        private async Task<Tuple<string, string, string>> GetLatestMemReductReleaseAssetAsync()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("GMTPC-Tool");
+                client.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github+json");
+                string json = await client.GetStringAsync(MEMREDUCT_RELEASES_API_URL);
+
+                Match tagMatch = Regex.Match(json ?? string.Empty, @"""tag_name""\s*:\s*""(?<tag>v?\d+\.\d+\.\d+)""", RegexOptions.IgnoreCase);
+                if (!tagMatch.Success)
+                {
+                    return null;
+                }
+
+                Match assetMatch = Regex.Match(
+                    json ?? string.Empty,
+                    @"""name""\s*:\s*""(?<name>memreduct-(?<ver>\d+\.\d+\.\d+)-setup\.exe)""[\s\S]*?""browser_download_url""\s*:\s*""(?<url>https:\/\/github\.com\/henrypp\/memreduct\/releases\/download\/[^""]+)""",
+                    RegexOptions.IgnoreCase);
+                if (!assetMatch.Success)
+                {
+                    return null;
+                }
+
+                return Tuple.Create(tagMatch.Groups["tag"].Value, assetMatch.Groups["url"].Value, assetMatch.Groups["name"].Value);
+            }
+        }
+
         // WintoHDD - Use InstallWithPromptAsync for Yes/No dialog with NTFS Compression check
         private async Task InstallWintoHDDAsync()
         {

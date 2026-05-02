@@ -1,5 +1,6 @@
 ﻿// AI Summary: 2026-04-28 - Added VentoySourceForgeFiles URL and Ventoy checkbox state wiring
 // AI Summary: 2026-04-30 - Added Office Tool Plus Releases URLs for latest x64 runtime zip probing and hover/copy-link flows
+// AI Summary: 2026-05-02 - Added MemReduct latest-release constants for the Windows Setup workflow
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -108,8 +109,11 @@ namespace GMTPC.Tool
         // ===================================================================
         // TabWindows â€” WintoHDD
         // TabItem Header: "Windows"
-        // Checkbox: ChkWintoHDD, ChkVentoy
+        // Checkbox: ChkMemReduct, ChkWintoHDD, ChkVentoy
         // ===================================================================
+        private const string MEMREDUCT_RELEASES_URL = "https://github.com/henrypp/memreduct/releases";
+        private const string MEMREDUCT_RELEASES_API_URL = "https://api.github.com/repos/henrypp/memreduct/releases/latest";
+        private const string MEMREDUCT_INSTALL_ARGUMENTS = "/S";
         private const string WINTOHDD_DOWNLOAD_URL = "https://github.com/ghostminhtoan/MMT/releases/download/WinPE/wintohdd.exe";
         private const string WINTOHDD_INSTALL_ARGUMENTS = "/S";
         private const string VENTOY_RELEASES_URL = "https://github.com/ventoy/Ventoy/releases";
@@ -695,6 +699,7 @@ namespace GMTPC.Tool
                              ChkAnyDesk.IsChecked == true ||
                              ChkVMWare162Lite.IsChecked == true ||
                              // Windows - Microsoft
+                             ChkMemReduct.IsChecked == true ||
                              ChkWin11_26H1.IsChecked == true ||
                              ChkWin10LtscIot21H2.IsChecked == true ||
                              ChkWin10_22H2_2024_December.IsChecked == true ||

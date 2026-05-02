@@ -30,6 +30,7 @@
 //   - 2026-03-08: Thêm MouseRightButtonUp cho BtnDownloadPage để copy link
 //   - 2026-03-09: Removed ChkAdvancedCodec, ChkTeracopy, ChkVPN1111 references
 // AI Summary: 2026-04-28 - Added Ventoy to Windows Tools selection, hover, and copy-link flows
+// AI Summary: 2026-05-02 - Wired MemReduct into Windows Setup selection, install, and hover flows
 // =======================================================================
 using System;
 using System.Collections.Generic;
@@ -478,6 +479,7 @@ namespace GMTPC.Tool
                 }
                 else if (tabHeader == "Windows")
                 {
+                    ChkMemReduct.IsChecked = true;
                     ChkWin11_26H1.IsChecked = true;
                     ChkWin10LtscIot21H2.IsChecked = true;
                     ChkWin10_22H2_2024_December.IsChecked = true;
@@ -603,6 +605,7 @@ namespace GMTPC.Tool
                 }
                 else if (tabHeader == "Windows")
                 {
+                    ChkMemReduct.IsChecked = false;
                     ChkWin11_26H1.IsChecked = false;
                     ChkWin10LtscIot21H2.IsChecked = false;
                     ChkWin10_22H2_2024_December.IsChecked = false;
@@ -698,6 +701,7 @@ namespace GMTPC.Tool
 
             // Bỏ chọn checkbox trong tab Windows - Microsoft
             ChkWin11_26H1.IsChecked = false;
+            ChkMemReduct.IsChecked = false;
 
             // Bỏ chọn checkbox trong tab Windows Tools
             ChkWin10LtscIot21H2.IsChecked = false;
@@ -786,6 +790,7 @@ namespace GMTPC.Tool
             if (ChkTeamViewerFull.IsChecked == true) tasks.Add((InstallTeamViewerFullAsync, ChkTeamViewerFull));
             if (ChkAnyDesk.IsChecked == true) tasks.Add((InstallAnyDeskAsync, ChkAnyDesk));
             if (ChkVMWare162Lite.IsChecked == true) tasks.Add((InstallVMWare162LiteAsync, ChkVMWare162Lite));
+            if (ChkMemReduct.IsChecked == true) tasks.Add((InstallMemReductAsync, ChkMemReduct));
             if (ChkWin11_26H1.IsChecked == true) tasks.Add((InstallWin11_26H1Async, ChkWin11_26H1));
             if (ChkWin10LtscIot21H2.IsChecked == true) tasks.Add((InstallWin10LtscIot21H2Async, ChkWin10LtscIot21H2));
             if (ChkWin10_22H2_2024_December.IsChecked == true) tasks.Add((InstallWin10_22H2_2024_DecemberAsync, ChkWin10_22H2_2024_December));
@@ -957,6 +962,9 @@ namespace GMTPC.Tool
 
             if (ChkVMWare162Lite?.IsChecked == true)
                 _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/v1.0/VMware_Workstation_16.2.2_Lite_Eng_._Rus.exe");
+
+            if (ChkMemReduct?.IsChecked == true)
+                _cachedDownloadLinks.Add(MEMREDUCT_RELEASES_URL);
 
             if (ChkOfficeToolPlus?.IsChecked == true)
                 _cachedDownloadLinks.Add(OFFICE_TOOL_PLUS_RELEASES_URL);
@@ -1241,7 +1249,7 @@ namespace GMTPC.Tool
                 ChkSamuraiMaiden, ChkChrome, ChkCocCoc, ChkEdge,
                 ChkBrave,
                 ChkUltraviewer, ChkTeamViewerQS, ChkTeamViewerFull, ChkAnyDesk, ChkVMWare162Lite,
-                ChkWin11_26H1, ChkWin10LtscIot21H2, ChkWin10_22H2_2024_December, ChkVentoy,
+                ChkMemReduct, ChkWin11_26H1, ChkWin10LtscIot21H2, ChkWin10_22H2_2024_December, ChkVentoy,
                 // ChkWin10ProWorkstations22H2 removed
             };
 
@@ -1385,6 +1393,9 @@ namespace GMTPC.Tool
                         break;
                     case "ChkVMWare162Lite":
                         link = "https://github.com/ghostminhtoan/MMT/releases/download/v1.0/VMware.Workstation.Pro.16.2.Lite.exe";
+                        break;
+                    case "ChkMemReduct":
+                        link = MEMREDUCT_RELEASES_URL;
                         break;
                     case "ChkActivateOffice":
                         link = "https://github.com/ghostminhtoan/MMT/releases/download/activate/ACTIVATE.OFFICE.cmd";

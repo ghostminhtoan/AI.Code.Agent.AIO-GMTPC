@@ -5,6 +5,7 @@
 <!-- AI Summary: 2026-04-25 - Tuned tab spacer sizes so sparse tabs keep full checkboxes while dense tabs retain Subtitle-like fit -->
 <!-- AI Summary: 2026-04-25 - Rebalanced hidden tab spacers so Office/Multimedia/Remote Desktop clamp earlier while Driver/Browser/Windows tabs can scale larger -->
 <!-- AI Summary: 2026-04-30 - Added Ventoy checkbox to Windows Mod MMT with GitHub Releases-based download flow -->
+<!-- AI Summary: 2026-05-02 - Reordered the Windows child tabs and added MemReduct to Windows Setup -->
 <Window x:Class="GMTPC.Tool.MainWindow"
          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -682,6 +683,16 @@
                                 </Grid>
                             </ControlTemplate>
                         </TabControl.Template>
+                        <TabItem Header="Windows Setup">
+                            <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled" Background="#FF1F1F1F">
+                                <WrapPanel x:Name="WindowsSetupPanel" Orientation="Horizontal" HorizontalAlignment="Stretch" Style="{StaticResource ResponsiveWrapPanelStyle}">
+                                    <CheckBox x:Name="ChkMemReduct" Content="MemReduct" Width="200" Height="34" Click="ChkMemReduct_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
+                                    <CheckBox x:Name="ChkVentoy" Content="Ventoy" Width="200" Height="34" Click="ChkVentoy_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
+                                    <CheckBox x:Name="ChkWintoHDD" Content="WintoHDD" Width="200" Height="34" Click="ChkWintoHDD_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
+                                    <Button x:Name="BtnWinPEToHDD" Content="WinPE to HDD" Width="200" Height="28" Click="BtnWinPEToHDD_Click" Margin="2"/>
+                                </WrapPanel>
+                            </ScrollViewer>
+                        </TabItem>
                         <TabItem Header="Windows - Microsoft">
                             <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled" Background="#FF1F1F1F">
                                 <WrapPanel x:Name="WindowsPanel" Orientation="Horizontal" HorizontalAlignment="Stretch" Style="{StaticResource ResponsiveWrapPanelStyle}">
@@ -694,15 +705,6 @@
                                 <WrapPanel x:Name="WindowsToolsPanel" Orientation="Horizontal" HorizontalAlignment="Stretch" Style="{StaticResource ResponsiveWrapPanelStyle}">
                                     <CheckBox x:Name="ChkWin10LtscIot21H2" Content="Win 10 LTSC IoT 21H2 - No Defender - Office - MMTPC 3.0" Width="420" Height="34" Click="ChkWin10LtscIot21H2_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
                                     <CheckBox x:Name="ChkWin10_22H2_2024_December" Content="Win 10 22h2 2024 DECEMBER - Office.365 - win 10 MMTPC 4.0" Width="420" Height="34" Click="ChkWin10_22H2_2024_December_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
-                                </WrapPanel>
-                            </ScrollViewer>
-                        </TabItem>
-                        <TabItem Header="Windows setup">
-                            <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled" Background="#FF1F1F1F">
-                                <WrapPanel x:Name="WindowsSetupPanel" Orientation="Horizontal" HorizontalAlignment="Stretch" Style="{StaticResource ResponsiveWrapPanelStyle}">
-                                    <CheckBox x:Name="ChkVentoy" Content="Ventoy" Width="200" Height="34" Click="ChkVentoy_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
-                                    <CheckBox x:Name="ChkWintoHDD" Content="WintoHDD" Width="200" Height="34" Click="ChkWintoHDD_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
-                                    <Button x:Name="BtnWinPEToHDD" Content="WinPE to HDD" Width="200" Height="28" Click="BtnWinPEToHDD_Click" Margin="2"/>
                                 </WrapPanel>
                             </ScrollViewer>
                         </TabItem>

@@ -56,7 +56,9 @@ namespace GMTPC.Tool
                 string latestMemReductVersion = memReductFileName
                     .Replace("memreduct-", string.Empty)
                     .Replace("-setup.exe", string.Empty);
-                string normalizedMemReductTag = $"v{latestMemReductVersion}";
+                string normalizedMemReductTag = latestMemReductVersion.StartsWith("v", StringComparison.OrdinalIgnoreCase)
+                    ? latestMemReductVersion
+                    : $"v{latestMemReductVersion}";
 
                 string gmtPCFolder = GetGMTPCFolder();
                 string memReductPath = Path.Combine(gmtPCFolder, memReductFileName);
@@ -135,7 +137,7 @@ namespace GMTPC.Tool
 
                 Match assetMatch = Regex.Match(
                     json ?? string.Empty,
-                    @"""name""\s*:\s*""(?<name>memreduct-(?<ver>\d+\.\d+\.\d+)-setup\.exe)""",
+                    @"""name""\s*:\s*""(?<name>memreduct-v(?<ver>\d+\.\d+\.\d+)-setup\.exe)""[\s\S]*?""browser_download_url""\s*:\s*""(?<url>https:\/\/github\.com\/henrypp\/memreduct\/releases\/download\/[^""]+)""",
                     RegexOptions.IgnoreCase);
                 if (!assetMatch.Success)
                 {
@@ -145,15 +147,17 @@ namespace GMTPC.Tool
                 string releaseTag = tagMatch.Groups["tag"].Value;
                 string assetVersion = assetMatch.Groups["ver"].Value;
                 string assetName = assetMatch.Groups["name"].Value;
-                string normalizedReleaseTag = $"v{assetVersion}";
+                string assetDownloadUrl = assetMatch.Groups["url"].Value;
+                string normalizedReleaseTag = releaseTag.StartsWith("v", StringComparison.OrdinalIgnoreCase)
+                    ? releaseTag
+                    : $"v{assetVersion}";
 
                 if (!string.Equals(releaseTag.TrimStart('v', '.'), assetVersion, StringComparison.OrdinalIgnoreCase))
                 {
                     return null;
                 }
 
-                string downloadUrl = $"{MEMREDUCT_DOWNLOAD_BASE_URL}/{normalizedReleaseTag}/{assetName}";
-                return Tuple.Create(normalizedReleaseTag, downloadUrl, assetName);
+                return Tuple.Create(normalizedReleaseTag, assetDownloadUrl, assetName);
             }
         }
 

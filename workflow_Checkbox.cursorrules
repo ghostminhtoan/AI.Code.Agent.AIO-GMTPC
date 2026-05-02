@@ -21,7 +21,7 @@ Mục tiêu của bạn là tuân thủ TUYỆT ĐỐI kiến trúc Partial Clas
 - Defender exclusion luôn được tạo cho %LocalAppdata%\GMTPC\GMTPC Tools\, còn các thư mục khác thì làm theo VÍ DỤ:
 nếu chọn ổ D thì sẽ tự tạo  defender exclusion cho D:\Temp Folder, khi đang ở ổ D:\ và chọn ổ E:\ thì sẽ xóa defender exclusion D:\Temp Folder rồi tạo E:\Temp Folder và tạo defender exclusion cho E:\Temp Folder. Trong toàn bộ trường hợp đổi qua đổi lại sẽ không bao giờ xóa defender exclusion của %LocalAppdata%\GMTPC\GMTPC Tools\
 - File trong tab Windows Mod MMT luôn luôn tải file về ổ C:\ và sẽ không bao giờ bị xóa kể cả sau khi tắt project.
-- Ventoy trong tab Windows Mod MMT là flow probe 2 tầng: tìm version cao nhất ở SourceForge, rồi probe file `ventoy-...windows.zip`, giải nén ra `C:\Ventoy`, và chạy `ventoy2disk.exe`.
+- Ventoy trong tab Windows Mod MMT là flow GitHub Releases: lấy release mới nhất, tải `ventoy-...windows.zip` vào `C:\Ventoy`, giải nén, chuyển folder `ventoy-x.x.x` ra `C:\`, mở `ventoy2disk.exe`, rồi xóa zip sau khi tiến trình tắt.
 </global_rules>
 
 <file_architecture>
@@ -92,7 +92,25 @@ nếu chọn ổ D thì sẽ tự tạo  defender exclusion cho D:\Temp Folder, 
         </example>
     </file>
 
-    <!-- ==================== PARTIAL CLASS FILES ==================== -->
+
+    <file name="MainWindow.SystemArchiveFlow.cs">
+        <description>
+        Cơ chế cài đặt/khởi chạy dạng archive - tải file, giải nén, mở file chỉ định, rồi dọn file zip hoặc thư mục tạm sau khi tiến trình kết thúc.
+        Dùng cho Ventoy và các phần mềm tương lai có cùng chu trình.
+        </description>
+        <methods>
+            - InstallVentoyAsync(): Flow Ventoy end-to-end hiện tại
+            - GetLatestVentoyReleaseAssetAsync(): Probe release mới nhất và asset zip
+            - FindVentoyPayloadFolder(versionFolderPath): Tìm folder payload sau khi giải nén
+            - FindVentoy2DiskExe(rootFolder): Tìm file chỉ định để mở
+            - WaitForProcessExitAsync(process): Đợi tiến trình được mở tắt hẳn
+            - TryDeleteFile(path) / TryDeleteDirectory(path): Dọn tài nguyên tạm
+        </methods>
+        <notes>
+            - Mẫu luồng: download -> extract -> open specified file -> cleanup zip/temp folder
+            - Có thể tái sử dụng cho tool khác nếu workflow tương lai cần mở một file exe/chạy file cụ thể sau khi bung archive
+        </notes>
+    </file>    <!-- ==================== PARTIAL CLASS FILES ==================== -->
     <file name="MainWindow.SystemBar.cs">
         <description>
         Xử lý Temp folder ComboBox - cho phép người dùng chọn ổ cứng để tải file, quản lý Windows Defender exclusions.
@@ -573,3 +591,10 @@ nếu chọn ổ D thì sẽ tự tạo  defender exclusion cho D:\Temp Folder, 
         - Quản lý Temp Folder cho toàn bộ ứng dụng
         - Methods: PopulateTempFolderComboBox(), CboTempFolder_SelectionChanged(), GetSelectedTempFolderPath()
     </file>
+
+
+<prompt_guidance>
+Gợi ý prompt ngắn cho workflow Ventoy hoặc flow archive tương tự:
+- "Dùng Workflow_editcheckbox: Tab Windows Mod MMT, checkbox Ventoy, link https://github.com/ventoy/Ventoy/releases, argument *(tool riêng)*. Dùng MainWindow.SystemArchiveFlow.cs, flow download -> extract -> mở file chỉ định -> xóa zip sau khi tiến trình tắt."
+- Nếu là phần mềm khác cùng kiểu: nêu rõ tên file sau khi bung archive cần mở, và file/thư mục tạm nào phải xóa sau khi xong.
+</prompt_guidance>

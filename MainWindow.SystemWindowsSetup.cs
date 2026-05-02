@@ -62,8 +62,8 @@ namespace GMTPC.Tool
                 string memReductPath = Path.Combine(gmtPCFolder, memReductFileName);
 
                 UpdateStatus($"Đã chọn MemReduct {latestMemReductVersion} ({normalizedMemReductTag})", "Green");
-                UpdateStatus($"Đang tải {memReductFileName}...", "Cyan");
-                await DownloadWithProgressAsync(memReductDownloadUrl, memReductPath, "MemReduct");
+                UpdateStatus($"Đang tải {memReductFileName} bằng 1 kết nối...", "Cyan");
+                await DownloadSingleConnectionAsync(memReductDownloadUrl, memReductPath, "MemReduct");
                 if (!File.Exists(memReductPath))
                 {
                     throw new FileNotFoundException($"Không tìm thấy file đã tải: {memReductPath}");

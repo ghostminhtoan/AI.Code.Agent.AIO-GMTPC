@@ -393,6 +393,10 @@ namespace AICodeAgentAIOGMTPC
                     ChkRevoUninstaller.IsChecked = true;
                     ChkInstallZalo.IsChecked = true;
                 }
+                else if (tabHeader == "Tool")
+                {
+                    SetToolTabCheckBoxes(true);
+                }
                 // Nếu tab là "System"
                 else if (tabHeader == "System")
                 {
@@ -518,6 +522,10 @@ namespace AICodeAgentAIOGMTPC
                     Chk3DPNet.IsChecked = false;
                     ChkRevoUninstaller.IsChecked = false;
                     ChkInstallZalo.IsChecked = false;
+                }
+                else if (tabHeader == "Tool")
+                {
+                    SetToolTabCheckBoxes(false);
                 }
                 // Nếu tab là "System"
                 else if (tabHeader == "System")
@@ -708,6 +716,8 @@ namespace AICodeAgentAIOGMTPC
             ChkWin10_22H2_2024_December.IsChecked = false;
             ChkVentoy.IsChecked = false;
             ChkWintoHDD.IsChecked = false;
+
+            SetToolTabCheckBoxes(false);
 
             UpdateInstallButtonState();
         }

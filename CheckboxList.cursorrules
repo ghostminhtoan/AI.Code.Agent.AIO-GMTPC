@@ -1,179 +1,35 @@
-﻿<!-- AI Summary: 2026-05-02 - Refreshed the Windows Setup tab order -->
-<!-- AI Summary: 2026-04-30 - Updated ChkOfficeToolPlus to probe latest Office Tool Plus runtime x64 zip from GitHub Releases -->
-<!-- AI Summary: 2026-05-02 - Moved ChkVentoy to the reusable archive flow backed by MainWindow.SystemArchiveFlow.cs -->
-<!-- AI Summary: 2026-04-25 - Updated ChkSubtitleEdit to the new GMTPC portable release link -->
-<!-- AI Summary: 2026-04-24 (2) - Updated ChkDownloadSampleVideo to save into %USERPROFILE%\Videos -->
-<!-- AI Summary: 2026-04-24 - Added ChkDownloadSampleVideo to Tab Subtitle -->
-<!-- AI Summary: 2026-04-13 - Added ChkSubtitleDraftGMTPC to Tab Subtitle -->
+<!-- AI Summary: 2026-05-11 - Rebuilt the checkbox catalog around the Tool tab after removing the other install tabs -->
 
-# Danh sÃ¡ch Checkbox
+# Danh sách Checkbox
 
-> File nÃ y lÆ°u trá»¯ thÃ´ng tin cÃ¡c checkbox cÃ i Ä‘áº·t pháº§n má»m Ä‘Ã£ táº¡o.
-> Cáº­p nháº­t sau má»—i láº§n táº¡o/sá»­a checkbox báº±ng Workflow_createcheckbox hoáº·c Workflow_editcheckbox.
+> File này chỉ còn ghi nhận các checkbox giữ lại trong tab Tool.
+> Các tab Subtitle, Partition, Gaming, Driver, Browser, Remote Desktop, Windows và System Information đã được gom/xóa theo yêu cầu.
 
 ## Related Files
 
-- `@Services/SegmentedDownloadEngine.cs` - Download engine: multi-thread segmented (chunk-based)
-- `@MainWindow.RestoredMethods.cs` - Helper methods, shared methods for the entire application
+- @Services/SegmentedDownloadEngine.cs - Download engine: multi-thread segmented (chunk-based)
+- @MainWindow.RestoredMethods.cs - Helper methods, shared methods for the entire application
 
-## Tab System Information
+## Tab Tool
 
-| TÃªn Checkbox | Link Download | Argument |
+| Tên Checkbox | Link Download | Argument |
 |-------------|---------------|----------|
-| *(Tab hiá»ƒn thá»‹ thÃ´ng tin há»‡ thá»‘ng, khÃ´ng cÃ³ checkbox cÃ i Ä‘áº·t)* | | |
+| ChkInstallIDM | https://tinyurl.com/idmhcmvn | /s /a /u /o /quiet /skipdlgst |
+| ChkInstallNeatDM | https://neatdownloadmanager.com/file/NeatDM_setup.exe | /silent |
+| ChkVcredist | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/vcredist.all.in.one.by.MMT.Windows.Tech.exe | /passive |
+| ChkNotepadPlusPlus | https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.9.2/npp.8.9.2.Installer.x64.msi | /passive /norestart |
+| ChkFastStone | *(FastStone Capture)* | *(tool riêng)* |
+| ChkComfortClipboardPro | *(Comfort Clipboard Pro)* | *(tool riêng)* |
+| ChkPowerISO | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/PowerISO.exe | /S |
+| ChkMemReduct | https://github.com/henrypp/memreduct/releases/download/v.3.5.2/memreduct-3.5.2-setup.exe | /S |
+| ChkTeraCopy | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/TeraCopy.Pro.v3.17.0.0.exe | /S |
+| ChkVPN1111 | https://1111-releases.cloudflareclient.com/win/latest | /passive |
+| ChkChrome | https://dl.google.com/chrome/install/latest/chrome_installer.exe | /silent /install |
+| ChkCocCoc | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/CocCoc.exe | /silent /install |
+| ChkVMWare162Lite | *(VMWare 16.2 lite)* | *(tool riêng)* |
 
-## Tab Popular
+## Ghi chú
 
-| TÃªn Checkbox | Link Download | Argument |
-|-------------|---------------|----------|
-| ChkInstallIDM | https://tinyurl.com/idmhcmvn | `/s /a /u /o /quiet /skipdlgst` |
-| ChkInstallNeatDM | https://neatdownloadmanager.com/file/NeatDM_setup.exe | `/silent` |
-| ChkInstallWinRAR | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/WinRAR.exe | `/silent /I /EN` |
-| ChkInstallBID | https://bulkimagedownloader.com/files/bid_6_62_setup_x64.exe | *(khÃ´ng cÃ³)* |
-| ChkActivateWindows | (Built-in Windows Activation) | `slmgr /ipk ...` |
-| ChkPauseWindowsUpdate | (Windows Update Service) | *(system service)* |
-| ChkVcredist | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/vcredist.all.in.one.by.MMT.Windows.Tech.exe | `/passive` |
-| ChkDirectX | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/DirectX.exe | `/passive` |
-| ChkJava | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/java.exe | `/s` |
-| ChkOpenAL | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/oalinst.exe | `/S` |
-| ChkRevoUninstaller | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/RevoUninstallerPro.exe | `/S` |
-| ChkInstallZalo | https://zalo.me/download/zalo-pc?utm=90000 | `/s` |
-
-## Tab Office
-
-| TÃªn Checkbox | Link Download | Argument |
-|-------------|---------------|----------|
-| ChkOfficeToolPlus | https://github.com/YerongAI/Office-Tool/releases | *(probe latest x64 runtime zip, extract to C:\, create desktop shortcut, open Office Tool Plus.exe)* |
-| ChkOfficeSoftmaker | *(Office Softmaker)* | *(tool riÃªng)* |
-| ChkActivateOffice | (Office Activation) | *(script riÃªng)* |
-| ChkGMTPCFonts | https://github.com/ghostminhtoan/Subtitle-draft-GMTPC/releases/download/subtitle.materials/GMTPC-FONTS.exe | *(run directly, delete on app exit)* |
-| ChkNotepadPlusPlus | https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.9.2/npp.8.9.2.Installer.x64.msi | `/passive /norestart` |
-
-## Tab Subtitle
-
-| TÃªn Checkbox | Link Download | Argument |
-|-------------|---------------|----------|
-| ChkSubtitleEdit | https://github.com/ghostminhtoan/Subtitle-draft-GMTPC/releases/download/subtitle.materials/Subtitle.Edit.-.GMTPC.portable.exe | `/verysilent /norestart` |
-| ChkVidCoder | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/vidcoder.exe | *(run directly, C:\Vidcoder)* |
-| ChkBoilsoftVideoSplitter | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/BoilsoftVideoSplitter.8.3.3.by.elchupacabra.exe | *(Yes: /S, No: manual)* |
-| ChkVibe | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/vibe.exe | *(Yes: /S, No: manual)* |
-| ChkMKVToolNix | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/mkvtoolnix-mkvcleaver.exe | *(Yes: /S, No: manual)* |
-| ChkSubtitleDraftGMTPC | https://github.com/ghostminhtoan/Subtitle-draft-GMTPC/blob/master/Subtitle%20draft%20GMTPC.exe | *(download to C:\, create desktop shortcut, open file)* |
-| ChkDownloadSampleVideo | https://github.com/ghostminhtoan/Subtitle-draft-GMTPC/releases/download/subtitle.materials/ReZero.Starting.Life.in.Another.World.S04E01.WEB-DL.1080p.AVC.AAC.Dual.Audio-FBI.mkv | *(download to %USERPROFILE%\Videos, open containing folder after download)* |
-
-## Tab Multimedia
-
-| TÃªn Checkbox | Link Download | Argument |
-|-------------|---------------|----------|
-| ChkAdvancedCodecPack | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/ADVANCED_Codec_Pack.exe | `/S /V/qn` |
-| ChkPotPlayer | *(PotPlayer)* | *(tool riÃªng)* |
-| ChkFastStone | *(FastStone Capture)* | *(tool riÃªng)* |
-| ChkFoxit | *(Foxit PDF Reader)* | *(tool riÃªng)* |
-| ChkBandiview | *(Bandiview)* | *(tool riÃªng)* |
-
-## Tab System
-
-| TÃªn Checkbox | Link Download | Argument |
-|-------------|---------------|----------|
-| ChkMMTApps | *(MMT Apps)* | *(tool riÃªng)* |
-| ChkDISMPP | *(DISM++)* | *(tool riÃªng)* |
-| ChkComfortClipboardPro | *(Comfort Clipboard Pro)* | *(tool riÃªng)* |
-| ChkFolderSize | *(FolderSize)* | *(tool riÃªng)* |
-| ChkPowerISO | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/PowerISO.exe | `/S` |
-| ChkMemReduct | https://github.com/henrypp/memreduct/releases/download/v.3.5.2/memreduct-3.5.2-setup.exe | `/S` |
-| ChkTeraCopy | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/TeraCopy.Pro.v3.17.0.0.exe | `/S` |
-| ChkVPN1111 | https://1111-releases.cloudflareclient.com/win/latest | `/passive` |
-| ChkGoogleDrive | *(Google Drive)* | *(tool riÃªng)* |
-| ChkNetLimiter | *(NetLimiter)* | *(tool riÃªng)* |
-
-## Tab Partition
-
-| TÃªn Checkbox | Link Download | Argument |
-|-------------|---------------|----------|
-| ChkAomeiPartitionAssistant | *(AOMEI Partition Assistant)* | *(tool riÃªng)* |
-| ChkDiskGenius | *(Disk Genius)* | *(tool riÃªng)* |
-
-## Tab Gaming
-
-| TÃªn Checkbox | Link Download | Argument |
-|-------------|---------------|----------|
-| ChkProcessLasso | *(Process Lasso)* | *(tool riÃªng)* |
-| ChkThrottlestop | *(Throttlestop)* | *(tool riÃªng)* |
-| ChkMSIAfterburner | *(MSI Afterburner)* | *(tool riÃªng)* |
-| ChkLeagueOfLegends | *(League of Legends VN)* | *(tool riÃªng)* |
-| ChkPorofessor | *(Porofessor)* | *(tool riÃªng)* |
-| ChkSamuraiMaiden | *(Samurai Maiden)* | *(tool riÃªng)* |
-| ChkGhostOfTsushima | https://github.com/ghostminhtoan/MMT/releases/download/game/Ghost.of.Tsushima_LinkNeverDie.Com.part01.exe (29 parts) | *(multi-part installer)* |
-
-## Tab Browser
-
-| TÃªn Checkbox | Link Download | Argument |
-|-------------|---------------|----------|
-| ChkChrome | https://dl.google.com/chrome/install/latest/chrome_installer.exe | `/silent /install` |
-| ChkCocCoc | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/CocCoc.exe | `/silent /install` |
-| ChkEdge | https://go.microsoft.com/fwlink/?linkid=2108834&Channel=Stable&language=vi | `/silent /install` |
-
-## Tab Remote Desktop
-
-| TÃªn Checkbox | Link Download | Argument |
-|-------------|---------------|----------|
-| ChkUltraviewer | *(Ultraviewer)* | *(tool riÃªng)* |
-| ChkTeamViewerQS | *(TeamViewer QuickSupport)* | *(tool riÃªng)* |
-| ChkTeamViewerFull | *(TeamViewer Full)* | *(tool riÃªng)* |
-| ChkAnyDesk | *(AnyDesk)* | *(tool riÃªng)* |
-| ChkVMWare162Lite | *(VMWare 16.2 lite)* | *(tool riÃªng)* |
-
-## Tab Driver
-
-| TÃªn Checkbox | Link Download | Argument |
-|-------------|---------------|----------|
-| Chk3DPChip | https://www.3dpchip.com/3dp/chip.exe | `/S` |
-| Chk3DPNet | https://www.3dpchip.com/3dp/net.exe | `/S` |
-
-## Tab Windows Setup
-
-| TÃªn Checkbox | Link Download | Argument |
-|-------------|---------------|----------|
-
-| ChkVentoy | https://github.com/ventoy/Ventoy/releases | *(GitHub latest release zip, extract to C:\Ventoy, move ventoy-x.x.x to C:\, run ventoy2disk.exe, delete zip after exit)* |
-| ChkWintoHDD | https://github.com/ghostminhtoan/MMT/releases/download/WinPE/wintohdd.exe | `/S` |
-| BtnWinPEToHDD | `powershell irm bit.ly/mmtwinpe \| iex` | *(button, run as administrator)* |
-
-## Tab Windows - Microsoft
-
-| TÃªn Checkbox | Link Download | Argument |
-|-------------|---------------|----------|
-| ChkWin11_26H1 | https://archive.org/download/microsoft-win11-26h2-february-2026/en-us_windows_11_consumer_editions_version_26h1_x64_dvd_5208fe5b.iso | *(ISO image)* |
-
-## Tab Windows Mod MMT
-
-| TÃªn Checkbox | Link Download | Argument |
-|-------------|---------------|----------|
-| ChkWin10LtscIot21H2 | GitHub (3 parts - auto merge):<br>https://github.com/ghostminhtoan/MMT/releases/download/windows/LTSC.IOT.21H2.-.2021.10.-.gaming.-.Office.365.-.win.10.MMTPC.3.0.iso.001<br>https://github.com/ghostminhtoan/MMT/releases/download/windows/LTSC.IOT.21H2.-.2021.10.-.gaming.-.Office.365.-.win.10.MMTPC.3.0.iso.002<br>https://github.com/ghostminhtoan/MMT/releases/download/windows/LTSC.IOT.21H2.-.2021.10.-.gaming.-.Office.365.-.win.10.MMTPC.3.0.iso.003 | *(ISO image - 3-part download, auto merge)* |
-| ChkWin10_22H2_2024_December | GitHub (5 parts - auto merge):<br>https://github.com/ghostminhtoan/MMT/releases/download/windows/win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso.001<br>https://github.com/ghostminhtoan/MMT/releases/download/windows/win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso.002<br>https://github.com/ghostminhtoan/MMT/releases/download/windows/win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso.003<br>https://github.com/ghostminhtoan/MMT/releases/download/windows/win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso.004<br>https://github.com/ghostminhtoan/MMT/releases/download/windows/win.10.22h2.2024.DECEMBER.-.Office.365.-.win.10.MMTPC.4.0.iso.005 | *(ISO image - 5-part download, auto merge)* |
----
-
-**Tá»•ng sá»‘:** 57 checkboxes
-
-**Ghi chÃº:**
-- CÃ¡c checkbox Ä‘Æ°á»£c phÃ¢n loáº¡i theo Tab tÆ°Æ¡ng á»©ng trong giao diá»‡n (MainWindow.xaml)
-- Link download cÃ³ thá»ƒ lÃ  URL rÃºt gá»n (tinyurl) hoáº·c link trá»±c tiáº¿p tá»« GitHub Releases
-- Argument lÃ  tham sá»‘ dÃ²ng lá»‡nh Ä‘á»ƒ cÃ i Ä‘áº·t tá»± Ä‘á»™ng (silent/unattended) - Ä‘Æ°á»£c hiá»ƒn thá»‹ vá»›i Ä‘á»‹nh dáº¡ng `code`
-- *(khÃ´ng cÃ³)* = KhÃ´ng yÃªu cáº§u tham sá»‘ dÃ²ng lá»‡nh
-- *(tool riÃªng)* = Sá»­ dá»¥ng phÆ°Æ¡ng thá»©c cÃ i Ä‘áº·t riÃªng trong code
-
-## Legend - MÃ u sáº¯c Argument
-
-| Loáº¡i Argument | Äá»‹nh dáº¡ng | Ã nghÄ©a |
-|--------------|-----------|---------|
-| `/silent`, `/passive` | `code` | CÃ i Ä‘áº·t ngáº§m, khÃ´ng hiá»ƒn thá»‹ UI |
-| `/s`, `/S` | `code` | Silent install (rÃºt gá»n) |
-| `/norestart` | `code` | KhÃ´ng khá»Ÿi Ä‘á»™ng láº¡i sau cÃ i Ä‘áº·t |
-| *(khÃ´ng cÃ³)* | *italic* | KhÃ´ng cáº§n tham sá»‘ |
-| *(tool riÃªng)* | *italic* | Sá»­ dá»¥ng phÆ°Æ¡ng thá»©c cÃ i Ä‘áº·t custom |
-| *(ISO image)* | *italic* | File ISO Windows (khÃ´ng pháº£i installer thÃ´ng thÆ°á»ng) |
-
-
-
-
-
+- Tất cả checkbox trên đều được gom vào tab Tool.
+- Các tab cũ đã được xóa khỏi giao diện theo yêu cầu.
+- Khi thêm/chỉnh checkbox mới, luôn cập nhật workflow và build lại exe trước khi push.

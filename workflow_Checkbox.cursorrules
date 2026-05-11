@@ -1,4 +1,5 @@
-﻿<!-- AI Summary: 2026-04-30 - Integrated MainWindow.SystemDPISCaling.cs into the checkbox workflow as the parent/child tab DPI entry point -->
+<!-- AI Summary: 2026-05-11 - Consolidated the checkbox inventory into the Tool tab and aligned the workflow docs with the removed tabs -->
+<!-- AI Summary: 2026-04-30 - Integrated MainWindow.SystemDPISCaling.cs into the checkbox workflow as the parent/child tab DPI entry point -->
 <!-- AI Summary: 2026-04-28 - Added Ventoy probe-based install flow note for Windows Mod MMT -->
 <!-- AI Summary: 2026-04-25 - Added Brave browser checkbox entry to the Browser workflow checklist -->
 <!-- AI Summary: 2026-04-24 - Added mandatory rule to always git add/commit/push root AI.Code.Agent.AIO-GMTPC.exe after build -->
@@ -535,39 +536,20 @@ nếu chọn ổ D thì sẽ tự tạo  defender exclusion cho D:\Temp Folder, 
 </implementation_rules>
 
 <current_checkboxes>
-    <!-- Danh sách checkbox hiện tại (tham khảo từ CheckboxList.cursorrules) -->
-    
-    <!-- Tab Popular -->
-    <checkbox name="ChkInstallIDM" tab="Popular" url="https://tinyurl.com/idmhcmvn" args="/s /a /u /o /quiet /skipdlgst"/>
-    <checkbox name="ChkInstallWinRAR" tab="Popular" url="https://github.com/ghostminhtoan/MMT/releases/download/v1.0/WinRAR.exe" args="/silent /I /EN"/>
-    <checkbox name="ChkInstallBID" tab="Popular" url="https://bulkimagedownloader.com/files/bid_6_62_setup_x64.exe" args=""/>
-    
-    <!-- Tab Office -->
-    <checkbox name="ChkGMTPCFonts" tab="Office" url="https://github.com/ghostminhtoan/Subtitle-draft-GMTPC/releases/download/subtitle.materials/GMTPC-FONTS.exe" args=""/>
-    <checkbox name="ChkInstallNotepadPlusPlus" tab="Office" url="https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.9.2/npp.8.9.2.Installer.x64.msi" args="/passive /norestart"/>
-    
-    <!-- Tab Browser -->
-    <checkbox name="ChkInstallChrome" tab="Browser" url="https://dl.google.com/chrome/install/latest/chrome_installer.exe" args="/silent /install"/>
-    <checkbox name="ChkInstallCocCoc" tab="Browser" url="https://coccoc.com/download/win32" args="/silent"/>
-    <checkbox name="ChkInstallEdge" tab="Browser" url="https://go.microsoft.com/fwlink/?linkid=2108834&amp;Channel=Stable&amp;language=vi" args="/silent /install"/>
-    <checkbox name="ChkInstallBrave" tab="Browser" url="https://laptop-updates.brave.com/download/BRV010?bitness=64" args=""/>
-    
-    <!-- Tab Multimedia -->
-    <checkbox name="ChkInstallVcredist" tab="Multimedia" url="https://github.com/ghostminhtoan/MMT/releases/download/v1.0/vcredist.all.in.one.by.MMT.Windows.Tech.exe" args="/passive"/>
-    <checkbox name="ChkInstallDirectX" tab="Multimedia" url="https://github.com/ghostminhtoan/MMT/releases/download/v1.0/DirectX.exe" args="/passive"/>
-    <checkbox name="ChkInstallJava" tab="Multimedia" url="https://github.com/ghostminhtoan/MMT/releases/download/v1.0/java.exe" args="/s"/>
-    <checkbox name="ChkInstallOpenAL" tab="Multimedia" url="https://github.com/ghostminhtoan/MMT/releases/download/v1.0/oalinst.exe" args="/S"/>
-    
-    <!-- Tab Gaming -->
-    <checkbox name="ChkInstallDPChip" tab="Gaming" url="https://www.3dpchip.com/3dp/chip.exe" args="/S"/>
-    <checkbox name="ChkInstallDPNet" tab="Gaming" url="https://www.3dpchip.com/3dp/net.exe" args="/S"/>
-    <checkbox name="ChkInstallRevo" tab="Gaming" url="https://github.com/ghostminhtoan/MMT/releases/download/v1.0/RevoUninstallerPro.exe" args="/S"/>
-    
-    <!-- Tab Info -->
-    <checkbox name="ChkInstallZalo" tab="Info" url="https://zalo.me/download/zalo-pc?utm=90000" args="/s"/>
-    
-    <!-- Tab System -->
-    <checkbox name="ChkActivateWindows" tab="System" url="(Built-in)" args="slmgr /ipk ..."/>
+    <!-- Chỉ còn tab Tool sau khi gom UI -->
+    <checkbox name="ChkInstallIDM" tab="Tool" url="https://tinyurl.com/idmhcmvn" args="/s /a /u /o /quiet /skipdlgst"/>
+    <checkbox name="ChkInstallNeatDM" tab="Tool" url="https://neatdownloadmanager.com/file/NeatDM_setup.exe" args="/silent"/>
+    <checkbox name="ChkVcredist" tab="Tool" url="https://github.com/ghostminhtoan/MMT/releases/download/v1.0/vcredist.all.in.one.by.MMT.Windows.Tech.exe" args="/passive"/>
+    <checkbox name="ChkNotepadPlusPlus" tab="Tool" url="https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.9.2/npp.8.9.2.Installer.x64.msi" args="/passive /norestart"/>
+    <checkbox name="ChkFastStone" tab="Tool" url="*(FastStone Capture)*" args="*(tool riêng)*"/>
+    <checkbox name="ChkComfortClipboardPro" tab="Tool" url="*(Comfort Clipboard Pro)*" args="*(tool riêng)*"/>
+    <checkbox name="ChkPowerISO" tab="Tool" url="https://github.com/ghostminhtoan/MMT/releases/download/v1.0/PowerISO.exe" args="/S"/>
+    <checkbox name="ChkMemReduct" tab="Tool" url="https://github.com/henrypp/memreduct/releases/download/v.3.5.2/memreduct-3.5.2-setup.exe" args="/S"/>
+    <checkbox name="ChkTeraCopy" tab="Tool" url="https://github.com/ghostminhtoan/MMT/releases/download/v1.0/TeraCopy.Pro.v3.17.0.0.exe" args="/S"/>
+    <checkbox name="ChkVPN1111" tab="Tool" url="https://1111-releases.cloudflareclient.com/win/latest" args="/passive"/>
+    <checkbox name="ChkChrome" tab="Tool" url="https://dl.google.com/chrome/install/latest/chrome_installer.exe" args="/silent /install"/>
+    <checkbox name="ChkCocCoc" tab="Tool" url="https://github.com/ghostminhtoan/MMT/releases/download/v1.0/CocCoc.exe" args="/silent /install"/>
+    <checkbox name="ChkVMWare162Lite" tab="Tool" url="*(VMWare 16.2 lite)*" args="*(tool riêng)*"/>
 </current_checkboxes>
 
 <file_structure_reference>

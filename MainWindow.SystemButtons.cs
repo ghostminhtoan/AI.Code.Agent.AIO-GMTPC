@@ -51,7 +51,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media.Animation;
 
-namespace GMTPC.Tool
+namespace AICodeAgentAIOGMTPC
 {
     public partial class MainWindow
     {
@@ -402,6 +402,7 @@ namespace GMTPC.Tool
                     ChkComfortClipboardPro.IsChecked = true;
                     ChkFolderSize.IsChecked = true;
                     ChkPowerISO.IsChecked = true;
+                    ChkMemReduct.IsChecked = true;
                     ChkTeraCopy.IsChecked = true;
                     ChkVPN1111.IsChecked = true;
                     ChkGoogleDrive.IsChecked = true;
@@ -527,6 +528,7 @@ namespace GMTPC.Tool
                     ChkComfortClipboardPro.IsChecked = false;
                     ChkFolderSize.IsChecked = false;
                     ChkPowerISO.IsChecked = false;
+                    ChkMemReduct.IsChecked = false;
                     ChkTeraCopy.IsChecked = false;
                     ChkVPN1111.IsChecked = false;
                     ChkGoogleDrive.IsChecked = false;
@@ -651,6 +653,7 @@ namespace GMTPC.Tool
             ChkComfortClipboardPro.IsChecked = false;
             ChkFolderSize.IsChecked = false;
             ChkPowerISO.IsChecked = false;
+            ChkMemReduct.IsChecked = false;
             ChkTeraCopy.IsChecked = false;
             ChkVPN1111.IsChecked = false;
             ChkGoogleDrive.IsChecked = false;
@@ -767,6 +770,7 @@ namespace GMTPC.Tool
             if (ChkDownloadSampleVideo.IsChecked == true) tasks.Add((InstallSampleVideoAsync, ChkDownloadSampleVideo));
             // Only add once to avoid duplicate install and MessageBox
             if (ChkPowerISO.IsChecked == true) tasks.Add((InstallPowerISOAsync, ChkPowerISO));
+            if (ChkMemReduct.IsChecked == true) tasks.Add((InstallMemReductAsync, ChkMemReduct));
             if (ChkTeraCopy.IsChecked == true) tasks.Add((InstallTeraCopyAsync, ChkTeraCopy));
             if (ChkVPN1111.IsChecked == true) tasks.Add((InstallVPN1111Async, ChkVPN1111));
             if (ChkGoogleDrive.IsChecked == true) tasks.Add((InstallGoogleDriveAsync, ChkGoogleDrive));
@@ -1042,6 +1046,9 @@ namespace GMTPC.Tool
             if (ChkPowerISO?.IsChecked == true)
                 _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/v1.0/PowerISO.exe");
 
+            if (ChkMemReduct?.IsChecked == true)
+                _cachedDownloadLinks.Add(MEMREDUCT_DOWNLOAD_URL);
+
             if (ChkGoogleDrive?.IsChecked == true)
                 _cachedDownloadLinks.Add("https://dl.google.com/drive-file-stream/GoogleDriveSetup.exe");
 
@@ -1253,7 +1260,7 @@ namespace GMTPC.Tool
                 ChkOfficeToolPlus, ChkOfficeSoftmaker, ChkActivateOffice, ChkGMTPCFonts,
                 ChkPotPlayer, ChkFastStone, ChkFoxit, ChkBandiview, ChkAdvancedCodecPack,
                 ChkMMTApps, ChkDISMPP, ChkComfortClipboardPro,
-                ChkFolderSize, ChkPowerISO, ChkTeraCopy, ChkVPN1111, ChkGoogleDrive,
+                ChkFolderSize, ChkPowerISO, ChkMemReduct, ChkTeraCopy, ChkVPN1111, ChkGoogleDrive,
                 ChkNetLimiter, ChkAomeiPartitionAssistant, ChkDiskGenius, ChkProcessLasso,
                 ChkThrottlestop, ChkMSIAfterburner, ChkLeagueOfLegends, ChkPorofessor,
                 ChkSamuraiMaiden, ChkChrome, ChkCocCoc, ChkEdge,
@@ -1354,6 +1361,9 @@ namespace GMTPC.Tool
                         break;
                     case "ChkPowerISO":
                         link = "https://github.com/ghostminhtoan/MMT/releases/download/v1.0/PowerISO.exe";
+                        break;
+                    case "ChkMemReduct":
+                        link = MEMREDUCT_DOWNLOAD_URL;
                         break;
                     case "ChkGoogleDrive":
                         link = "https://dl.google.com/drive-file-stream/GoogleDriveSetup.exe";
@@ -1493,4 +1503,5 @@ namespace GMTPC.Tool
         }
     }
 }
+
 

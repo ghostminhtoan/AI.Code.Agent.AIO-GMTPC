@@ -1,8 +1,8 @@
-// =======================================================================
+﻿// =======================================================================
 // MainWindow.SystemInstallMultipart.cs
-// Chức năng: Cơ chế cài đặt Multi-part - tải nhiều split file, tự động ghép và xóa
-// Cập nhật gần đây:
-//   - 2026-04-16: Cập nhật UpdateStatus hiển thị "đang tải x/y parts"
+// Chá»©c nÄƒng: CÆ¡ cháº¿ cÃ i Ä‘áº·t Multi-part - táº£i nhiá»u split file, tá»± Ä‘á»™ng ghÃ©p vÃ  xÃ³a
+// Cáº­p nháº­t gáº§n Ä‘Ã¢y:
+//   - 2026-04-16: Cáº­p nháº­t UpdateStatus hiá»ƒn thá»‹ "Ä‘ang táº£i x/y parts"
 // =======================================================================
 using System;
 using System.Diagnostics;
@@ -10,26 +10,26 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace GMTPC.Tool
+namespace AICodeAgentAIOGMTPC
 {
     public partial class MainWindow
     {
-        // ===================== SystemInstallMultipart - Cài đặt Multi-part =====================
+        // ===================== SystemInstallMultipart - CÃ i Ä‘áº·t Multi-part =====================
         /// <summary>
-        /// Cơ chế cài đặt Multi-part: Tải nhiều split file (.001, .002, .003...)
-        /// Sau khi tải xong BẮT BUỘC TỰ ĐỘNG GỘP LẠI thành 1 file
-        /// Sau khi GỘP XONG THÌ XÓA TOÀN BỘ SPLIT FILE
+        /// CÆ¡ cháº¿ cÃ i Ä‘áº·t Multi-part: Táº£i nhiá»u split file (.001, .002, .003...)
+        /// Sau khi táº£i xong Báº®T BUá»˜C Tá»° Äá»˜NG Gá»˜P Láº I thÃ nh 1 file
+        /// Sau khi Gá»˜P XONG THÃŒ XÃ“A TOÃ€N Bá»˜ SPLIT FILE
         /// </summary>
-        /// <param name="downloadUrls">Mảng các link tải về (theo thứ tự .001, .002, .003...)</param>
-        /// <param name="outputFilePath">Đường dẫn file hoàn chỉnh sau khi ghép</param>
-        /// <param name="displayName">Tên hiển thị (ví dụ: "Ghost of Tsushima", "Win 10 ISO")</param>
-        /// <param name="runAfterMerge">Có chạy file sau khi ghép không (default: true)</param>
-        /// <param name="deleteAfterMerge">Có xóa split file sau khi ghép không (default: true - BẮT BUỘC)</param>
+        /// <param name="downloadUrls">Máº£ng cÃ¡c link táº£i vá» (theo thá»© tá»± .001, .002, .003...)</param>
+        /// <param name="outputFilePath">ÄÆ°á»ng dáº«n file hoÃ n chá»‰nh sau khi ghÃ©p</param>
+        /// <param name="displayName">TÃªn hiá»ƒn thá»‹ (vÃ­ dá»¥: "Ghost of Tsushima", "Win 10 ISO")</param>
+        /// <param name="runAfterMerge">CÃ³ cháº¡y file sau khi ghÃ©p khÃ´ng (default: true)</param>
+        /// <param name="deleteAfterMerge">CÃ³ xÃ³a split file sau khi ghÃ©p khÃ´ng (default: true - Báº®T BUá»˜C)</param>
         protected async Task InstallWithMultipartAsync(string[] downloadUrls, string outputFilePath, string displayName, bool runAfterMerge = true, bool deleteAfterMerge = true)
         {
             if (downloadUrls == null || downloadUrls.Length == 0)
             {
-                UpdateStatus($"Lỗi: Không có link tải cho {displayName}", "Red");
+                UpdateStatus($"Lá»—i: KhÃ´ng cÃ³ link táº£i cho {displayName}", "Red");
                 return;
             }
 
@@ -57,14 +57,14 @@ namespace GMTPC.Tool
                     });
                 }
 
-                // Step 2: Merge all parts (BẮT BUỘC)
-                UpdateStatus($"Tải xong {downloadUrls.Length} phần! Đang gộp file...", "Cyan");
+                // Step 2: Merge all parts (Báº®T BUá»˜C)
+                UpdateStatus($"Táº£i xong {downloadUrls.Length} pháº§n! Äang gá»™p file...", "Cyan");
                 await MergeSplitFilesAsync(partPaths, outputFilePath);
 
-                // Step 3: Delete all split files (BẮT BUỘC)
+                // Step 3: Delete all split files (Báº®T BUá»˜C)
                 if (deleteAfterMerge)
                 {
-                    UpdateStatus("Đang xóa các file split...", "Gray");
+                    UpdateStatus("Äang xÃ³a cÃ¡c file split...", "Gray");
                     foreach (string partPath in partPaths)
                     {
                         if (File.Exists(partPath))
@@ -72,7 +72,7 @@ namespace GMTPC.Tool
                             try
                             {
                                 File.Delete(partPath);
-                                UpdateStatus($"Đã xóa {Path.GetFileName(partPath)}", "Gray");
+                                UpdateStatus($"ÄÃ£ xÃ³a {Path.GetFileName(partPath)}", "Gray");
                             }
                             catch { /* Ignore delete errors */ }
                         }
@@ -84,18 +84,18 @@ namespace GMTPC.Tool
                         if (Directory.Exists(tempFolder))
                         {
                             Directory.Delete(tempFolder, true);
-                            UpdateStatus($"Đã xóa folder tạm {tempFolder}", "Gray");
+                            UpdateStatus($"ÄÃ£ xÃ³a folder táº¡m {tempFolder}", "Gray");
                         }
                     }
                     catch { /* Ignore delete errors */ }
                     
-                    UpdateStatus($"Đã xóa toàn bộ {downloadUrls.Length} file split!", "Green");
+                    UpdateStatus($"ÄÃ£ xÃ³a toÃ n bá»™ {downloadUrls.Length} file split!", "Green");
                 }
 
                 // Step 4: Run file after merge (if requested)
                 if (runAfterMerge && File.Exists(outputFilePath))
                 {
-                    UpdateStatus($"Đang mở {displayName}...", "Green");
+                    UpdateStatus($"Äang má»Ÿ {displayName}...", "Green");
                     Process.Start(new ProcessStartInfo 
                     { 
                         FileName = outputFilePath, 
@@ -103,17 +103,17 @@ namespace GMTPC.Tool
                     });
                 }
 
-                UpdateStatus($"Hoàn tất cài đặt {displayName}!", "Green");
+                UpdateStatus($"HoÃ n táº¥t cÃ i Ä‘áº·t {displayName}!", "Green");
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài {displayName}: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i {displayName}: {ex.Message}", "Red");
                 throw;
             }
         }
 
         /// <summary>
-        /// Gộp nhiều split files thành 1 file hoàn chỉnh
+        /// Gá»™p nhiá»u split files thÃ nh 1 file hoÃ n chá»‰nh
         /// </summary>
         protected async Task MergeSplitFilesAsync(string[] partPaths, string outputPath)
         {
@@ -127,11 +127,11 @@ namespace GMTPC.Tool
                     }
                 }
             }
-            UpdateStatus($"Gộp file thành công: {Path.GetFileName(outputPath)}", "Green");
+            UpdateStatus($"Gá»™p file thÃ nh cÃ´ng: {Path.GetFileName(outputPath)}", "Green");
         }
 
         /// <summary>
-        /// Cơ chế cài đặt Multi-part với retry logic
+        /// CÆ¡ cháº¿ cÃ i Ä‘áº·t Multi-part vá»›i retry logic
         /// </summary>
         protected async Task InstallWithMultipartAndRetryAsync(string[] downloadUrls, string outputFilePath, string displayName, int maxRetries = 3)
         {
@@ -148,13 +148,14 @@ namespace GMTPC.Tool
                     retryCount++;
                     if (retryCount >= maxRetries)
                     {
-                        UpdateStatus($"Lỗi sau {maxRetries} lần thử: {ex.Message}", "Red");
+                        UpdateStatus($"Lá»—i sau {maxRetries} láº§n thá»­: {ex.Message}", "Red");
                         throw;
                     }
-                    UpdateStatus($"Thử lại lần {retryCount}/{maxRetries}...", "Yellow");
+                    UpdateStatus($"Thá»­ láº¡i láº§n {retryCount}/{maxRetries}...", "Yellow");
                     await Task.Delay(2000); // Wait 2 seconds before retry
                 }
             }
         }
     }
 }
+

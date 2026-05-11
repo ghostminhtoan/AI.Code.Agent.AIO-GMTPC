@@ -13,7 +13,7 @@ using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
 
-namespace GMTPC.Tool
+namespace AICodeAgentAIOGMTPC
 {
     public partial class MainWindow : Window
     {
@@ -103,3 +103,4 @@ namespace GMTPC.Tool
         }
     }
 }
+

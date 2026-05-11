@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -17,7 +17,7 @@ using System.Net.Http;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace GMTPC.Tool
+namespace AICodeAgentAIOGMTPC
 {
     public partial class MainWindow
     {
@@ -41,17 +41,17 @@ namespace GMTPC.Tool
          */
 
         // ===================================================================
-        // TabSubtitle — VidCoder
+        // TabSubtitle â€” VidCoder
         // ===================================================================
         private void ChkVidCoder_Click(object sender, RoutedEventArgs e)
         {
             if (ChkVidCoder.IsChecked == true)
             {
-                UpdateStatus("Đã chọn: VidCoder", "Green");
+                UpdateStatus("ÄÃ£ chá»n: VidCoder", "Green");
             }
             else
             {
-                UpdateStatus("Đã hủy chọn: VidCoder", "Yellow");
+                UpdateStatus("ÄÃ£ há»§y chá»n: VidCoder", "Yellow");
             }
 
             UpdateInstallButtonState();
@@ -61,19 +61,19 @@ namespace GMTPC.Tool
         {
             try
             {
-                // Bước 1: Tạo folder C:\Vidcoder nếu chưa tồn tại
+                // BÆ°á»›c 1: Táº¡o folder C:\Vidcoder náº¿u chÆ°a tá»“n táº¡i
                 string vidCoderFolder = @"C:\Vidcoder";
                 if (!Directory.Exists(vidCoderFolder))
                 {
                     Directory.CreateDirectory(vidCoderFolder);
-                    UpdateStatus($"Đã tạo folder {vidCoderFolder}", "Cyan");
+                    UpdateStatus($"ÄÃ£ táº¡o folder {vidCoderFolder}", "Cyan");
                 }
 
-                // Bước 2: Tải VidCoder.exe từ link cố định của MMT
+                // BÆ°á»›c 2: Táº£i VidCoder.exe tá»« link cá»‘ Ä‘á»‹nh cá»§a MMT
                 string vidCoderExeUrl = VIDCODER_DOWNLOAD_URL;
                 string vidCoderExePath = Path.Combine(vidCoderFolder, "VidCoder.exe");
                 
-                UpdateStatus("Đang tải VidCoder...", "Cyan");
+                UpdateStatus("Äang táº£i VidCoder...", "Cyan");
                 await DownloadWithProgressAsync(vidCoderExeUrl, vidCoderExePath, "VidCoder");
 
                 Dispatcher.Invoke(() =>
@@ -83,29 +83,29 @@ namespace GMTPC.Tool
                     SpeedTextBlock.Text = "";
                 });
 
-                // Bước 3: Tải file VidCoder.sqlite từ MMT repo
+                // BÆ°á»›c 3: Táº£i file VidCoder.sqlite tá»« MMT repo
                 string vidCoderSqliteUrl = "https://github.com/ghostminhtoan/MMT/releases/download/v1.0/VidCoder.sqlite";
                 string vidCoderSqlitePath = Path.Combine(vidCoderFolder, "VidCoder.sqlite");
 
-                UpdateStatus("Đang tải VidCoder.sqlite...", "Cyan");
+                UpdateStatus("Äang táº£i VidCoder.sqlite...", "Cyan");
                 using (WebClient client = new WebClient())
                 {
                     await client.DownloadFileTaskAsync(vidCoderSqliteUrl, vidCoderSqlitePath);
                 }
 
-                UpdateStatus("Đã tải xong VidCoder.sqlite", "Green");
+                UpdateStatus("ÄÃ£ táº£i xong VidCoder.sqlite", "Green");
 
-                // Bước 4: Tạo shortcut trên Desktop
+                // BÆ°á»›c 4: Táº¡o shortcut trÃªn Desktop
                 string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
                 string shortcutPath = Path.Combine(desktopPath, "VidCoder.lnk");
                 
-                // Xóa shortcut cũ nếu tồn tại
+                // XÃ³a shortcut cÅ© náº¿u tá»“n táº¡i
                 if (File.Exists(shortcutPath))
                 {
                     File.Delete(shortcutPath);
                 }
                 
-                // Tạo shortcut mới sử dụng WshShell
+                // Táº¡o shortcut má»›i sá»­ dá»¥ng WshShell
                 try
                 {
                     Type shellType = Type.GetTypeFromProgID("WScript.Shell");
@@ -114,22 +114,22 @@ namespace GMTPC.Tool
                         object shell = Activator.CreateInstance(shellType);
                         object shortcut = shellType.InvokeMember("CreateShortcut", System.Reflection.BindingFlags.InvokeMethod, null, shell, new object[] { shortcutPath });
                         
-                        // Set các thuộc tính shortcut
+                        // Set cÃ¡c thuá»™c tÃ­nh shortcut
                         shellType.InvokeMember("TargetPath", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { vidCoderExePath });
                         shellType.InvokeMember("WorkingDirectory", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { vidCoderFolder });
                         shellType.InvokeMember("Description", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { "VidCoder - Video transcoder" });
                         shellType.InvokeMember("Save", System.Reflection.BindingFlags.InvokeMethod, null, shortcut, null);
                         
-                        UpdateStatus("Đã tạo shortcut VidCoder trên Desktop", "Green");
+                        UpdateStatus("ÄÃ£ táº¡o shortcut VidCoder trÃªn Desktop", "Green");
                     }
                 }
                 catch (Exception ex)
                 {
-                    UpdateStatus($"Không thể tạo shortcut: {ex.Message}", "Orange");
+                    UpdateStatus($"KhÃ´ng thá»ƒ táº¡o shortcut: {ex.Message}", "Orange");
                 }
 
-                // Bước 5: Chỉ chạy file .exe sau khi tải xong SQLite
-                UpdateStatus("Đang mở VidCoder...", "Cyan");
+                // BÆ°á»›c 5: Chá»‰ cháº¡y file .exe sau khi táº£i xong SQLite
+                UpdateStatus("Äang má»Ÿ VidCoder...", "Cyan");
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = vidCoderExePath,
@@ -140,12 +140,12 @@ namespace GMTPC.Tool
 
                 if (process != null)
                 {
-                    UpdateStatus("VidCoder đã được mở!", "Green");
+                    UpdateStatus("VidCoder Ä‘Ã£ Ä‘Æ°á»£c má»Ÿ!", "Green");
                 }
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài đặt VidCoder: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i Ä‘áº·t VidCoder: {ex.Message}", "Red");
             }
         }
 
@@ -154,11 +154,11 @@ namespace GMTPC.Tool
         {
             try
             {
-                // Sử dụng GitHub API để lấy danh sách releases
+                // Sá»­ dá»¥ng GitHub API Ä‘á»ƒ láº¥y danh sÃ¡ch releases
                 string apiUrl = "https://api.github.com/repos/RandomEngy/VidCoder/releases";
                 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(apiUrl);
-                request.UserAgent = "GMTPC-Tool";
+                request.UserAgent = "AI-Code-Agent-AIO-GMTPC";
                 request.Accept = "application/json";
 
                 using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
@@ -166,10 +166,10 @@ namespace GMTPC.Tool
                 {
                     string json = await reader.ReadToEndAsync();
                     
-                    // Parse JSON đơn giản để tìm tất cả versions
+                    // Parse JSON Ä‘Æ¡n giáº£n Ä‘á»ƒ tÃ¬m táº¥t cáº£ versions
                     var versions = new List<(string Version, int BuildNumber)>();
                     
-                    // Tìm tất cả các tag_name có dạng v*
+                    // TÃ¬m táº¥t cáº£ cÃ¡c tag_name cÃ³ dáº¡ng v*
                     int startIndex = 0;
                     while ((startIndex = json.IndexOf("\"tag_name\":", startIndex)) != -1)
                     {
@@ -183,10 +183,10 @@ namespace GMTPC.Tool
                         
                         string tagName = json.Substring(quoteStart, quoteEnd - quoteStart);
                         
-                        // Chỉ lấy các tag có dạng vX.Y.Z
+                        // Chá»‰ láº¥y cÃ¡c tag cÃ³ dáº¡ng vX.Y.Z
                         if (tagName.StartsWith("v") && tagName.Length > 1)
                         {
-                            // Parse version number để so sánh
+                            // Parse version number Ä‘á»ƒ so sÃ¡nh
                             string versionNum = tagName.TrimStart('v');
                             int buildNumber = ParseVersionToNumber(versionNum);
                             versions.Add((tagName, buildNumber));
@@ -195,7 +195,7 @@ namespace GMTPC.Tool
                         startIndex = quoteEnd + 1;
                     }
 
-                    // Tìm version có số build lớn nhất
+                    // TÃ¬m version cÃ³ sá»‘ build lá»›n nháº¥t
                     if (versions.Count > 0)
                     {
                         var latest = versions.OrderByDescending(v => v.BuildNumber).First();
@@ -205,14 +205,14 @@ namespace GMTPC.Tool
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi tìm phiên bản VidCoder: {ex.Message}", "Orange");
+                UpdateStatus($"Lá»—i khi tÃ¬m phiÃªn báº£n VidCoder: {ex.Message}", "Orange");
             }
 
             return null;
         }
 
         /// <summary>
-        /// Chuyển version string (X.Y.Z) thành số để so sánh
+        /// Chuyá»ƒn version string (X.Y.Z) thÃ nh sá»‘ Ä‘á»ƒ so sÃ¡nh
         /// </summary>
         private int ParseVersionToNumber(string version)
         {
@@ -225,7 +225,7 @@ namespace GMTPC.Tool
                     int minor = int.TryParse(parts[1], out var n) ? n : 0;
                     int build = int.TryParse(parts[2], out var b) ? b : 0;
                     
-                    // Công thức: major * 1000000 + minor * 1000 + build
+                    // CÃ´ng thá»©c: major * 1000000 + minor * 1000 + build
                     return major * 1000000 + minor * 1000 + build;
                 }
             }
@@ -235,17 +235,17 @@ namespace GMTPC.Tool
         }
 
         // ===================================================================
-        // TabSubtitle — Boilsoft Video Splitter
+        // TabSubtitle â€” Boilsoft Video Splitter
         // ===================================================================
         private void ChkBoilsoftVideoSplitter_Click(object sender, RoutedEventArgs e)
         {
             if (ChkBoilsoftVideoSplitter.IsChecked == true)
             {
-                UpdateStatus("Đã chọn: Boilsoft Video Splitter", "Green");
+                UpdateStatus("ÄÃ£ chá»n: Boilsoft Video Splitter", "Green");
             }
             else
             {
-                UpdateStatus("Đã hủy chọn: Boilsoft Video Splitter", "Yellow");
+                UpdateStatus("ÄÃ£ há»§y chá»n: Boilsoft Video Splitter", "Yellow");
             }
 
             UpdateInstallButtonState();
@@ -255,7 +255,7 @@ namespace GMTPC.Tool
         {
             try
             {
-                UpdateStatus("Đang tải Boilsoft Video Splitter...", "Cyan");
+                UpdateStatus("Äang táº£i Boilsoft Video Splitter...", "Cyan");
                 string boilsoftPath = Path.Combine(GetGMTPCFolder(), "Boilsoft.VideoSplitter.exe");
                 await DownloadWithProgressAsync(BOILSOFT_VIDEO_SPLITTER_DOWNLOAD_URL, boilsoftPath, "Boilsoft Video Splitter");
 
@@ -266,12 +266,12 @@ namespace GMTPC.Tool
                     SpeedTextBlock.Text = "";
                 });
 
-                // Hiển thị popup để hỏi người dùng chọn cài đặt
-                MessageBoxResult result = MessageBox.Show("Yes = Cài đặt tự động (silent)\nNo = Cài đặt thủ công (GUI)", "Cài đặt Boilsoft Video Splitter", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                // Hiá»ƒn thá»‹ popup Ä‘á»ƒ há»i ngÆ°á»i dÃ¹ng chá»n cÃ i Ä‘áº·t
+                MessageBoxResult result = MessageBox.Show("Yes = CÃ i Ä‘áº·t tá»± Ä‘á»™ng (silent)\nNo = CÃ i Ä‘áº·t thá»§ cÃ´ng (GUI)", "CÃ i Ä‘áº·t Boilsoft Video Splitter", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Cancel)
                 {
-                    UpdateStatus("Đã hủy cài đặt Boilsoft Video Splitter", "Yellow");
+                    UpdateStatus("ÄÃ£ há»§y cÃ i Ä‘áº·t Boilsoft Video Splitter", "Yellow");
                     if (File.Exists(boilsoftPath))
                     {
                         File.Delete(boilsoftPath);
@@ -287,14 +287,14 @@ namespace GMTPC.Tool
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    // Cài đặt tự động
+                    // CÃ i Ä‘áº·t tá»± Ä‘á»™ng
                     startInfo.Arguments = BOILSOFT_VIDEO_SPLITTER_INSTALL_ARGUMENTS;
-                    UpdateStatus("Đang cài đặt Boilsoft Video Splitter (silent)...", "Yellow");
+                    UpdateStatus("Äang cÃ i Ä‘áº·t Boilsoft Video Splitter (silent)...", "Yellow");
                 }
                 else
                 {
-                    // Cài đặt thủ công
-                    UpdateStatus("Đang mở Boilsoft Video Splitter installer (thủ công)...", "Yellow");
+                    // CÃ i Ä‘áº·t thá»§ cÃ´ng
+                    UpdateStatus("Äang má»Ÿ Boilsoft Video Splitter installer (thá»§ cÃ´ng)...", "Yellow");
                 }
 
                 Process process = Process.Start(startInfo);
@@ -302,33 +302,33 @@ namespace GMTPC.Tool
                 if (process != null)
                 {
                     await Task.Run(() => process.WaitForExit());
-                    UpdateStatus("Cài đặt Boilsoft Video Splitter hoàn tất!", "Green");
+                    UpdateStatus("CÃ i Ä‘áº·t Boilsoft Video Splitter hoÃ n táº¥t!", "Green");
                 }
 
                 if (File.Exists(boilsoftPath))
                 {
                     File.Delete(boilsoftPath);
-                    UpdateStatus("Đã xóa file Boilsoft.VideoSplitter.exe", "Cyan");
+                    UpdateStatus("ÄÃ£ xÃ³a file Boilsoft.VideoSplitter.exe", "Cyan");
                 }
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài đặt Boilsoft Video Splitter: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i Ä‘áº·t Boilsoft Video Splitter: {ex.Message}", "Red");
             }
         }
 
         // ===================================================================
-        // TabSubtitle — Vibe
+        // TabSubtitle â€” Vibe
         // ===================================================================
         private void ChkVibe_Click(object sender, RoutedEventArgs e)
         {
             if (ChkVibe.IsChecked == true)
             {
-                UpdateStatus("Đã chọn: Vibe", "Green");
+                UpdateStatus("ÄÃ£ chá»n: Vibe", "Green");
             }
             else
             {
-                UpdateStatus("Đã hủy chọn: Vibe", "Yellow");
+                UpdateStatus("ÄÃ£ há»§y chá»n: Vibe", "Yellow");
             }
 
             UpdateInstallButtonState();
@@ -338,7 +338,7 @@ namespace GMTPC.Tool
         {
             try
             {
-                UpdateStatus("Đang tải Vibe...", "Cyan");
+                UpdateStatus("Äang táº£i Vibe...", "Cyan");
                 string vibePath = Path.Combine(GetGMTPCFolder(), "Vibe.exe");
                 await DownloadWithProgressAsync(VIBE_DOWNLOAD_URL, vibePath, "Vibe");
 
@@ -349,12 +349,12 @@ namespace GMTPC.Tool
                     SpeedTextBlock.Text = "";
                 });
 
-                // Hiển thị popup để hỏi người dùng chọn cài đặt
-                MessageBoxResult result = MessageBox.Show("Yes = Cài đặt tự động (silent)\nNo = Cài đặt thủ công (GUI)", "Cài đặt Vibe", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                // Hiá»ƒn thá»‹ popup Ä‘á»ƒ há»i ngÆ°á»i dÃ¹ng chá»n cÃ i Ä‘áº·t
+                MessageBoxResult result = MessageBox.Show("Yes = CÃ i Ä‘áº·t tá»± Ä‘á»™ng (silent)\nNo = CÃ i Ä‘áº·t thá»§ cÃ´ng (GUI)", "CÃ i Ä‘áº·t Vibe", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Cancel)
                 {
-                    UpdateStatus("Đã hủy cài đặt Vibe", "Yellow");
+                    UpdateStatus("ÄÃ£ há»§y cÃ i Ä‘áº·t Vibe", "Yellow");
                     if (File.Exists(vibePath))
                     {
                         File.Delete(vibePath);
@@ -370,14 +370,14 @@ namespace GMTPC.Tool
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    // Cài đặt tự động
+                    // CÃ i Ä‘áº·t tá»± Ä‘á»™ng
                     startInfo.Arguments = VIBE_INSTALL_ARGUMENTS;
-                    UpdateStatus("Đang cài đặt Vibe (silent)...", "Yellow");
+                    UpdateStatus("Äang cÃ i Ä‘áº·t Vibe (silent)...", "Yellow");
                 }
                 else
                 {
-                    // Cài đặt thủ công
-                    UpdateStatus("Đang mở Vibe installer (thủ công)...", "Yellow");
+                    // CÃ i Ä‘áº·t thá»§ cÃ´ng
+                    UpdateStatus("Äang má»Ÿ Vibe installer (thá»§ cÃ´ng)...", "Yellow");
                 }
 
                 Process process = Process.Start(startInfo);
@@ -385,33 +385,33 @@ namespace GMTPC.Tool
                 if (process != null)
                 {
                     await Task.Run(() => process.WaitForExit());
-                    UpdateStatus("Cài đặt Vibe hoàn tất!", "Green");
+                    UpdateStatus("CÃ i Ä‘áº·t Vibe hoÃ n táº¥t!", "Green");
                 }
 
                 if (File.Exists(vibePath))
                 {
                     File.Delete(vibePath);
-                    UpdateStatus("Đã xóa file Vibe.exe", "Cyan");
+                    UpdateStatus("ÄÃ£ xÃ³a file Vibe.exe", "Cyan");
                 }
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài đặt Vibe: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i Ä‘áº·t Vibe: {ex.Message}", "Red");
             }
         }
 
         // ===================================================================
-        // TabSubtitle — MKVToolNix MKVCleaver
+        // TabSubtitle â€” MKVToolNix MKVCleaver
         // ===================================================================
         private void ChkMKVToolNix_Click(object sender, RoutedEventArgs e)
         {
             if (ChkMKVToolNix.IsChecked == true)
             {
-                UpdateStatus("Đã chọn: MKVToolNix MKVCleaver", "Green");
+                UpdateStatus("ÄÃ£ chá»n: MKVToolNix MKVCleaver", "Green");
             }
             else
             {
-                UpdateStatus("Đã hủy chọn: MKVToolNix MKVCleaver", "Yellow");
+                UpdateStatus("ÄÃ£ há»§y chá»n: MKVToolNix MKVCleaver", "Yellow");
             }
 
             UpdateInstallButtonState();
@@ -421,7 +421,7 @@ namespace GMTPC.Tool
         {
             try
             {
-                UpdateStatus("Đang tải MKVToolNix MKVCleaver...", "Cyan");
+                UpdateStatus("Äang táº£i MKVToolNix MKVCleaver...", "Cyan");
                 string mkvtoolnixPath = Path.Combine(GetGMTPCFolder(), "MKVToolNix.MKVCleaver.exe");
                 await DownloadWithProgressAsync(MKVTOOLNIX_DOWNLOAD_URL, mkvtoolnixPath, "MKVToolNix MKVCleaver");
 
@@ -432,12 +432,12 @@ namespace GMTPC.Tool
                     SpeedTextBlock.Text = "";
                 });
 
-                // Hiển thị popup để hỏi người dùng chọn cài đặt
-                MessageBoxResult result = MessageBox.Show("Yes = Cài đặt tự động (silent)\nNo = Cài đặt thủ công (GUI)", "Cài đặt MKVToolNix MKVCleaver", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                // Hiá»ƒn thá»‹ popup Ä‘á»ƒ há»i ngÆ°á»i dÃ¹ng chá»n cÃ i Ä‘áº·t
+                MessageBoxResult result = MessageBox.Show("Yes = CÃ i Ä‘áº·t tá»± Ä‘á»™ng (silent)\nNo = CÃ i Ä‘áº·t thá»§ cÃ´ng (GUI)", "CÃ i Ä‘áº·t MKVToolNix MKVCleaver", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Cancel)
                 {
-                    UpdateStatus("Đã hủy cài đặt MKVToolNix MKVCleaver", "Yellow");
+                    UpdateStatus("ÄÃ£ há»§y cÃ i Ä‘áº·t MKVToolNix MKVCleaver", "Yellow");
                     if (File.Exists(mkvtoolnixPath))
                     {
                         File.Delete(mkvtoolnixPath);
@@ -453,14 +453,14 @@ namespace GMTPC.Tool
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    // Cài đặt tự động
+                    // CÃ i Ä‘áº·t tá»± Ä‘á»™ng
                     startInfo.Arguments = MKVTOOLNIX_INSTALL_ARGUMENTS;
-                    UpdateStatus("Đang cài đặt MKVToolNix MKVCleaver (silent)...", "Yellow");
+                    UpdateStatus("Äang cÃ i Ä‘áº·t MKVToolNix MKVCleaver (silent)...", "Yellow");
                 }
                 else
                 {
-                    // Cài đặt thủ công
-                    UpdateStatus("Đang mở MKVToolNix MKVCleaver installer (thủ công)...", "Yellow");
+                    // CÃ i Ä‘áº·t thá»§ cÃ´ng
+                    UpdateStatus("Äang má»Ÿ MKVToolNix MKVCleaver installer (thá»§ cÃ´ng)...", "Yellow");
                 }
 
                 Process process = Process.Start(startInfo);
@@ -468,33 +468,33 @@ namespace GMTPC.Tool
                 if (process != null)
                 {
                     await Task.Run(() => process.WaitForExit());
-                    UpdateStatus("Cài đặt MKVToolNix MKVCleaver hoàn tất!", "Green");
+                    UpdateStatus("CÃ i Ä‘áº·t MKVToolNix MKVCleaver hoÃ n táº¥t!", "Green");
                 }
 
                 if (File.Exists(mkvtoolnixPath))
                 {
                     File.Delete(mkvtoolnixPath);
-                    UpdateStatus("Đã xóa file MKVToolNix.MKVCleaver.exe", "Cyan");
+                    UpdateStatus("ÄÃ£ xÃ³a file MKVToolNix.MKVCleaver.exe", "Cyan");
                 }
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài đặt MKVToolNix MKVCleaver: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i Ä‘áº·t MKVToolNix MKVCleaver: {ex.Message}", "Red");
             }
         }
 
         // ===================================================================
-        // TabSubtitle — Subtitle Draft GMTPC
+        // TabSubtitle â€” Subtitle Draft GMTPC
         // ===================================================================
         private void ChkSubtitleDraftGMTPC_Click(object sender, RoutedEventArgs e)
         {
             if (ChkSubtitleDraftGMTPC.IsChecked == true)
             {
-                UpdateStatus("Đã chọn: Subtitle Draft GMTPC", "Green");
+                UpdateStatus("ÄÃ£ chá»n: Subtitle Draft GMTPC", "Green");
             }
             else
             {
-                UpdateStatus("Đã hủy chọn: Subtitle Draft GMTPC", "Yellow");
+                UpdateStatus("ÄÃ£ há»§y chá»n: Subtitle Draft GMTPC", "Yellow");
             }
 
             UpdateInstallButtonState();
@@ -504,11 +504,11 @@ namespace GMTPC.Tool
         {
             try
             {
-                // Bước 1: Tải file về ổ C:\
+                // BÆ°á»›c 1: Táº£i file vá» á»• C:\
                 string subtitleDraftFolder = @"C:\";
                 string subtitleDraftExe = Path.Combine(subtitleDraftFolder, "Subtitle draft GMTPC.exe");
 
-                UpdateStatus("Đang tải Subtitle Draft GMTPC...", "Cyan");
+                UpdateStatus("Äang táº£i Subtitle Draft GMTPC...", "Cyan");
                 await DownloadWithProgressAsync(SUBTITLE_DRAFT_GMTPC_DOWNLOAD_URL, subtitleDraftExe, "Subtitle Draft GMTPC");
 
                 Dispatcher.Invoke(() =>
@@ -518,19 +518,19 @@ namespace GMTPC.Tool
                     SpeedTextBlock.Text = "";
                 });
 
-                UpdateStatus("Đã tải xong Subtitle Draft GMTPC", "Green");
+                UpdateStatus("ÄÃ£ táº£i xong Subtitle Draft GMTPC", "Green");
 
-                // Bước 2: Tạo shortcut trên Desktop
+                // BÆ°á»›c 2: Táº¡o shortcut trÃªn Desktop
                 string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
                 string shortcutPath = Path.Combine(desktopPath, "Subtitle Draft GMTPC.lnk");
 
-                // Xóa shortcut cũ nếu tồn tại
+                // XÃ³a shortcut cÅ© náº¿u tá»“n táº¡i
                 if (File.Exists(shortcutPath))
                 {
                     File.Delete(shortcutPath);
                 }
 
-                // Tạo shortcut mới sử dụng WshShell
+                // Táº¡o shortcut má»›i sá»­ dá»¥ng WshShell
                 try
                 {
                     Type shellType = Type.GetTypeFromProgID("WScript.Shell");
@@ -539,22 +539,22 @@ namespace GMTPC.Tool
                         object shell = Activator.CreateInstance(shellType);
                         object shortcut = shellType.InvokeMember("CreateShortcut", System.Reflection.BindingFlags.InvokeMethod, null, shell, new object[] { shortcutPath });
 
-                        // Set các thuộc tính shortcut
+                        // Set cÃ¡c thuá»™c tÃ­nh shortcut
                         shellType.InvokeMember("TargetPath", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { subtitleDraftExe });
                         shellType.InvokeMember("WorkingDirectory", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { subtitleDraftFolder });
                         shellType.InvokeMember("Description", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { "Subtitle Draft GMTPC" });
                         shellType.InvokeMember("Save", System.Reflection.BindingFlags.InvokeMethod, null, shortcut, null);
 
-                        UpdateStatus("Đã tạo shortcut Subtitle Draft GMTPC trên Desktop", "Green");
+                        UpdateStatus("ÄÃ£ táº¡o shortcut Subtitle Draft GMTPC trÃªn Desktop", "Green");
                     }
                 }
                 catch (Exception ex)
                 {
-                    UpdateStatus($"Không thể tạo shortcut: {ex.Message}", "Orange");
+                    UpdateStatus($"KhÃ´ng thá»ƒ táº¡o shortcut: {ex.Message}", "Orange");
                 }
 
-                // Bước 3: Mở file
-                UpdateStatus("Đang mở Subtitle Draft GMTPC...", "Cyan");
+                // BÆ°á»›c 3: Má»Ÿ file
+                UpdateStatus("Äang má»Ÿ Subtitle Draft GMTPC...", "Cyan");
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = subtitleDraftExe,
@@ -565,27 +565,27 @@ namespace GMTPC.Tool
 
                 if (process != null)
                 {
-                    UpdateStatus("Subtitle Draft GMTPC đã được mở!", "Green");
+                    UpdateStatus("Subtitle Draft GMTPC Ä‘Ã£ Ä‘Æ°á»£c má»Ÿ!", "Green");
                 }
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài đặt Subtitle Draft GMTPC: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i Ä‘áº·t Subtitle Draft GMTPC: {ex.Message}", "Red");
             }
         }
 
         // ===================================================================
-        // TabSubtitle — Download sample video
+        // TabSubtitle â€” Download sample video
         // ===================================================================
         private void ChkDownloadSampleVideo_Click(object sender, RoutedEventArgs e)
         {
             if (ChkDownloadSampleVideo.IsChecked == true)
             {
-                UpdateStatus("Đã chọn: Download sample video", "Green");
+                UpdateStatus("ÄÃ£ chá»n: Download sample video", "Green");
             }
             else
             {
-                UpdateStatus("Đã hủy chọn: Download sample video", "Yellow");
+                UpdateStatus("ÄÃ£ há»§y chá»n: Download sample video", "Yellow");
             }
 
             UpdateInstallButtonState();
@@ -604,7 +604,7 @@ namespace GMTPC.Tool
                     Directory.CreateDirectory(targetFolder);
                 }
 
-                UpdateStatus($"Đang tải sample video về {targetFolder}...", "Cyan");
+                UpdateStatus($"Äang táº£i sample video vá» {targetFolder}...", "Cyan");
                 await DownloadWithProgressAsync(SAMPLE_VIDEO_DOWNLOAD_URL, sampleVideoPath, "Sample video");
 
                 Dispatcher.Invoke(() =>
@@ -614,7 +614,7 @@ namespace GMTPC.Tool
                     SpeedTextBlock.Text = "";
                 });
 
-                UpdateStatus($"Đã tải xong sample video vào {targetFolder}", "Green");
+                UpdateStatus($"ÄÃ£ táº£i xong sample video vÃ o {targetFolder}", "Green");
 
                 Process.Start(new ProcessStartInfo
                 {
@@ -623,12 +623,13 @@ namespace GMTPC.Tool
                     UseShellExecute = true
                 });
 
-                UpdateStatus("Đã mở thư mục chứa sample video", "Green");
+                UpdateStatus("ÄÃ£ má»Ÿ thÆ° má»¥c chá»©a sample video", "Green");
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi tải sample video: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi táº£i sample video: {ex.Message}", "Red");
             }
         }
     }
 }
+

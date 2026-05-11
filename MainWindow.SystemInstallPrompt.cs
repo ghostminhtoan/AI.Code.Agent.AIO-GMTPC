@@ -1,8 +1,8 @@
-// =======================================================================
+﻿// =======================================================================
 // MainWindow.SystemInstallPrompt.cs
-// Chức năng: Cơ chế cài đặt có hộp thoại Yes/No - chọn cài tự động hoặc mở bình thường
-// Cập nhật gần đây:
-//   - 2026-03-17: Tạo mới theo yêu cầu phân loại cơ chế cài đặt (giống MMT Apps)
+// Chá»©c nÄƒng: CÆ¡ cháº¿ cÃ i Ä‘áº·t cÃ³ há»™p thoáº¡i Yes/No - chá»n cÃ i tá»± Ä‘á»™ng hoáº·c má»Ÿ bÃ¬nh thÆ°á»ng
+// Cáº­p nháº­t gáº§n Ä‘Ã¢y:
+//   - 2026-03-17: Táº¡o má»›i theo yÃªu cáº§u phÃ¢n loáº¡i cÆ¡ cháº¿ cÃ i Ä‘áº·t (giá»‘ng MMT Apps)
 // =======================================================================
 using System;
 using System.Diagnostics;
@@ -10,27 +10,27 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace GMTPC.Tool
+namespace AICodeAgentAIOGMTPC
 {
     public partial class MainWindow
     {
-        // ===================== SystemInstallPrompt - Cài đặt có hộp thoại Yes/No =====================
+        // ===================== SystemInstallPrompt - CÃ i Ä‘áº·t cÃ³ há»™p thoáº¡i Yes/No =====================
         /// <summary>
-        /// Cơ chế cài đặt có hộp thoại Yes/No
-        /// Sau khi tải xong, hỏi người dùng có muốn cài tự động không
-        /// Chọn Yes: chạy với lệnh /s để cài tự động
-        /// Chọn No: mở file bình thường
+        /// CÆ¡ cháº¿ cÃ i Ä‘áº·t cÃ³ há»™p thoáº¡i Yes/No
+        /// Sau khi táº£i xong, há»i ngÆ°á»i dÃ¹ng cÃ³ muá»‘n cÃ i tá»± Ä‘á»™ng khÃ´ng
+        /// Chá»n Yes: cháº¡y vá»›i lá»‡nh /s Ä‘á»ƒ cÃ i tá»± Ä‘á»™ng
+        /// Chá»n No: má»Ÿ file bÃ¬nh thÆ°á»ng
         /// </summary>
-        /// <param name="downloadUrl">Link tải về</param>
-        /// <param name="filePath">Đường dẫn lưu file</param>
-        /// <param name="silentArguments">Tham số cài tự động (ví dụ: /s, /silent)</param>
-        /// <param name="displayName">Tên hiển thị (ví dụ: "MMT Apps", "Office Tool")</param>
+        /// <param name="downloadUrl">Link táº£i vá»</param>
+        /// <param name="filePath">ÄÆ°á»ng dáº«n lÆ°u file</param>
+        /// <param name="silentArguments">Tham sá»‘ cÃ i tá»± Ä‘á»™ng (vÃ­ dá»¥: /s, /silent)</param>
+        /// <param name="displayName">TÃªn hiá»ƒn thá»‹ (vÃ­ dá»¥: "MMT Apps", "Office Tool")</param>
         protected async Task InstallWithPromptAsync(string downloadUrl, string filePath, string silentArguments, string displayName)
         {
             try
             {
                 // Step 1: Download file
-                UpdateStatus($"Đang tải {displayName}...", "Cyan");
+                UpdateStatus($"Äang táº£i {displayName}...", "Cyan");
                 await DownloadWithProgressAsync(downloadUrl, filePath, displayName);
 
                 // Reset progress bar
@@ -42,16 +42,16 @@ namespace GMTPC.Tool
                 });
 
                 // Step 2: Show Yes/No dialog
-                UpdateStatus($"Đang chờ người dùng chọn cách cài đặt {displayName}...", "Yellow");
+                UpdateStatus($"Äang chá» ngÆ°á»i dÃ¹ng chá»n cÃ¡ch cÃ i Ä‘áº·t {displayName}...", "Yellow");
                 
                 bool installSilently = false;
                 Dispatcher.Invoke(() =>
                 {
                     MessageBoxResult result = MessageBox.Show(
-                        $"Bạn có muốn cài đặt {displayName} tự động không?\n\n" +
-                        $"Yes: Cài tự động (silent mode)\n" +
-                        $"No: Mở file để cài thủ công",
-                        $"Cài đặt {displayName}",
+                        $"Báº¡n cÃ³ muá»‘n cÃ i Ä‘áº·t {displayName} tá»± Ä‘á»™ng khÃ´ng?\n\n" +
+                        $"Yes: CÃ i tá»± Ä‘á»™ng (silent mode)\n" +
+                        $"No: Má»Ÿ file Ä‘á»ƒ cÃ i thá»§ cÃ´ng",
+                        $"CÃ i Ä‘áº·t {displayName}",
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Question);
                     
@@ -62,7 +62,7 @@ namespace GMTPC.Tool
                 if (installSilently)
                 {
                     // User chose Yes - install silently
-                    UpdateStatus($"Đang cài đặt {displayName} tự động ( {silentArguments} )...", "Yellow");
+                    UpdateStatus($"Äang cÃ i Ä‘áº·t {displayName} tá»± Ä‘á»™ng ( {silentArguments} )...", "Yellow");
                     ProcessStartInfo startInfo = new ProcessStartInfo
                     {
                         FileName = filePath,
@@ -73,37 +73,37 @@ namespace GMTPC.Tool
                     if (process != null)
                     {
                         await Task.Run(() => process.WaitForExit());
-                        UpdateStatus($"Cài đặt {displayName} tự động hoàn tất.", "Green");
+                        UpdateStatus($"CÃ i Ä‘áº·t {displayName} tá»± Ä‘á»™ng hoÃ n táº¥t.", "Green");
                     }
                 }
                 else
                 {
                     // User chose No - open file normally
-                    UpdateStatus($"Đang mở {displayName}...", "Yellow");
+                    UpdateStatus($"Äang má»Ÿ {displayName}...", "Yellow");
                     ProcessStartInfo startInfo = new ProcessStartInfo
                     {
                         FileName = filePath,
                         UseShellExecute = true
                     };
                     Process.Start(startInfo);
-                    UpdateStatus($"Đã mở {displayName}. Vui lòng cài thủ công.", "Green");
+                    UpdateStatus($"ÄÃ£ má»Ÿ {displayName}. Vui lÃ²ng cÃ i thá»§ cÃ´ng.", "Green");
                 }
 
                 // Step 4: Delete installer (only if installed silently)
                 if (installSilently && File.Exists(filePath))
                 {
                     File.Delete(filePath);
-                    UpdateStatus($"Đã xóa file cài đặt {displayName}", "Cyan");
+                    UpdateStatus($"ÄÃ£ xÃ³a file cÃ i Ä‘áº·t {displayName}", "Cyan");
                 }
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài {displayName}: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i {displayName}: {ex.Message}", "Red");
             }
         }
 
         /// <summary>
-        /// Cơ chế cài đặt có hộp thoại Yes/No với retry logic
+        /// CÆ¡ cháº¿ cÃ i Ä‘áº·t cÃ³ há»™p thoáº¡i Yes/No vá»›i retry logic
         /// </summary>
         protected async Task InstallWithPromptAndRetryAsync(string downloadUrl, string filePath, string silentArguments, string displayName, int maxRetries = 3)
         {
@@ -120,13 +120,14 @@ namespace GMTPC.Tool
                     retryCount++;
                     if (retryCount >= maxRetries)
                     {
-                        UpdateStatus($"Lỗi sau {maxRetries} lần thử: {ex.Message}", "Red");
+                        UpdateStatus($"Lá»—i sau {maxRetries} láº§n thá»­: {ex.Message}", "Red");
                         throw;
                     }
-                    UpdateStatus($"Thử lại lần {retryCount}/{maxRetries}...", "Yellow");
+                    UpdateStatus($"Thá»­ láº¡i láº§n {retryCount}/{maxRetries}...", "Yellow");
                     await Task.Delay(2000); // Wait 2 seconds before retry
                 }
             }
         }
     }
 }
+

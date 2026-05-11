@@ -1,9 +1,9 @@
-// AI Summary: 2026-04-22 - Added delete-on-exit cleanup registry for downloaded installer files.
+﻿// AI Summary: 2026-04-22 - Added delete-on-exit cleanup registry for downloaded installer files.
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace GMTPC.Tool
+namespace AICodeAgentAIOGMTPC
 {
     public partial class MainWindow
     {
@@ -43,3 +43,4 @@ namespace GMTPC.Tool
         }
     }
 }
+

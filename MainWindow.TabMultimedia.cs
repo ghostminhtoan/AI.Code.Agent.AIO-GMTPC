@@ -22,7 +22,7 @@ using System.Windows.Data;
  * - Added ChkAdvancedCodecPack (advanced codec pack)
  */
 
-namespace GMTPC.Tool
+namespace AICodeAgentAIOGMTPC
 {
     public partial class MainWindow
     {
@@ -273,3 +273,4 @@ namespace GMTPC.Tool
 
     }
 }
+

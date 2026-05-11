@@ -1,4 +1,4 @@
-﻿namespace GMTPC.Tool
+﻿namespace AICodeAgentAIOGMTPC
 {
     // =======================================================================
     // MainWindow.TabWindows.cs
@@ -9,3 +9,4 @@
     {
     }
 }
+

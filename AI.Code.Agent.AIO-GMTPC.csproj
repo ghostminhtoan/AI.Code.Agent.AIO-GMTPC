@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <!-- AI Summary: 2026-04-30 - Enforced Release Any CPU builds and auto-copied GMTPC.Tool.exe to the repo root -->
+  <!-- AI Summary: 2026-04-30 - Enforced Release Any CPU builds and auto-copied AI.Code.Agent.AIO-GMTPC.exe to the repo root -->
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net48</TargetFramework>
     <UseWPF>true</UseWPF>
-    <RootNamespace>GMTPC.Tool</RootNamespace>
-    <AssemblyName>GMTPC.Tool</AssemblyName>
+    <RootNamespace>AICodeAgentAIOGMTPC</RootNamespace>
+    <AssemblyName>AI.Code.Agent.AIO-GMTPC</AssemblyName>
     <ApplicationIcon>idm 3.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>AnyCPU</Platforms>
@@ -20,16 +20,16 @@
     <PropertyGroup>
       <BuildNumber>$([System.DateTime]::Now.ToString(yyyy-MM-dd / HH:mm:ss))</BuildNumber>
     </PropertyGroup>
-    <Exec Command="echo // Auto-generated build number&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot; &amp;&amp; echo namespace GMTPC.Tool&gt;&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot; &amp;&amp; echo {&gt;&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot; &amp;&amp; echo     public static class BuildInfo&gt;&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot; &amp;&amp; echo     {&gt;&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot; &amp;&amp; echo         public const string BUILD_NUMBER = &quot;$(BuildNumber)&quot;;&gt;&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot; &amp;&amp; echo     }&gt;&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot; &amp;&amp; echo }&gt;&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot;" />
+    <Exec Command="echo // Auto-generated build number&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot; &amp;&amp; echo namespace AICodeAgentAIOGMTPC&gt;&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot; &amp;&amp; echo {&gt;&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot; &amp;&amp; echo     public static class BuildInfo&gt;&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot; &amp;&amp; echo     {&gt;&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot; &amp;&amp; echo         public const string BUILD_NUMBER = &quot;$(BuildNumber)&quot;;&gt;&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot; &amp;&amp; echo     }&gt;&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot; &amp;&amp; echo }&gt;&gt; &quot;$(ProjectDir)Generated\BuildNumber.cs&quot;" />
   </Target>
 
   <Target Name="EnforceReleaseAnyCPU" BeforeTargets="BeforeBuild">
-    <Error Condition="'$(Configuration)' != 'Release'" Text="GMTPC.Tool must be built in Release configuration." />
-    <Error Condition="'$(Platform)' != 'Any CPU' and '$(Platform)' != 'AnyCPU'" Text="GMTPC.Tool must be built with Any CPU platform." />
+    <Error Condition="'$(Configuration)' != 'Release'" Text="AI.Code.Agent.AIO-GMTPC must be built in Release configuration." />
+    <Error Condition="'$(Platform)' != 'Any CPU' and '$(Platform)' != 'AnyCPU'" Text="AI.Code.Agent.AIO-GMTPC must be built with Any CPU platform." />
   </Target>
 
   <Target Name="CopyReleaseExeToRoot" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
-    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(ProjectDir)GMTPC.Tool.exe" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(ProjectDir)AI.Code.Agent.AIO-GMTPC.exe" />
   </Target>
 
   <ItemGroup>
@@ -56,3 +56,4 @@
   </ItemGroup>
 
 </Project>
+

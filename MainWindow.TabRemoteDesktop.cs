@@ -16,7 +16,7 @@ using System.Net.Http;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace GMTPC.Tool
+namespace AICodeAgentAIOGMTPC
 {
     public partial class MainWindow
     {
@@ -291,3 +291,4 @@ namespace GMTPC.Tool
 
     }
 }
+

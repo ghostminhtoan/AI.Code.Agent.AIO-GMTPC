@@ -6,10 +6,10 @@
 <!-- AI Summary: 2026-04-25 - Rebalanced hidden tab spacers so Office/Multimedia/Remote Desktop clamp earlier while Driver/Browser/Windows tabs can scale larger -->
 <!-- AI Summary: 2026-04-30 - Added Ventoy checkbox to Windows Mod MMT with GitHub Releases-based download flow -->
 <!-- AI Summary: 2026-05-02 - Reordered the Windows child tabs -->
-<Window x:Class="GMTPC.Tool.MainWindow"
+<Window x:Class="AICodeAgentAIOGMTPC.MainWindow"
          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-         Title="GMTPC Tools" SizeToContent="WidthAndHeight" MinHeight="480" MinWidth="560" MaxHeight="800" MaxWidth="1000"
+         Title="AI Code Agent AIO-GMTPC" SizeToContent="WidthAndHeight" MinHeight="480" MinWidth="560" MaxHeight="800" MaxWidth="1000"
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanResizeWithGrip"
         WindowStyle="SingleBorderWindow"
@@ -223,7 +223,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Margin="0,0,20,0">
-                    <TextBlock Text="GMTPC Tools"
+                    <TextBlock Text="AI Code Agent AIO-GMTPC"
                                 FontSize="22"
                                 FontWeight="Bold"
                                 Foreground="Yellow"
@@ -546,6 +546,7 @@
                                 </StackPanel>
                             </Border>
                             <CheckBox x:Name="ChkPowerISO" Content="PowerISO" Width="200" Height="34" Click="ChkPowerISO_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
+                            <CheckBox x:Name="ChkMemReduct" Content="MemReduct" Width="200" Height="34" Click="ChkMemReduct_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
                             <CheckBox x:Name="ChkTeraCopy" Content="TeraCopy" Width="200" Height="34" Click="ChkTeraCopy_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
                             <CheckBox x:Name="ChkVPN1111" Content="VPN 1111 (Cloudflare)" Width="200" Height="34" Click="ChkVPN1111_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
                             <CheckBox x:Name="ChkGoogleDrive" Content="Google Drive" Width="200" Height="34" Click="ChkGoogleDrive_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
@@ -781,3 +782,4 @@
     </Grid>
 </Window>
 <!-- AI Summary: 2026-04-25 - Tuned tab spacer sizes so sparse tabs keep full checkboxes while dense tabs retain Subtitle-like fit -->
+

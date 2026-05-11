@@ -22,7 +22,7 @@ using System.Windows.Data;
  * - Added ChkTeraCopy and ChkVPN1111 references
  */
 
-namespace GMTPC.Tool
+namespace AICodeAgentAIOGMTPC
 {
     public partial class MainWindow
     {
@@ -53,5 +53,20 @@ namespace GMTPC.Tool
 
             UpdateInstallButtonState();
         }
+
+        private void ChkMemReduct_Click(object sender, RoutedEventArgs e)
+        {
+            if (ChkMemReduct.IsChecked == true)
+            {
+                UpdateStatus("Đã chọn: MemReduct", "Green");
+            }
+            else
+            {
+                UpdateStatus("Đã hủy chọn: MemReduct", "Yellow");
+            }
+
+            UpdateInstallButtonState();
+        }
     }
 }
+

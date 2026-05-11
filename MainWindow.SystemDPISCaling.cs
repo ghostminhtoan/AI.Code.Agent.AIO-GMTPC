@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
-namespace GMTPC.Tool
+namespace AICodeAgentAIOGMTPC
 {
     public partial class MainWindow
     {
@@ -76,3 +76,4 @@ namespace GMTPC.Tool
         }
     }
 }
+

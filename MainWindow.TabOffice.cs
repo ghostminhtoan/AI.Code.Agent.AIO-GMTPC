@@ -18,7 +18,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace GMTPC.Tool
+namespace AICodeAgentAIOGMTPC
 {
     public partial class MainWindow
     {
@@ -211,7 +211,7 @@ namespace GMTPC.Tool
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd("GMTPC-Tool");
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd("AI-Code-Agent-AIO-GMTPC");
                     client.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github+json");
 
                     string json = await client.GetStringAsync(OFFICE_TOOL_PLUS_RELEASES_API_URL);
@@ -582,3 +582,4 @@ namespace GMTPC.Tool
 
     }
 }
+

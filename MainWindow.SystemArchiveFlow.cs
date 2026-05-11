@@ -1,4 +1,4 @@
-// AI Summary: 2026-05-02 - Moved the archive download/extract/launch/cleanup flow into a dedicated reusable system file.
+﻿// AI Summary: 2026-05-02 - Moved the archive download/extract/launch/cleanup flow into a dedicated reusable system file.
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace GMTPC.Tool
+namespace AICodeAgentAIOGMTPC
 {
     public partial class MainWindow
     {
@@ -22,11 +22,11 @@ namespace GMTPC.Tool
             {
                 Directory.CreateDirectory(VENTOY_EXTRACT_ROOT);
 
-                UpdateStatus("Đang probe Ventoy release mới nhất trên GitHub...", "Cyan");
+                UpdateStatus("Äang probe Ventoy release má»›i nháº¥t trÃªn GitHub...", "Cyan");
                 Tuple<string, string, string> ventoyReleaseInfo = await GetLatestVentoyReleaseAssetAsync();
                 if (ventoyReleaseInfo == null || string.IsNullOrEmpty(ventoyReleaseInfo.Item1) || string.IsNullOrEmpty(ventoyReleaseInfo.Item2))
                 {
-                    throw new InvalidOperationException("Không tìm thấy Ventoy release mới nhất.");
+                    throw new InvalidOperationException("KhÃ´ng tÃ¬m tháº¥y Ventoy release má»›i nháº¥t.");
                 }
 
                 string latestVentoyTag = ventoyReleaseInfo.Item1;
@@ -34,8 +34,8 @@ namespace GMTPC.Tool
                 string zipFileName = ventoyReleaseInfo.Item3;
                 string latestVersionName = latestVentoyTag;
                 string latestVersionFolderName = latestVentoyTag.TrimStart('v');
-                UpdateStatus($"Đã chọn Ventoy {latestVersionName}", "Green");
-                UpdateStatus($"Đã tìm thấy file: {zipFileName}", "Cyan");
+                UpdateStatus($"ÄÃ£ chá»n Ventoy {latestVersionName}", "Green");
+                UpdateStatus($"ÄÃ£ tÃ¬m tháº¥y file: {zipFileName}", "Cyan");
 
                 string versionFolderPath = Path.Combine(VENTOY_EXTRACT_ROOT, latestVersionFolderName);
                 string zipPath = Path.Combine(VENTOY_EXTRACT_ROOT, zipFileName);
@@ -50,21 +50,21 @@ namespace GMTPC.Tool
                     }
                     catch (Exception ex)
                     {
-                        UpdateStatus($"Không xóa được folder Ventoy cũ: {ex.Message}", "Orange");
+                        UpdateStatus($"KhÃ´ng xÃ³a Ä‘Æ°á»£c folder Ventoy cÅ©: {ex.Message}", "Orange");
                     }
                 }
 
-                UpdateStatus("Đang tải Ventoy windows.zip vào C:\\Ventoy...", "Cyan");
+                UpdateStatus("Äang táº£i Ventoy windows.zip vÃ o C:\\Ventoy...", "Cyan");
                 await DownloadWithProgressAsync(ventoyZipDownloadUrl, zipPath, "Ventoy");
 
-                UpdateStatus("Đang giải nén Ventoy...", "Cyan");
+                UpdateStatus("Äang giáº£i nÃ©n Ventoy...", "Cyan");
                 Directory.CreateDirectory(versionFolderPath);
                 ZipFile.ExtractToDirectory(zipPath, versionFolderPath);
 
                 string ventoySourceFolderPath = FindVentoyPayloadFolder(versionFolderPath);
                 if (string.IsNullOrEmpty(ventoySourceFolderPath))
                 {
-                    throw new InvalidOperationException("Không tìm thấy folder Ventoy sau khi giải nén.");
+                    throw new InvalidOperationException("KhÃ´ng tÃ¬m tháº¥y folder Ventoy sau khi giáº£i nÃ©n.");
                 }
 
                 finalVentoyFolderName = Path.GetFileName(ventoySourceFolderPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
@@ -78,20 +78,20 @@ namespace GMTPC.Tool
                     }
                     catch (Exception ex)
                     {
-                        UpdateStatus($"Không xóa được folder Ventoy cũ ở ổ C: {ex.Message}", "Orange");
+                        UpdateStatus($"KhÃ´ng xÃ³a Ä‘Æ°á»£c folder Ventoy cÅ© á»Ÿ á»• C: {ex.Message}", "Orange");
                     }
                 }
 
-                UpdateStatus($"Đang chuyển folder Ventoy ra ổ C:\\{finalVentoyFolderName}...", "Cyan");
+                UpdateStatus($"Äang chuyá»ƒn folder Ventoy ra á»• C:\\{finalVentoyFolderName}...", "Cyan");
                 Directory.Move(ventoySourceFolderPath, finalVentoyFolderPath);
 
                 string ventoyExePath = FindVentoy2DiskExe(finalVentoyFolderPath);
                 if (string.IsNullOrEmpty(ventoyExePath))
                 {
-                    throw new InvalidOperationException("Không tìm thấy ventoy2disk.exe sau khi chuyển folder.");
+                    throw new InvalidOperationException("KhÃ´ng tÃ¬m tháº¥y ventoy2disk.exe sau khi chuyá»ƒn folder.");
                 }
 
-                UpdateStatus("Đang mở Ventoy2Disk với quyền administrator...", "Cyan");
+                UpdateStatus("Äang má»Ÿ Ventoy2Disk vá»›i quyá»n administrator...", "Cyan");
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = ventoyExePath,
@@ -103,27 +103,27 @@ namespace GMTPC.Tool
                 Process process = Process.Start(startInfo);
                 if (process != null)
                 {
-                    UpdateStatus("Ventoy2Disk đã được mở!", "Green");
-                    UpdateStatus("Đợi Ventoy2Disk tắt để dọn file tạm...", "Cyan");
+                    UpdateStatus("Ventoy2Disk Ä‘Ã£ Ä‘Æ°á»£c má»Ÿ!", "Green");
+                    UpdateStatus("Äá»£i Ventoy2Disk táº¯t Ä‘á»ƒ dá»n file táº¡m...", "Cyan");
                     await WaitForProcessExitAsync(process);
                 }
 
-                UpdateStatus("Đang xóa file zip Ventoy...", "Cyan");
+                UpdateStatus("Äang xÃ³a file zip Ventoy...", "Cyan");
                 TryDeleteFile(zipPath);
 
-                UpdateStatus("Đang dọn folder tạm Ventoy...", "Cyan");
+                UpdateStatus("Äang dá»n folder táº¡m Ventoy...", "Cyan");
                 TryDeleteDirectory(versionFolderPath);
 
-                UpdateStatus("Đang xóa C:\\Ventoy...", "Cyan");
+                UpdateStatus("Äang xÃ³a C:\\Ventoy...", "Cyan");
                 TryDeleteDirectory(VENTOY_EXTRACT_ROOT);
             }
             catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223)
             {
-                UpdateStatus("Đã hủy mở Ventoy2Disk.", "Yellow");
+                UpdateStatus("ÄÃ£ há»§y má»Ÿ Ventoy2Disk.", "Yellow");
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài đặt Ventoy: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i Ä‘áº·t Ventoy: {ex.Message}", "Red");
             }
         }
 
@@ -131,7 +131,7 @@ namespace GMTPC.Tool
         {
             using (HttpClient client = new HttpClient())
             {
-                client.DefaultRequestHeaders.UserAgent.ParseAdd("GMTPC-Tool");
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("AI-Code-Agent-AIO-GMTPC");
                 client.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github+json");
                 string json = await client.GetStringAsync(VENTOY_GITHUB_RELEASES_API_URL);
 
@@ -263,3 +263,4 @@ namespace GMTPC.Tool
         }
     }
 }
+

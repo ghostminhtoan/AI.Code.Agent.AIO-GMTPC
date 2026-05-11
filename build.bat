@@ -1,7 +1,7 @@
-rem AI Summary: 2026-04-30 - Standardized build script to Release Any CPU and copy GMTPC.Tool.exe to root before git push
+﻿rem AI Summary: 2026-04-30 - Standardized build script to Release Any CPU and copy AI.Code.Agent.AIO-GMTPC.exe to root before git push
 @echo off
 echo ========================================
-echo Building GMTPC.Tool (Release Any CPU)
+echo Building AI.Code.Agent.AIO-GMTPC (Release Any CPU)
 echo ========================================
 echo.
 
@@ -25,7 +25,7 @@ if "%MSBUILD%"=="" (
 echo Using: %MSBUILD%
 echo.
 
-"%MSBUILD%" GMTPC.Tool.csproj /p:Configuration=Release /p:Platform="Any CPU" /nologo /v:minimal
+"%MSBUILD%" AI.Code.Agent.AIO-GMTPC.csproj /p:Configuration=Release /p:Platform="Any CPU" /nologo /v:minimal
 if %ERRORLEVEL% NEQ 0 (
     echo.
     echo [ERROR] Build failed!
@@ -40,12 +40,12 @@ echo ========================================
 echo.
 
 echo Copying exe to root folder...
-copy /Y "bin\Release\net48\GMTPC.Tool.exe" "GMTPC.Tool.exe" >nul
+copy /Y "bin\Release\net48\AI.Code.Agent.AIO-GMTPC.exe" "AI.Code.Agent.AIO-GMTPC.exe" >nul
 if %ERRORLEVEL% NEQ 0 (
     echo [WARNING] Failed to copy exe to root folder.
     goto end
 ) else (
-    echo [OK] Exe copied to root: GMTPC.Tool.exe
+    echo [OK] Exe copied to root: AI.Code.Agent.AIO-GMTPC.exe
 )
 echo.
 
@@ -76,3 +76,4 @@ if %ERRORLEVEL% NEQ 0 (
 )
 echo Done!
 pause
+

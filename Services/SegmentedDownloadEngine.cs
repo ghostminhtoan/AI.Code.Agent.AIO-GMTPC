@@ -1,7 +1,7 @@
-// =============================================================================
+﻿// =============================================================================
 // Services/SegmentedDownloadEngine.cs
 // Download engine: multi-thread segmented (chunk-based) with IProgress<T>
-// UTF-8 with BOM – .NET Framework 4.8 / C# 7.3
+// UTF-8 with BOM â€“ .NET Framework 4.8 / C# 7.3
 // =============================================================================
 using System;
 using System.Collections.Concurrent;
@@ -12,7 +12,7 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace GMTPC.Tool.Services
+namespace AICodeAgentAIOGMTPC.Services
 {
     /// <summary>
     /// Progress info reported on every UI tick.
@@ -46,7 +46,7 @@ namespace GMTPC.Tool.Services
     /// </summary>
     public sealed class SegmentedDownloadEngine
     {
-        // ── tunables ──────────────────────────────────────────────────────────
+        // â”€â”€ tunables â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         private const long ChunkSize = 8L * 1024 * 1024;      // 8 MB per work-item
         private const long MinSizeForSegmented = 5L * 1024 * 1024; // 5 MB minimum
         private const int  MaxRedirects = 10;
@@ -58,7 +58,7 @@ namespace GMTPC.Tool.Services
         private const string UserAgent =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
 
-        // ─────────────────────────────────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
         /// <summary>
         /// Downloads <paramref name="url"/> to <paramref name="destinationPath"/> using up to
@@ -93,7 +93,7 @@ namespace GMTPC.Tool.Services
             await DownloadSegmentedAsync(finalUrl, destinationPath, fileSize, segments, progress, ct);
         }
 
-        // ── ProbeResult ───────────────────────────────────────────────────────
+        // â”€â”€ ProbeResult â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         private struct ProbeResult
         {
             public string FinalUrl;
@@ -101,7 +101,7 @@ namespace GMTPC.Tool.Services
             public bool   SupportsRange;
         }
 
-        // ── Probe ────────────────────────────────────────────────────────────
+        // â”€â”€ Probe â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
         private async Task<ProbeResult> ProbeAsync(string url, CancellationToken ct)
         {
@@ -127,7 +127,7 @@ namespace GMTPC.Tool.Services
                     }
                 }
             }
-            catch { /* HEAD not supported – fall through */ }
+            catch { /* HEAD not supported â€“ fall through */ }
 
             if (result.FileSize > 0 && result.SupportsRange) return result;
 
@@ -181,7 +181,7 @@ namespace GMTPC.Tool.Services
             return result;
         }
 
-        // ── Single-thread fallback ────────────────────────────────────────────
+        // â”€â”€ Single-thread fallback â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
         private async Task DownloadSingleAsync(
             string url,
@@ -266,7 +266,7 @@ namespace GMTPC.Tool.Services
             }
         }
 
-        // ── Segmented download ────────────────────────────────────────────────
+        // â”€â”€ Segmented download â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
         private sealed class ChunkRange
         {
@@ -382,7 +382,7 @@ namespace GMTPC.Tool.Services
                             if (remainingChunks.Count > 0)
                             {
                                 if (totalRounds == 0)
-                                    throw new Exception($"Tất cả {segments} luồng thất bại liên tục. Kiểm tra mạng.");
+                                    throw new Exception($"Táº¥t cáº£ {segments} luá»“ng tháº¥t báº¡i liÃªn tá»¥c. Kiá»ƒm tra máº¡ng.");
                                 foreach (var r in remainingChunks) chunkQueue.Enqueue(r);
                                 remainingChunks.Clear();
                             }
@@ -488,7 +488,7 @@ namespace GMTPC.Tool.Services
                                                                 emptyReads++;
                                                                 if (emptyReads >= 3 && chunk.Downloaded < chunk.Length)
                                                                 {
-                                                                    // Stalled – requeue remainder
+                                                                    // Stalled â€“ requeue remainder
                                                                     var rem = new ChunkRange
                                                                     {
                                                                         Start      = chunk.Start + chunk.Downloaded,
@@ -541,3 +541,4 @@ namespace GMTPC.Tool.Services
         }
     }
 }
+

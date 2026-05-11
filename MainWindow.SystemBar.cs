@@ -6,14 +6,14 @@
 //   - 2026-03-26 (5): Fixed Open Folder button - uses _openFolderButtonPath which is set
 //                 when user selects a drive. Always opens correct folder.
 //   - 2026-03-26 (4): All drives show same format (C:\ (100GB), D:\ (50GB), etc.)
-//                 C: uses %LocalAppData%\GMTPC\GMTPC Tools\ for actual storage
+//                 C: uses %LocalAppData%\GMTPC\AI Code Agent AIO-GMTPC\ for actual storage
 //                 Added "Open folder" button with BtnOpenFolder_Click and OpenTempFolder()
-//   - 2026-03-26 (3): All drives show same format (C:\, D:\, etc.). C: uses %LocalAppData%\GMTPC\GMTPC Tools\
+//   - 2026-03-26 (3): All drives show same format (C:\, D:\, etc.). C: uses %LocalAppData%\GMTPC\AI Code Agent AIO-GMTPC\
 //                 Added OpenTempFolder() method and _selectedDriveName field
-//   - 2026-03-26 (2): Restored multi-drive selection. C: = %LocalAppData%\GMTPC\GMTPC Tools\
+//   - 2026-03-26 (2): Restored multi-drive selection. C: = %LocalAppData%\GMTPC\AI Code Agent AIO-GMTPC\
 //                 Other drives = D:\Temp Folder, E:\Temp Folder, etc.
 //                 System folder (C:) NEVER has Defender exclusion removed.
-//   - 2026-03-26: Fixed Temp Folder - only show C: with %LocalAppData%\GMTPC\GMTPC Tools\
+//   - 2026-03-26: Fixed Temp Folder - only show C: with %LocalAppData%\GMTPC\AI Code Agent AIO-GMTPC\
 //                 Fixed Defender Exclusion path (add missing \)
 //   - 2026-03-05: Chuyển UpdateStatus, UpdateSecondaryStatus, SetInstallingState
 //                 và các shared fields từ xaml.cs về đây theo AI_WORKFLOW.md
@@ -33,7 +33,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace GMTPC.Tool
+namespace AICodeAgentAIOGMTPC
 {
     public partial class MainWindow
     {
@@ -314,11 +314,11 @@ namespace GMTPC.Tool
                         segments = n;
                 });
 
-                Progress<GMTPC.Tool.Services.DownloadProgressInfo> uiProgress = null;
+                Progress<AICodeAgentAIOGMTPC.Services.DownloadProgressInfo> uiProgress = null;
                 await Dispatcher.InvokeAsync(() =>
                 {
                     ResetDownloadUI();
-                    uiProgress = new Progress<GMTPC.Tool.Services.DownloadProgressInfo>(info =>
+                    uiProgress = new Progress<AICodeAgentAIOGMTPC.Services.DownloadProgressInfo>(info =>
                     {
                         if (!ct.IsCancellationRequested)
                             ApplyDownloadProgressToUI(info);
@@ -327,7 +327,7 @@ namespace GMTPC.Tool
 
                 UpdateStatus($"Dang tai {displayName}...", "Cyan");
 
-                var engine = new GMTPC.Tool.Services.SegmentedDownloadEngine();
+                var engine = new AICodeAgentAIOGMTPC.Services.SegmentedDownloadEngine();
                 await engine.DownloadAsync(downloadUrl, destinationPath, segments, uiProgress, ct);
 
                 await Dispatcher.InvokeAsync(() => ResetDownloadUI());
@@ -345,7 +345,7 @@ namespace GMTPC.Tool
             }
         }
 
-        private void ApplyDownloadProgressToUI(GMTPC.Tool.Services.DownloadProgressInfo info)
+        private void ApplyDownloadProgressToUI(AICodeAgentAIOGMTPC.Services.DownloadProgressInfo info)
         {
             bool isSingle = info.SegmentPercents == null || info.SegmentPercents.Length <= 1;
             DownloadProgressBar.Visibility = isSingle ? Visibility.Visible : Visibility.Collapsed;
@@ -694,7 +694,7 @@ namespace GMTPC.Tool
         /// <summary>
         /// Populate the Temp folder ComboBox with all available drives (excluding CD-ROM)
         /// - All drives display the same format: "C:\ (100 GB free)", "D:\ (50 GB free)", etc.
-        /// - C: drive uses %LocalAppData%\GMTPC\GMTPC Tools\ as actual path
+        /// - C: drive uses %LocalAppData%\GMTPC\AI Code Agent AIO-GMTPC\ as actual path
         /// - Other drives use D:\Temp Folder, E:\Temp Folder, etc.
         /// </summary>
         private void PopulateTempFolderComboBox()
@@ -716,7 +716,7 @@ namespace GMTPC.Tool
                         if (drive.Name.TrimEnd('\\').Equals("C:", StringComparison.OrdinalIgnoreCase))
                         {
                             // C: drive uses system folder
-                            actualPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GMTPC", "GMTPC Tools");
+                            actualPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GMTPC", "AI Code Agent AIO-GMTPC");
                             displayText = $"{drive.Name} ({FormatBytes(drive.TotalFreeSpace)} free)";
                         }
                         else
@@ -750,7 +750,7 @@ namespace GMTPC.Tool
         /// <summary>
         /// Handle Temp folder ComboBox selection changed
         /// Auto-create folder and manage Windows Defender exclusions
-        /// - System folder (%LocalAppData%\GMTPC\GMTPC Tools\) is NEVER deleted or removed from Defender exclusion
+        /// - System folder (%LocalAppData%\GMTPC\AI Code Agent AIO-GMTPC\) is NEVER deleted or removed from Defender exclusion
         /// - Other drives: delete old folder and defender exclusion when switching
         /// </summary>
         private async void CboTempFolder_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -765,7 +765,7 @@ namespace GMTPC.Tool
                     {
                         // Extract drive name from display text (e.g., "C:\ (100 GB free)" -> "C:\")
                         string driveName = null;
-                        if (newTempPath.Contains("GMTPC Tools"))
+                        if (newTempPath.Contains("AI Code Agent AIO-GMTPC"))
                         {
                             driveName = "C:\\";
                         }
@@ -778,7 +778,7 @@ namespace GMTPC.Tool
                         // Initialize system temp folder path on first run
                         if (_systemTempFolderPath == null)
                         {
-                            _systemTempFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GMTPC", "GMTPC Tools");
+                            _systemTempFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GMTPC", "AI Code Agent AIO-GMTPC");
 
                             // Always ensure system folder has defender exclusion (never remove it)
                             await AddDefenderExclusionAsync(_systemTempFolderPath);
@@ -871,7 +871,7 @@ namespace GMTPC.Tool
             }
 
             // Default to LocalAppData if nothing selected
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GMTPC", "GMTPC Tools");
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GMTPC", "AI Code Agent AIO-GMTPC");
         }
 
         /// <summary>
@@ -888,7 +888,7 @@ namespace GMTPC.Tool
                 // Fallback to system folder if nothing selected yet
                 if (string.IsNullOrEmpty(folderPath))
                 {
-                    folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GMTPC", "GMTPC Tools");
+                    folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GMTPC", "AI Code Agent AIO-GMTPC");
                 }
 
                 // Debug logging
@@ -1097,3 +1097,4 @@ namespace GMTPC.Tool
 
     }
 }
+

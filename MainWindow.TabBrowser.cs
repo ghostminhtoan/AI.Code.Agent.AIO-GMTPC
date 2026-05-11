@@ -1,4 +1,4 @@
-// AI Summary: 2026-04-25 - Added Brave browser install handler and Browser-tab selection/status wiring; removed Edge workspace button hook
+﻿// AI Summary: 2026-04-25 - Added Brave browser install handler and Browser-tab selection/status wiring; removed Edge workspace button hook
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,18 +17,18 @@ using System.Net.Http;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace GMTPC.Tool
+namespace AICodeAgentAIOGMTPC
 {
     public partial class MainWindow
     {
 
         private async Task InstallCocCocAsync()
         {
-            UpdateStatus("Đang tải Cốc Cốc...", "Cyan");
+            UpdateStatus("Äang táº£i Cá»‘c Cá»‘c...", "Cyan");
             string cocCocInstallerPath = Path.Combine(GetGMTPCFolder(), "coccoc_standalone_vi.exe");
             try
             {
-                await DownloadWithProgressAsync(COCCOC_DOWNLOAD_URL, cocCocInstallerPath, "Cốc Cốc");
+                await DownloadWithProgressAsync(COCCOC_DOWNLOAD_URL, cocCocInstallerPath, "Cá»‘c Cá»‘c");
 
                 // Reset progress UI after download
                 Dispatcher.Invoke(() =>
@@ -38,7 +38,7 @@ namespace GMTPC.Tool
                     SpeedTextBlock.Text = "";
                 });
 
-                UpdateStatus("Đang chạy Cốc Cốc installer ( " + COCCOC_INSTALL_ARGUMENTS + " )...", "Yellow");
+                UpdateStatus("Äang cháº¡y Cá»‘c Cá»‘c installer ( " + COCCOC_INSTALL_ARGUMENTS + " )...", "Yellow");
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = cocCocInstallerPath,
@@ -52,21 +52,21 @@ namespace GMTPC.Tool
                     await Task.Run(() => process.WaitForExit());
                     if (process.ExitCode == 0)
                     {
-                        UpdateStatus("Cài đặt Cốc Cốc hoàn tất.", "Green");
+                        UpdateStatus("CÃ i Ä‘áº·t Cá»‘c Cá»‘c hoÃ n táº¥t.", "Green");
                     }
                     else
                     {
-                        UpdateStatus($"Cốc Cốc installer kết thúc với mã {process.ExitCode}", "Yellow");
+                        UpdateStatus($"Cá»‘c Cá»‘c installer káº¿t thÃºc vá»›i mÃ£ {process.ExitCode}", "Yellow");
                     }
                 }
             }
             catch (OperationCanceledException)
             {
-                UpdateStatus("Tải Cốc Cốc bị hủy.", "Red");
+                UpdateStatus("Táº£i Cá»‘c Cá»‘c bá»‹ há»§y.", "Red");
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi tải hoặc cài đặt Cốc Cốc: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi táº£i hoáº·c cÃ i Ä‘áº·t Cá»‘c Cá»‘c: {ex.Message}", "Red");
             }
             finally
             {
@@ -83,7 +83,7 @@ namespace GMTPC.Tool
         {
             try
             {
-                UpdateStatus("Đang tải Microsoft Edge...", "Cyan");
+                UpdateStatus("Äang táº£i Microsoft Edge...", "Cyan");
                 string edgePath = Path.Combine(GetGMTPCFolder(), "MicrosoftEdgeSetup.exe");
                 await DownloadWithProgressAsync(EDGE_DOWNLOAD_URL, edgePath, "Microsoft Edge");
 
@@ -94,7 +94,7 @@ namespace GMTPC.Tool
                     SpeedTextBlock.Text = "";
                 });
 
-                UpdateStatus("Đang chạy Microsoft Edge installer ( " + EDGE_INSTALL_ARGUMENTS + " )...", "Yellow");
+                UpdateStatus("Äang cháº¡y Microsoft Edge installer ( " + EDGE_INSTALL_ARGUMENTS + " )...", "Yellow");
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = edgePath,
@@ -106,14 +106,14 @@ namespace GMTPC.Tool
                 if (process != null)
                 {
                     await Task.Run(() => process.WaitForExit());
-                    UpdateStatus("Microsoft Edge đã hoàn tất.", "Green");
+                    UpdateStatus("Microsoft Edge Ä‘Ã£ hoÃ n táº¥t.", "Green");
                 }
 
                 if (File.Exists(edgePath)) File.Delete(edgePath);
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài Microsoft Edge: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i Microsoft Edge: {ex.Message}", "Red");
             }
         }
 
@@ -121,7 +121,7 @@ namespace GMTPC.Tool
         {
             try
             {
-                UpdateStatus("Đang tải Brave...", "Cyan");
+                UpdateStatus("Äang táº£i Brave...", "Cyan");
                 string bravePath = Path.Combine(GetGMTPCFolder(), "BraveSetup.exe");
                 await DownloadWithProgressAsync(BRAVE_DOWNLOAD_URL, bravePath, "Brave");
 
@@ -132,7 +132,7 @@ namespace GMTPC.Tool
                     SpeedTextBlock.Text = "";
                 });
 
-                UpdateStatus("Đang chạy Brave installer...", "Yellow");
+                UpdateStatus("Äang cháº¡y Brave installer...", "Yellow");
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = bravePath,
@@ -144,14 +144,14 @@ namespace GMTPC.Tool
                 if (process != null)
                 {
                     await Task.Run(() => process.WaitForExit());
-                    UpdateStatus("Brave đã hoàn tất.", "Green");
+                    UpdateStatus("Brave Ä‘Ã£ hoÃ n táº¥t.", "Green");
                 }
 
                 if (File.Exists(bravePath)) File.Delete(bravePath);
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài Brave: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i Brave: {ex.Message}", "Red");
             }
         }
 
@@ -160,11 +160,11 @@ namespace GMTPC.Tool
         {
             if (ChkChrome.IsChecked == true)
             {
-                UpdateStatus("Đã chọn: Google Chrome", "Green");
+                UpdateStatus("ÄÃ£ chá»n: Google Chrome", "Green");
             }
             else
             {
-                UpdateStatus("Đã hủy chọn: Google Chrome", "Yellow");
+                UpdateStatus("ÄÃ£ há»§y chá»n: Google Chrome", "Yellow");
             }
 
             UpdateInstallButtonState();
@@ -175,11 +175,11 @@ namespace GMTPC.Tool
         {
             if (ChkCocCoc.IsChecked == true)
             {
-                UpdateStatus("Đã chọn: Cốc Cốc", "Green");
+                UpdateStatus("ÄÃ£ chá»n: Cá»‘c Cá»‘c", "Green");
             }
             else
             {
-                UpdateStatus("Đã hủy chọn: Cốc Cốc", "Yellow");
+                UpdateStatus("ÄÃ£ há»§y chá»n: Cá»‘c Cá»‘c", "Yellow");
             }
 
             UpdateInstallButtonState();
@@ -190,11 +190,11 @@ namespace GMTPC.Tool
         {
             if (ChkEdge.IsChecked == true)
             {
-                UpdateStatus("Đã chọn: Microsoft Edge", "Green");
+                UpdateStatus("ÄÃ£ chá»n: Microsoft Edge", "Green");
             }
             else
             {
-                UpdateStatus("Đã hủy chọn: Microsoft Edge", "Yellow");
+                UpdateStatus("ÄÃ£ há»§y chá»n: Microsoft Edge", "Yellow");
             }
 
             UpdateInstallButtonState();
@@ -204,11 +204,11 @@ namespace GMTPC.Tool
         {
             if (ChkBrave.IsChecked == true)
             {
-                UpdateStatus("Đã chọn: Brave", "Green");
+                UpdateStatus("ÄÃ£ chá»n: Brave", "Green");
             }
             else
             {
-                UpdateStatus("Đã hủy chọn: Brave", "Yellow");
+                UpdateStatus("ÄÃ£ há»§y chá»n: Brave", "Yellow");
             }
 
             UpdateInstallButtonState();
@@ -216,7 +216,7 @@ namespace GMTPC.Tool
 
         private async Task InstallChromeAsync()
         {
-            UpdateStatus("Đang tải Google Chrome...", "Cyan");
+            UpdateStatus("Äang táº£i Google Chrome...", "Cyan");
             string chromeInstallerPath = Path.Combine(GetGMTPCFolder(), "ChromeSetup.exe");
             try
             {
@@ -230,7 +230,7 @@ namespace GMTPC.Tool
                     SpeedTextBlock.Text = "";
                 });
 
-                UpdateStatus("Đang chạy Chrome installer ( " + CHROME_INSTALL_ARGUMENTS + " )...", "Yellow");
+                UpdateStatus("Äang cháº¡y Chrome installer ( " + CHROME_INSTALL_ARGUMENTS + " )...", "Yellow");
 
                 // Run installer with arguments
                 ProcessStartInfo startInfo = new ProcessStartInfo
@@ -246,21 +246,21 @@ namespace GMTPC.Tool
                     await Task.Run(() => process.WaitForExit());
                     if (process.ExitCode == 0)
                     {
-                        UpdateStatus("Cài đặt Google Chrome hoàn tất.", "Green");
+                        UpdateStatus("CÃ i Ä‘áº·t Google Chrome hoÃ n táº¥t.", "Green");
                     }
                     else
                     {
-                        UpdateStatus($"Chrome installer kết thúc với mã {process.ExitCode}", "Yellow");
+                        UpdateStatus($"Chrome installer káº¿t thÃºc vá»›i mÃ£ {process.ExitCode}", "Yellow");
                     }
                 }
             }
             catch (OperationCanceledException)
             {
-                UpdateStatus("Tải Chrome bị hủy.", "Red");
+                UpdateStatus("Táº£i Chrome bá»‹ há»§y.", "Red");
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi tải hoặc cài đặt Chrome: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi táº£i hoáº·c cÃ i Ä‘áº·t Chrome: {ex.Message}", "Red");
             }
             finally
             {
@@ -274,3 +274,4 @@ namespace GMTPC.Tool
 
     }
 }
+

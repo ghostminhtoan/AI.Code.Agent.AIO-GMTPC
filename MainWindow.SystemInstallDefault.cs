@@ -1,8 +1,8 @@
-// =======================================================================
+﻿// =======================================================================
 // MainWindow.SystemInstallDefault.cs
-// Chức năng: Cơ chế cài đặt cơ bản - tải file và chạy với argument
-// Cập nhật gần đây:
-//   - 2026-03-17: Tạo mới theo yêu cầu phân loại cơ chế cài đặt
+// Chá»©c nÄƒng: CÆ¡ cháº¿ cÃ i Ä‘áº·t cÆ¡ báº£n - táº£i file vÃ  cháº¡y vá»›i argument
+// Cáº­p nháº­t gáº§n Ä‘Ã¢y:
+//   - 2026-03-17: Táº¡o má»›i theo yÃªu cáº§u phÃ¢n loáº¡i cÆ¡ cháº¿ cÃ i Ä‘áº·t
 // =======================================================================
 using System;
 using System.Diagnostics;
@@ -10,25 +10,25 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace GMTPC.Tool
+namespace AICodeAgentAIOGMTPC
 {
     public partial class MainWindow
     {
-        // ===================== SystemInstallDefault - Cài đặt cơ bản =====================
+        // ===================== SystemInstallDefault - CÃ i Ä‘áº·t cÆ¡ báº£n =====================
         /// <summary>
-        /// Cơ chế cài đặt cơ bản: Tải file và chạy với argument
-        /// Sử dụng cho các checkbox cài đặt phần mềm thông thường
+        /// CÆ¡ cháº¿ cÃ i Ä‘áº·t cÆ¡ báº£n: Táº£i file vÃ  cháº¡y vá»›i argument
+        /// Sá»­ dá»¥ng cho cÃ¡c checkbox cÃ i Ä‘áº·t pháº§n má»m thÃ´ng thÆ°á»ng
         /// </summary>
-        /// <param name="downloadUrl">Link tải về</param>
-        /// <param name="filePath">Đường dẫn lưu file</param>
-        /// <param name="installArguments">Tham số cài đặt (ví dụ: /s, /silent, /quiet)</param>
-        /// <param name="displayName">Tên hiển thị (ví dụ: "IDM", "WinRAR")</param>
+        /// <param name="downloadUrl">Link táº£i vá»</param>
+        /// <param name="filePath">ÄÆ°á»ng dáº«n lÆ°u file</param>
+        /// <param name="installArguments">Tham sá»‘ cÃ i Ä‘áº·t (vÃ­ dá»¥: /s, /silent, /quiet)</param>
+        /// <param name="displayName">TÃªn hiá»ƒn thá»‹ (vÃ­ dá»¥: "IDM", "WinRAR")</param>
         protected async Task InstallWithDefaultAsync(string downloadUrl, string filePath, string installArguments, string displayName)
         {
             try
             {
                 // Step 1: Download file
-                UpdateStatus($"Đang tải {displayName}...", "Cyan");
+                UpdateStatus($"Äang táº£i {displayName}...", "Cyan");
                 await DownloadWithProgressAsync(downloadUrl, filePath, displayName);
 
                 // Reset progress bar
@@ -40,7 +40,7 @@ namespace GMTPC.Tool
                 });
 
                 // Step 2: Run installer with arguments
-                UpdateStatus($"Đang cài đặt {displayName} ( {installArguments} )...", "Yellow");
+                UpdateStatus($"Äang cÃ i Ä‘áº·t {displayName} ( {installArguments} )...", "Yellow");
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = filePath,
@@ -51,24 +51,24 @@ namespace GMTPC.Tool
                 if (process != null)
                 {
                     await Task.Run(() => process.WaitForExit());
-                    UpdateStatus($"Cài đặt {displayName} hoàn tất.", "Green");
+                    UpdateStatus($"CÃ i Ä‘áº·t {displayName} hoÃ n táº¥t.", "Green");
                 }
 
                 // Step 3: Delete installer
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
-                    UpdateStatus($"Đã xóa file cài đặt {displayName}", "Cyan");
+                    UpdateStatus($"ÄÃ£ xÃ³a file cÃ i Ä‘áº·t {displayName}", "Cyan");
                 }
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Lỗi khi cài {displayName}: {ex.Message}", "Red");
+                UpdateStatus($"Lá»—i khi cÃ i {displayName}: {ex.Message}", "Red");
             }
         }
 
         /// <summary>
-        /// Cơ chế cài đặt cơ bản với retry logic
+        /// CÆ¡ cháº¿ cÃ i Ä‘áº·t cÆ¡ báº£n vá»›i retry logic
         /// </summary>
         protected async Task InstallWithDefaultAndRetryAsync(string downloadUrl, string filePath, string installArguments, string displayName, int maxRetries = 3)
         {
@@ -85,13 +85,14 @@ namespace GMTPC.Tool
                     retryCount++;
                     if (retryCount >= maxRetries)
                     {
-                        UpdateStatus($"Lỗi sau {maxRetries} lần thử: {ex.Message}", "Red");
+                        UpdateStatus($"Lá»—i sau {maxRetries} láº§n thá»­: {ex.Message}", "Red");
                         throw;
                     }
-                    UpdateStatus($"Thử lại lần {retryCount}/{maxRetries}...", "Yellow");
+                    UpdateStatus($"Thá»­ láº¡i láº§n {retryCount}/{maxRetries}...", "Yellow");
                     await Task.Delay(2000); // Wait 2 seconds before retry
                 }
             }
         }
     }
 }
+

@@ -21,7 +21,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using Forms = System.Windows.Forms;
 
-namespace GMTPC.Tool
+namespace AICodeAgentAIOGMTPC
 {
     public partial class MainWindow
     {
@@ -1154,3 +1154,4 @@ namespace GMTPC.Tool
         }
     }
 }
+

@@ -20,7 +20,7 @@ using System.Windows.Threading;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace GMTPC.Tool
+namespace AICodeAgentAIOGMTPC
 {
     public partial class MainWindow
     {
@@ -740,7 +740,7 @@ namespace GMTPC.Tool
         {
             HttpClient client = new HttpClient();
             client.Timeout = TimeSpan.FromSeconds(15);
-            client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) GMTPC.Tool/1.0");
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AI-Code-Agent-AIO-GMTPC/1.0");
             return client;
         }
 
@@ -792,3 +792,4 @@ namespace GMTPC.Tool
         }
     }
 }
+

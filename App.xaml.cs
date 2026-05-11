@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Security.Principal;
 using System.Windows;
 
-namespace GMTPC.Tool
+namespace AICodeAgentAIOGMTPC
 {
     public partial class App : Application
     {

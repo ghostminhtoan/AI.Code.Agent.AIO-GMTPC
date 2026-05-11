@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace GMTPC.Tool
+namespace AICodeAgentAIOGMTPC
 {
 // =============================================================================
 // MainWindow.SystemWindowsSetup.cs
@@ -386,5 +386,6 @@ namespace GMTPC.Tool
         }
     }
 }
+
 
 

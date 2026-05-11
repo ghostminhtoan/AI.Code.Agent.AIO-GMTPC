@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GMTPC.Tool.Properties {
+namespace AICodeAgentAIOGMTPC.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace GMTPC.Tool.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("GMTPC.Tool.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AICodeAgentAIOGMTPC.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,3 +61,4 @@ namespace GMTPC.Tool.Properties {
         }
     }
 }
+

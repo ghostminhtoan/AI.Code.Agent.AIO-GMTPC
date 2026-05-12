@@ -288,7 +288,7 @@ namespace AICodeAgentAIOGMTPC
 // SOURCE: MainWindow.TabDriver.cs
 // -----------------------------------------------------------------------
 // ===================================================================
-        // TabDriver �?" Checkbox Click Handlers
+        // TabDriver - Checkbox Click Handlers
         // TabItem Header: "Driver"
         // Checkboxes: Chk3DPChip, Chk3DPNet
         // ===================================================================
@@ -321,7 +321,7 @@ namespace AICodeAgentAIOGMTPC
         }
 
         // ===================================================================
-        // TabDriver �?" Install Methods
+        // TabDriver - Install Methods
         // ===================================================================
         private Task Run3DPChipAsync()
         {
@@ -336,7 +336,7 @@ namespace AICodeAgentAIOGMTPC
         }
 
         // ===================================================================
-        // TabDriver �?" Button Click Handlers (actual implementation)
+        // TabDriver - Button Click Handlers (actual implementation)
         // ===================================================================
         private async void Btn3DPChip_Click(object sender, RoutedEventArgs e)
         {
@@ -590,7 +590,7 @@ private async Task InstallMSIAfterburnerAsync()
                     SpeedTextBlock.Text = "";
                 });
 
-                MessageBoxResult result = MessageBox.Show("Yes = Cài đặt tự động vào ổ C\nNo = Cài vào  khác", "Cài đặt Process Lasso", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                MessageBoxResult result = MessageBox.Show("Yes = Cài đặt tự động vào ? C\nNo = Cài vào  khác", "Cài đặt Process Lasso", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
@@ -601,7 +601,7 @@ private async Task InstallMSIAfterburnerAsync()
                 if (result == MessageBoxResult.Yes)
                 {
                     startInfo.Arguments = "/s";
-                    UpdateStatus("Cài đặt Process Lasso vào ổ C...", "Yellow");
+                    UpdateStatus("Cài đặt Process Lasso vào ? C...", "Yellow");
                 }
                 else if (result == MessageBoxResult.No)
                 {
@@ -652,7 +652,7 @@ private async Task InstallMSIAfterburnerAsync()
                     SpeedTextBlock.Text = "";
                 });
 
-                MessageBoxResult result = MessageBox.Show("Yes = Cài đặt tự động vào ổ C\nNo = Cài vào  khác", "Cài đặt Throttlestop", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                MessageBoxResult result = MessageBox.Show("Yes = Cài đặt tự động vào ? C\nNo = Cài vào  khác", "Cài đặt Throttlestop", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
@@ -663,7 +663,7 @@ private async Task InstallMSIAfterburnerAsync()
                 if (result == MessageBoxResult.Yes)
                 {
                     startInfo.Arguments = "/s";
-                    UpdateStatus("Cài đặt Throttlestop vào ổ C...", "Yellow");
+                    UpdateStatus("Cài đặt Throttlestop vào ? C...", "Yellow");
                 }
                 else if (result == MessageBoxResult.No)
                 {
@@ -1179,15 +1179,15 @@ private DispatcherTimer _systemInfoRefreshTimer;
             foreach (ManagementObject gpu in QueryWmi("Win32_VideoController"))
             {
                 AppendLine(sb, $"=== GPU {index} ===");
-                AppendLine(sb, "T�n", GetValue(gpu, "Name"));
+                AppendLine(sb, "Tên", GetValue(gpu, "Name"));
                 AppendLine(sb, "Driver Version", GetValue(gpu, "DriverVersion"));
                 AppendLine(sb, "Display memory (VRAM)", FormatGpuMemory(gpu));
                 AppendLine(sb, "Video Processor", GetValue(gpu, "VideoProcessor"));
                 AppendGpuCodecInfo(sb, GetValue(gpu, "Name"), GetValue(gpu, "VideoProcessor"));
-                AppendLine(sb, "D? ph�n gi?i", FormatResolution(gpu));
+                AppendLine(sb, "Độ phân giải", FormatResolution(gpu));
                 AppendLine(sb, "Refresh Rate", AppendUnit(GetValue(gpu, "CurrentRefreshRate"), "Hz"));
                 AppendLine(sb, "Bit Depth", AppendUnit(GetValue(gpu, "CurrentBitsPerPixel"), "bit"));
-                AppendLine(sb, "Tr?ng th�i", GetValue(gpu, "Status"));
+                AppendLine(sb, "Trạng thái", GetValue(gpu, "Status"));
                 AppendLine(sb, "PNP Device ID", GetValue(gpu, "PNPDeviceID"));
                 index++;
             }
@@ -1240,15 +1240,15 @@ private DispatcherTimer _systemInfoRefreshTimer;
             foreach (ManagementObject cpu in QueryWmi("Win32_Processor"))
             {
                 AppendLine(sb, $"=== CPU {index} ===");
-                AppendLine(sb, "T�n", GetValue(cpu, "Name"));
-                AppendLine(sb, "H�ng s?n xu?t", GetValue(cpu, "Manufacturer"));
-                AppendLine(sb, "Ki?n tr�c", GetArchitectureName(GetValue(cpu, "Architecture")));
+                AppendLine(sb, "Tên", GetValue(cpu, "Name"));
+                AppendLine(sb, "Hãng sản xuất", GetValue(cpu, "Manufacturer"));
+                AppendLine(sb, "Kiến trúc", GetArchitectureName(GetValue(cpu, "Architecture")));
                 AppendLine(sb, "Socket", GetValue(cpu, "SocketDesignation"));
-                AppendLine(sb, "S? nh�n", GetValue(cpu, "NumberOfCores"));
-                AppendLine(sb, "S? lu?ng", GetValue(cpu, "NumberOfLogicalProcessors"));
+                AppendLine(sb, "Số nhân", GetValue(cpu, "NumberOfCores"));
+                AppendLine(sb, "Số luồng", GetValue(cpu, "NumberOfLogicalProcessors"));
                 AppendLine(sb, "Base clock", "{BASE_CLOCK}");
                 AppendLine(sb, "Turbo clock", "{TURBO_CLOCK}");
-                AppendLine(sb, "Xung hi?n tải", "{CURRENT_CLOCK}");
+                AppendLine(sb, "Xung hiện tại", "{CURRENT_CLOCK}");
                 AppendLine(sb, "Cache L2", AppendUnit(GetValue(cpu, "L2CacheSize"), "KB"));
                 AppendLine(sb, "Cache L3", AppendUnit(GetValue(cpu, "L3CacheSize"), "KB"));
                 AppendLine(sb, "Virtualization", GetValue(cpu, "VirtualizationFirmwareEnabled"));
@@ -1506,13 +1506,13 @@ private DispatcherTimer _systemInfoRefreshTimer;
                 totalRamBytes += capacity;
 
                 AppendLine(sb, $"=== RAM Slot {slot} ===");
-                AppendLine(sb, "Dung lu?ng", FormatBytes(capacity));
-                AppendLine(sb, "H�ng s?n xu?t", GetValue(ram, "Manufacturer"));
+                AppendLine(sb, "Dung lượng", FormatBytes(capacity));
+                AppendLine(sb, "Hãng sản xuất", GetValue(ram, "Manufacturer"));
                 AppendLine(sb, "Part Number", GetValue(ram, "PartNumber"));
                 AppendLine(sb, "Serial", GetValue(ram, "SerialNumber"));
                 AppendLine(sb, "Bank", GetValue(ram, "BankLabel"));
-                AppendLine(sb, "V? tr�", GetValue(ram, "DeviceLocator"));
-                AppendLine(sb, "T?c d?", AppendUnit(GetValue(ram, "Speed"), "MHz"));
+                AppendLine(sb, "Vị trí", GetValue(ram, "DeviceLocator"));
+                AppendLine(sb, "Tốc độ", AppendUnit(GetValue(ram, "Speed"), "MHz"));
                 AppendLine(sb, "Configured Speed", AppendUnit(GetValue(ram, "ConfiguredClockSpeed"), "MHz"));
                 AppendLine(sb, "Form Factor", GetMemoryFormFactor(GetValue(ram, "FormFactor")));
                 AppendLine(sb, "");
@@ -1522,7 +1522,7 @@ private DispatcherTimer _systemInfoRefreshTimer;
 
             if (totalRamBytes > 0)
             {
-                sb.Insert(0, $"T?ng RAM v?t l�: {FormatBytes(totalRamBytes)}{Environment.NewLine}{Environment.NewLine}");
+                sb.Insert(0, $"Tổng RAM vật lý: {FormatBytes(totalRamBytes)}{Environment.NewLine}{Environment.NewLine}");
             }
 
             return sb.Length > 0 ? sb.ToString().TrimEnd() : "Unknown";
@@ -1535,15 +1535,15 @@ private DispatcherTimer _systemInfoRefreshTimer;
             ManagementObject bios = FirstOrDefault(QueryWmi("Win32_BIOS"));
             ManagementObject system = FirstOrDefault(QueryWmi("Win32_ComputerSystem"));
 
-            AppendLine(sb, "H�ng s?n xu?t", GetValue(board, "Manufacturer"));
+            AppendLine(sb, "Hãng sản xuất", GetValue(board, "Manufacturer"));
             AppendLine(sb, "Model", GetValue(board, "Product"));
             AppendLine(sb, "Serial", GetValue(board, "SerialNumber"));
             AppendLine(sb, "Version", GetValue(board, "Version"));
-            AppendLine(sb, "Tr?ng th�i", GetValue(board, "Status"));
+            AppendLine(sb, "Trạng thái", GetValue(board, "Status"));
             AppendLine(sb, "");
             AppendLine(sb, "BIOS", GetValue(bios, "Manufacturer"));
             AppendLine(sb, "BIOS Version", GetValue(bios, "SMBIOSBIOSVersion"));
-            AppendLine(sb, "Ng�y ph�t h�nh", FormatWmiDate(GetValue(bios, "ReleaseDate")));
+            AppendLine(sb, "Ngày phát hành", FormatWmiDate(GetValue(bios, "ReleaseDate")));
             AppendLine(sb, "");
             AppendLine(sb, "System", GetValue(system, "Manufacturer"));
             AppendLine(sb, "System Model", GetValue(system, "Model"));
@@ -2032,7 +2032,7 @@ private async Task InstallPotPlayerAsync()
                     if (File.Exists(foxitExe))
                     {
                         Process.Start(foxitExe);
-                        MessageBox.Show("N?u th?y ch? 'register' th� ch?n 'Not now', sau d� ?n 'Next' li�n t?c để hoàn tất.", "Luu �", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show("Nếu thấy chữ 'register' thì chọn 'Not now', sau đó ấn 'Next' liên tục để hoàn tất.", "Lưu ý", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     else
                     {
@@ -2185,7 +2185,7 @@ private async Task InstallPotPlayerAsync()
         }
 
 
-        // ===================== Ch?c nang kích hoạt Office =====================
+        // ===================== Chức năng kích hoạt Office =====================
         private void ActivateOffice()
         {
             try
@@ -2200,7 +2200,7 @@ private async Task InstallPotPlayerAsync()
                 }
                 UpdateStatus("Đã tải file ACTIVATE.OFFICE.cmd", "Cyan");
 
-                // Ch?y script với quy?n admin
+                // Chạy script với quyền admin
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = activateOfficeCmdPath,
@@ -2286,7 +2286,7 @@ private async Task InstallPotPlayerAsync()
                     SpeedTextBlock.Text = "";
                 });
 
-                UpdateStatus("Dang giải nén Office Tool Plus vào ổ C...", "Cyan");
+                UpdateStatus("Dang giải nén Office Tool Plus vào ? C...", "Cyan");
                 ZipFile.ExtractToDirectory(officeToolPlusZipPath, officeToolPlusRootFolder);
 
                 if (File.Exists(officeToolPlusZipPath))
@@ -2298,7 +2298,7 @@ private async Task InstallPotPlayerAsync()
                 string officeToolPlusExePath = FindOfficeToolPlusExePath(officeToolPlusRootFolder);
                 if (string.IsNullOrEmpty(officeToolPlusExePath))
                 {
-                    throw new FileNotFoundException("Kh�ng tìm thấy Office Tool Plus.exe trong thư mục d� giải nén.");
+                    throw new FileNotFoundException("Không tìm thấy Office Tool Plus.exe trong thư mục đã giải nén.");
                 }
 
                 string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
@@ -2377,7 +2377,7 @@ private async Task InstallPotPlayerAsync()
                 UpdateStatus($"Không lấy được link Office Tool Plus mới nhất: {ex.Message}", "Yellow");
             }
 
-            throw new InvalidOperationException("Kh�ng tìm thấy g�i Office Tool Plus x64 mới nhất tr�n GitHub Releases.");
+            throw new InvalidOperationException("Không tìm thấy gói Office Tool Plus x64 mới nhất trên GitHub Releases.");
         }
 
         private string FindOfficeToolPlusExePath(string searchRoot)
@@ -2397,7 +2397,7 @@ private async Task InstallPotPlayerAsync()
         }
 
 
-        // Th�m phuong th?c x? l� s? ki?n Click cho Office Softmaker
+        // Thêm phương thức xử lý sự kiện Click cho Office Softmaker
         private void ChkOfficeSoftmaker_Click(object sender, RoutedEventArgs e)
         {
             if (ChkOfficeSoftmaker.IsChecked == true)
@@ -2413,7 +2413,7 @@ private async Task InstallPotPlayerAsync()
         }
 
 
-        // Th�m phuong th?c cài đặt Office Softmaker
+        // Thêm phương thức cài đặt Office Softmaker
         private async Task InstallOfficeSoftmakerAsync()
         {
             try
@@ -2422,7 +2422,7 @@ private async Task InstallPotPlayerAsync()
                 string officeSoftmakerPath = Path.Combine(GetGMTPCFolder(), "Office.Softmaker.exe");
                 await DownloadWithProgressAsync("https://github.com/ghostminhtoan/MMT/releases/download/v1.0/Office.Softmaker.exe", officeSoftmakerPath, "Office Softmaker Installer");
 
-                // D?m b?o progress bar reset sau khi tải
+                // Đảm bảo progress bar reset sau khi tải
                 Dispatcher.Invoke(() =>
                 {
                     DownloadProgressBar.Value = 0;
@@ -2430,8 +2430,8 @@ private async Task InstallPotPlayerAsync()
                     SpeedTextBlock.Text = "";
                 });
 
-                // Hi?n th? popup để h?i ngu?i d�ng ch?n cài đặt
-                MessageBoxResult result = MessageBox.Show("Yes = Cài đặt tự động vào ổ C\nNo = Cài vào  khác", "Cài đặt tự động Office Softmaker", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                // Hiển thị popup để hỏi người dùng chọn cài đặt
+                MessageBoxResult result = MessageBox.Show("Yes = Cài đặt tự động vào ? C\nNo = Cài vào  khác", "Cài đặt tự động Office Softmaker", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
@@ -2441,14 +2441,14 @@ private async Task InstallPotPlayerAsync()
 
                 if (result == MessageBoxResult.Yes) // Cài đặt tự động vào ổ C
                 {
-                    startInfo.Arguments = "/passive"; // S? d?ng /passive nhu y�u c?u
-                    UpdateStatus("1 = Cài đặt tự động vào ổ C", "Yellow");
+                    startInfo.Arguments = "/passive"; // Sử dụng /passive như yêu cầu
+                    UpdateStatus("1 = Cài đặt tự động vào ? C", "Yellow");
                 }
                 else if (result == MessageBoxResult.No) // Cài vào  khác
                 {
                     UpdateStatus("2 = Cài vào  khác", "Yellow");
                 }
-                else // H?y
+                else // Hủy
                 {
                     UpdateStatus("Đã hủy cài đặt Office Softmaker", "Yellow");
                     if (File.Exists(officeSoftmakerPath))
@@ -2474,7 +2474,7 @@ private async Task InstallPotPlayerAsync()
                     }
                 }
 
-                // X�a file sau khi cài đặt xong
+                // Xóa file sau khi cài đặt xong
                 if (File.Exists(officeSoftmakerPath))
                 {
                     File.Delete(officeSoftmakerPath);
@@ -2629,7 +2629,7 @@ private async Task InstallPotPlayerAsync()
                     SpeedTextBlock.Text = "";
                 });
 
-                // Hi?n th? popup để h?i ngu?i d�ng ch?n cài đặt
+                // Hiển thị popup để hỏi người dùng chọn cài đặt
                 MessageBoxResult result = MessageBox.Show("Yes = Cài đặt tự động (silent)\nNo = Cài đặt thủ công (GUI)", "Cài đặt Subtitle Edit", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Cancel)
@@ -2664,12 +2664,12 @@ private async Task InstallPotPlayerAsync()
 
                 if (process != null)
                 {
-                    // D?i ngu?i d�ng t?t installer
+                    // Đợi người dùng tắt installer
                     await Task.Run(() => process.WaitForExit());
                     UpdateStatus("Cài đặt Subtitle Edit hoàn tất!", "Green");
                 }
 
-                // X�a file installer sau khi cài đặt xong
+                // Xóa file installer sau khi cài đặt xong
                 if (File.Exists(subtitleEditPath))
                 {
                     File.Delete(subtitleEditPath);
@@ -2757,17 +2757,17 @@ private async Task InstallPotPlayerAsync()
 
 
         // InstallDiskGeniusAsync() -> Moved to MainWindow.SystemArguments.cs
-        // (c� MessageBox.Show + /s argument)
+        // (có MessageBox.Show + /s argument)
 
         // InstallAomeiPartitionAssistantAsync() -> Moved to MainWindow.SystemArguments.cs
-        // (c� MessageBox.Show + /passive argument)
+        // (có MessageBox.Show + /passive argument)
 
 // -----------------------------------------------------------------------
 // SOURCE: MainWindow.TabPopular.cs
 // -----------------------------------------------------------------------
 /// <summary>
-        /// Ki?m tra Windows dang d�ng Dark Theme hay Light Theme
-        /// Tr? v? true n?u dang d�ng Dark Theme, false n?u dang d�ng Light Theme
+        /// Kiểm tra Windows đang dùng Dark Theme hay Light Theme
+        /// Trả về true nếu đang dùng Dark Theme, false nếu đang dùng Light Theme
         /// </summary>
         private bool IsDarkThemeEnabled()
         {
@@ -2787,7 +2787,7 @@ private async Task InstallPotPlayerAsync()
                         }
                     }
                 }
-                return false; // Default l� Light Theme
+                return false; // Default là Light Theme
             }
             catch
             {
@@ -2796,14 +2796,14 @@ private async Task InstallPotPlayerAsync()
         }
 
         /// <summary>
-        /// B?t/t?t Dark Theme và restart Explorer
+        /// Bật/tắt Dark Theme và restart Explorer
         /// </summary>
         private async Task ToggleThemeAsync()
         {
             try
             {
                 bool isDarkTheme = IsDarkThemeEnabled();
-                int newValue = isDarkTheme ? 1 : 0; // N?u dang Dark th� đổi th�nh Light (1), ngu?c lỗi
+                int newValue = isDarkTheme ? 1 : 0; // Nếu đang Dark thì đổi thành Light (1), ngược lại thành Dark (0)
 
                 // Ghi registry
                 using (RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize", true))
@@ -2850,13 +2850,13 @@ private async Task InstallPotPlayerAsync()
         {
             await ToggleThemeAsync();
             
-            // C?p nh?t lỗi trêng th�i toggle button sau khi đổi theme
+            // Cập nhật trạng thái toggle button sau khi đổi theme
             await Task.Delay(1500);
             UpdateThemeToggleButtonState();
         }
 
         /// <summary>
-        /// C?p nh?t trêng th�i c?a Theme Toggle Button d?a tr�n theme hi?n tải
+        /// Cập nhật trạng thái của Theme Toggle Button dựa trên theme hiện tại
         /// </summary>
         private void UpdateThemeToggleButtonState()
         {
@@ -3343,7 +3343,7 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
          */
 
         // ===================================================================
-        // TabSubtitle �?" VidCoder
+        // TabSubtitle - VidCoder
         // ===================================================================
         private void ChkVidCoder_Click(object sender, RoutedEventArgs e)
         {
@@ -3363,7 +3363,7 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                // bu?c 1: tạo folder C:\Vidcoder n?u chưa t?n tải
+                // bước 1: tạo folder C:\Vidcoder nếu chưa tồn tại
                 string vidCoderFolder = @"C:\Vidcoder";
                 if (!Directory.Exists(vidCoderFolder))
                 {
@@ -3371,7 +3371,7 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
                     UpdateStatus($"đã tạo folder {vidCoderFolder}", "Cyan");
                 }
 
-                // bu?c 2: tải VidCoder.exe từ link c�' �'�<nh của MMT
+                // bước 2: tải VidCoder.exe từ link cố định của MMT
                 string vidCoderExeUrl = VIDCODER_DOWNLOAD_URL;
                 string vidCoderExePath = Path.Combine(vidCoderFolder, "VidCoder.exe");
                 
@@ -3385,7 +3385,7 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
                     SpeedTextBlock.Text = "";
                 });
 
-                // bu?c 3: tải file VidCoder.sqlite từ MMT repo
+                // bước 3: tải file VidCoder.sqlite từ MMT repo
                 string vidCoderSqliteUrl = "https://github.com/ghostminhtoan/MMT/releases/download/v1.0/VidCoder.sqlite";
                 string vidCoderSqlitePath = Path.Combine(vidCoderFolder, "VidCoder.sqlite");
 
@@ -3397,17 +3397,17 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
 
                 UpdateStatus("đã tải xong VidCoder.sqlite", "Green");
 
-                // bu?c 4: tạo shortcut tr�n Desktop
+                // bước 4: tạo shortcut trên Desktop
                 string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
                 string shortcutPath = Path.Combine(desktopPath, "VidCoder.lnk");
                 
-                // xóa shortcut cu n?u t?n tải
+                // xóa shortcut cũ nếu tồn tại
                 if (File.Exists(shortcutPath))
                 {
                     File.Delete(shortcutPath);
                 }
                 
-                // tạo shortcut m?i s? d?ng WshShell
+                // tạo shortcut mới sử dụng WshShell
                 try
                 {
                     Type shellType = Type.GetTypeFromProgID("WScript.Shell");
@@ -3416,7 +3416,7 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
                         object shell = Activator.CreateInstance(shellType);
                         object shortcut = shellType.InvokeMember("CreateShortcut", System.Reflection.BindingFlags.InvokeMethod, null, shell, new object[] { shortcutPath });
                         
-                        // Set các thu�Tc tính shortcut
+                        // Set các thuộc tính shortcut
                         shellType.InvokeMember("TargetPath", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { vidCoderExePath });
                         shellType.InvokeMember("WorkingDirectory", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { vidCoderFolder });
                         shellType.InvokeMember("Description", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { "VidCoder - Video transcoder" });
@@ -3430,7 +3430,7 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
                     UpdateStatus($"không thể tạo shortcut: {ex.Message}", "Orange");
                 }
 
-                // bu?c 5: Ch�? chạy file .exe sau khi tải xong SQLite
+                // bước 5: Chỉ chạy file .exe sau khi tải xong SQLite
                 UpdateStatus("Đang mở VidCoder...", "Cyan");
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
@@ -3456,7 +3456,7 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                // s? d?ng GitHub API ? lấy danh s�ch releases
+                // sử dụng GitHub API để lấy danh sách releases
                 string apiUrl = "https://api.github.com/repos/RandomEngy/VidCoder/releases";
                 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(apiUrl);
@@ -3468,10 +3468,10 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
                 {
                     string json = await reader.ReadToEndAsync();
                     
-                    // Parse JSON �'ơn giản ? tải t?t cả versions
+                    // Parse JSON đơn giản để tải tất cả versions
                     var versions = new List<(string Version, int BuildNumber)>();
                     
-                    // tải t?t cả các tag_name c� dạng v*
+                    // tải tất cả các tag_name có dạng v*
                     int startIndex = 0;
                     while ((startIndex = json.IndexOf("\"tag_name\":", startIndex)) != -1)
                     {
@@ -3485,10 +3485,10 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
                         
                         string tagName = json.Substring(quoteStart, quoteEnd - quoteStart);
                         
-                        // Ch�? lấy các tag c� dạng vX.Y.Z
+                        // Chỉ lấy các tag có dạng vX.Y.Z
                         if (tagName.StartsWith("v") && tagName.Length > 1)
                         {
-                            // Parse version number ? so sánh
+                            // Parse version number để so sánh
                             string versionNum = tagName.TrimStart('v');
                             int buildNumber = ParseVersionToNumber(versionNum);
                             versions.Add((tagName, buildNumber));
@@ -3497,7 +3497,7 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
                         startIndex = quoteEnd + 1;
                     }
 
-                    // tải version c� s?n build l?n nh?t
+                    // tải version có sẵn build lớn nhất
                     if (versions.Count > 0)
                     {
                         var latest = versions.OrderByDescending(v => v.BuildNumber).First();
@@ -3514,7 +3514,7 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
         }
 
         /// <summary>
-        /// Chuy?n version string (X.Y.Z) th�nh s?n ? so sánh
+        /// Chuyển version string (X.Y.Z) thành số để so sánh
         /// </summary>
         private int ParseVersionToNumber(string version)
         {
@@ -3527,7 +3527,7 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
                     int minor = int.TryParse(parts[1], out var n) ? n : 0;
                     int build = int.TryParse(parts[2], out var b) ? b : 0;
                     
-                    // c�ng thức: major * 1000000 + minor * 1000 + build
+                    // Công thức: major * 1000000 + minor * 1000 + build
                     return major * 1000000 + minor * 1000 + build;
                 }
             }
@@ -3537,7 +3537,7 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
         }
 
         // ===================================================================
-        // TabSubtitle �?" Boilsoft Video Splitter
+        // TabSubtitle - Boilsoft Video Splitter
         // ===================================================================
         private void ChkBoilsoftVideoSplitter_Click(object sender, RoutedEventArgs e)
         {
@@ -3568,7 +3568,7 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
                     SpeedTextBlock.Text = "";
                 });
 
-                // Hi?n th? popup ? hỏi người dùng ch?n cài đặt
+                // Hiển thị popup để hỏi người dùng chọn cài đặt
                 MessageBoxResult result = MessageBox.Show("Yes = cài đặt tự động (silent)\nNo = cài đặt thành công (GUI)", "cài đặt Boilsoft Video Splitter", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Cancel)
@@ -3620,7 +3620,7 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
         }
 
         // ===================================================================
-        // TabSubtitle �?" Vibe
+        // TabSubtitle - Vibe
         // ===================================================================
         private void ChkVibe_Click(object sender, RoutedEventArgs e)
         {
@@ -3651,7 +3651,7 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
                     SpeedTextBlock.Text = "";
                 });
 
-                // Hi?n th? popup ? hỏi người dùng ch?n cài đặt
+                // Hiển thị popup để hỏi người dùng chọn cài đặt
                 MessageBoxResult result = MessageBox.Show("Yes = cài đặt tự động (silent)\nNo = cài đặt thành công (GUI)", "cài đặt Vibe", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Cancel)
@@ -3703,7 +3703,7 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
         }
 
         // ===================================================================
-        // TabSubtitle �?" MKVToolNix MKVCleaver
+        // TabSubtitle - MKVToolNix MKVCleaver
         // ===================================================================
         private void ChkMKVToolNix_Click(object sender, RoutedEventArgs e)
         {
@@ -3734,7 +3734,7 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
                     SpeedTextBlock.Text = "";
                 });
 
-                // Hi?n th? popup ? hỏi người dùng ch?n cài đặt
+                // Hiển thị popup để hỏi người dùng chọn cài đặt
                 MessageBoxResult result = MessageBox.Show("Yes = cài đặt tự động (silent)\nNo = cài đặt thành công (GUI)", "cài đặt MKVToolNix MKVCleaver", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Cancel)
@@ -3786,7 +3786,7 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
         }
 
         // ===================================================================
-        // TabSubtitle �?" Subtitle Draft GMTPC
+        // TabSubtitle - Subtitle Draft GMTPC
         // ===================================================================
         private void ChkSubtitleDraftGMTPC_Click(object sender, RoutedEventArgs e)
         {
@@ -3806,7 +3806,7 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                // bu?c 1: tải file về �. C:\
+                // bước 1: tải file về ổ C:\
                 string subtitleDraftFolder = @"C:\";
                 string subtitleDraftExe = Path.Combine(subtitleDraftFolder, "Subtitle draft GMTPC.exe");
 
@@ -3822,17 +3822,17 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
 
                 UpdateStatus("đã tải xong Subtitle Draft GMTPC", "Green");
 
-                // bu?c 2: tạo shortcut tr�n Desktop
+                // bước 2: tạo shortcut trên Desktop
                 string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
                 string shortcutPath = Path.Combine(desktopPath, "Subtitle Draft GMTPC.lnk");
 
-                // xóa shortcut cu n?u t?n tải
+                // xóa shortcut cũ nếu tồn tại
                 if (File.Exists(shortcutPath))
                 {
                     File.Delete(shortcutPath);
                 }
 
-                // tạo shortcut m?i s? d?ng WshShell
+                // tạo shortcut mới sử dụng WshShell
                 try
                 {
                     Type shellType = Type.GetTypeFromProgID("WScript.Shell");
@@ -3841,7 +3841,7 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
                         object shell = Activator.CreateInstance(shellType);
                         object shortcut = shellType.InvokeMember("CreateShortcut", System.Reflection.BindingFlags.InvokeMethod, null, shell, new object[] { shortcutPath });
 
-                        // Set các thu�Tc tính shortcut
+                        // Set các thuộc tính shortcut
                         shellType.InvokeMember("TargetPath", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { subtitleDraftExe });
                         shellType.InvokeMember("WorkingDirectory", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { subtitleDraftFolder });
                         shellType.InvokeMember("Description", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { "Subtitle Draft GMTPC" });
@@ -3855,7 +3855,7 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
                     UpdateStatus($"không thể tạo shortcut: {ex.Message}", "Orange");
                 }
 
-                // bu?c 3: m? file
+                // bước 3: mở file
                 UpdateStatus("Đang mở Subtitle Draft GMTPC...", "Cyan");
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
@@ -3877,7 +3877,7 @@ private void ChkUltraviewer_Click(object sender, RoutedEventArgs e)
         }
 
         // ===================================================================
-        // TabSubtitle �?" Download sample video
+        // TabSubtitle - Download sample video
         // ===================================================================
         private void ChkDownloadSampleVideo_Click(object sender, RoutedEventArgs e)
         {

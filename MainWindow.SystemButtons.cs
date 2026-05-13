@@ -430,6 +430,12 @@ namespace AICodeAgentAIOGMTPC
                     ChkSubtitleDraftGMTPC.IsChecked = true;
                     ChkDownloadSampleVideo.IsChecked = true;
                 }
+                else if (tabHeader == "Vibe coding")
+                {
+                    ChkVisualStudioCode.IsChecked = true;
+                    ChkVisualStudio2026.IsChecked = true;
+                    ChkGit.IsChecked = true;
+                }
                 // Nếu tab là "Partition"
                 else if (tabHeader == "Partition")
                 {
@@ -559,6 +565,12 @@ namespace AICodeAgentAIOGMTPC
                     ChkMKVToolNix.IsChecked = false;
                     ChkSubtitleDraftGMTPC.IsChecked = false;
                     ChkDownloadSampleVideo.IsChecked = false;
+                }
+                else if (tabHeader == "Vibe coding")
+                {
+                    ChkVisualStudioCode.IsChecked = false;
+                    ChkVisualStudio2026.IsChecked = false;
+                    ChkGit.IsChecked = false;
                 }
                 // Nếu tab là "Partition"
                 else if (tabHeader == "Partition")
@@ -704,6 +716,9 @@ namespace AICodeAgentAIOGMTPC
             ChkVidCoder.IsChecked = false;
             ChkBoilsoftVideoSplitter.IsChecked = false;
             ChkVibe.IsChecked = false;
+            ChkVisualStudioCode.IsChecked = false;
+            ChkVisualStudio2026.IsChecked = false;
+            ChkGit.IsChecked = false;
             ChkMKVToolNix.IsChecked = false;
             ChkSubtitleDraftGMTPC.IsChecked = false;
             ChkDownloadSampleVideo.IsChecked = false;
@@ -775,6 +790,9 @@ namespace AICodeAgentAIOGMTPC
             if (ChkVidCoder.IsChecked == true) tasks.Add((InstallVidCoderAsync, ChkVidCoder));
             if (ChkBoilsoftVideoSplitter.IsChecked == true) tasks.Add((InstallBoilsoftVideoSplitterAsync, ChkBoilsoftVideoSplitter));
             if (ChkVibe.IsChecked == true) tasks.Add((InstallVibeAsync, ChkVibe));
+            if (ChkVisualStudioCode.IsChecked == true) tasks.Add((InstallVisualStudioCodeAsync, ChkVisualStudioCode));
+            if (ChkVisualStudio2026.IsChecked == true) tasks.Add((InstallVisualStudio2026Async, ChkVisualStudio2026));
+            if (ChkGit.IsChecked == true) tasks.Add((InstallGitAsync, ChkGit));
             if (ChkMKVToolNix.IsChecked == true) tasks.Add((InstallMKVToolNixAsync, ChkMKVToolNix));
             if (ChkSubtitleDraftGMTPC.IsChecked == true) tasks.Add((InstallSubtitleDraftGMTPCAsync, ChkSubtitleDraftGMTPC));
             if (ChkDownloadSampleVideo.IsChecked == true) tasks.Add((InstallSampleVideoAsync, ChkDownloadSampleVideo));
@@ -1052,6 +1070,15 @@ namespace AICodeAgentAIOGMTPC
 
             if (ChkDownloadSampleVideo?.IsChecked == true)
                 _cachedDownloadLinks.Add(SAMPLE_VIDEO_DOWNLOAD_URL);
+
+            if (ChkVisualStudioCode?.IsChecked == true)
+                _cachedDownloadLinks.Add(VISUAL_STUDIO_CODE_DOWNLOAD_URL);
+
+            if (ChkVisualStudio2026?.IsChecked == true)
+                _cachedDownloadLinks.Add(VISUAL_STUDIO_2026_DOWNLOAD_URL);
+
+            if (ChkGit?.IsChecked == true)
+                _cachedDownloadLinks.Add(GIT_DOWNLOAD_URL);
 
             if (ChkPowerISO?.IsChecked == true)
                 _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/v1.0/PowerISO.exe");
@@ -1458,6 +1485,15 @@ namespace AICodeAgentAIOGMTPC
                         break;
                     case "ChkVibe":
                         link = VIBE_DOWNLOAD_URL;
+                        break;
+                    case "ChkVisualStudioCode":
+                        link = VISUAL_STUDIO_CODE_DOWNLOAD_URL;
+                        break;
+                    case "ChkVisualStudio2026":
+                        link = VISUAL_STUDIO_2026_DOWNLOAD_URL;
+                        break;
+                    case "ChkGit":
+                        link = GIT_DOWNLOAD_URL;
                         break;
                     case "ChkMKVToolNix":
                         link = MKVTOOLNIX_DOWNLOAD_URL;

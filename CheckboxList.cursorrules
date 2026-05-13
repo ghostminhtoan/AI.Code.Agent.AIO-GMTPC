@@ -1,9 +1,9 @@
-<!-- AI Summary: 2026-05-11 - Rebuilt the checkbox catalog around the Tool tab after removing the other install tabs -->
+<!-- AI Summary: 2026-05-13 - Added the Vibe coding tab to the checkbox catalog -->
 
-# Danh sách Checkbox
+# Danh sach Checkbox
 
-> File này chỉ còn ghi nhận các checkbox giữ lại trong tab Tool.
-> Các tab Subtitle, Partition, Gaming, Driver, Browser, Remote Desktop, Windows và System Information đã được gom/xóa theo yêu cầu.
+> File nay ghi nhan checkbox trong tab Tool va tab Vibe coding.
+> Cac tab Subtitle, Partition, Gaming, Driver, Browser, Remote Desktop, Windows va System Information da duoc gom/xoa theo yeu cau.
 
 ## Related Files
 
@@ -12,24 +12,32 @@
 
 ## Tab Tool
 
-| Tên Checkbox | Link Download | Argument |
+| Ten Checkbox | Link Download | Argument |
 |-------------|---------------|----------|
 | ChkInstallIDM | https://tinyurl.com/idmhcmvn | /s /a /u /o /quiet /skipdlgst |
 | ChkInstallNeatDM | https://neatdownloadmanager.com/file/NeatDM_setup.exe | /silent |
 | ChkVcredist | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/vcredist.all.in.one.by.MMT.Windows.Tech.exe | /passive |
 | ChkNotepadPlusPlus | https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.9.2/npp.8.9.2.Installer.x64.msi | /passive /norestart |
-| ChkFastStone | *(FastStone Capture)* | *(tool riêng)* |
-| ChkComfortClipboardPro | *(Comfort Clipboard Pro)* | *(tool riêng)* |
+| ChkFastStone | *(FastStone Capture)* | *(tool rieng)* |
+| ChkComfortClipboardPro | *(Comfort Clipboard Pro)* | *(tool rieng)* |
 | ChkPowerISO | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/PowerISO.exe | /S |
 | ChkMemReduct | https://github.com/henrypp/memreduct/releases/download/v.3.5.2/memreduct-3.5.2-setup.exe | /S |
 | ChkTeraCopy | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/TeraCopy.Pro.v3.17.0.0.exe | /S |
 | ChkVPN1111 | https://1111-releases.cloudflareclient.com/win/latest | /passive |
 | ChkChrome | https://dl.google.com/chrome/install/latest/chrome_installer.exe | /silent /install |
 | ChkCocCoc | https://github.com/ghostminhtoan/MMT/releases/download/v1.0/CocCoc.exe | /silent /install |
-| ChkVMWare162Lite | *(VMWare 16.2 lite)* | *(tool riêng)* |
+| ChkVMWare162Lite | *(VMWare 16.2 lite)* | *(tool rieng)* |
 
-## Ghi chú
+## Tab Vibe coding
 
-- Tất cả checkbox trên đều được gom vào tab Tool.
-- Các tab cũ đã được xóa khỏi giao diện theo yêu cầu.
-- Khi thêm/chỉnh checkbox mới, luôn cập nhật workflow và build lại exe trước khi push.
+| Ten Checkbox | Link Download | Argument |
+|-------------|---------------|----------|
+| ChkVisualStudioCode | https://code.visualstudio.com/sha/download?build=stable&os=win32-x64-user | /silent |
+| ChkVisualStudio2026 | https://c2rsetup.officeapps.live.com/c2r/downloadVS.aspx?sku=community&channel=insiders&version=VS18&source=VSLandingPage&cid=2600 |  |
+| ChkGit | https://github.com/git-for-windows/git/releases/download/v2.54.0.windows.1/Git-2.54.0-64-bit.exe | /silent |
+
+## Ghi chu
+
+- Tat ca checkbox tren deu duoc gom vao tab Tool va tab Vibe coding.
+- Cac tab cu da duoc xoa khoi giao dien theo yeu cau.
+- Khi them/chinh checkbox moi, luon cap nhat workflow va build lai exe truoc khi push.

@@ -412,6 +412,26 @@ namespace AICodeAgentAIOGMTPC
 
 
 
+        // Vibe coding (Tab: Vibe coding)
+
+        private const string VISUAL_STUDIO_CODE_DOWNLOAD_URL = "https://code.visualstudio.com/sha/download?build=stable&os=win32-x64-user";
+
+        private const string VISUAL_STUDIO_CODE_INSTALL_ARGUMENTS = "/silent";
+
+        private const string VISUAL_STUDIO_2026_DOWNLOAD_URL = "https://c2rsetup.officeapps.live.com/c2r/downloadVS.aspx?sku=community&channel=insiders&version=VS18&source=VSLandingPage&cid=2600";
+
+        private const string VISUAL_STUDIO_2026_INSTALL_ARGUMENTS = "";
+
+
+
+        // Git (Tab: Vibe coding)
+
+        private const string GIT_DOWNLOAD_URL = "https://github.com/git-for-windows/git/releases/download/v2.54.0.windows.1/Git-2.54.0-64-bit.exe";
+
+        private const string GIT_INSTALL_ARGUMENTS = "/silent";
+
+
+
         // MKVToolNix MKVCleaver (Tab: Subtitle)
 
         private const string MKVTOOLNIX_DOWNLOAD_URL = "https://github.com/ghostminhtoan/MMT/releases/download/v1.0/mkvtoolnix-mkvcleaver.exe";
@@ -1252,6 +1272,14 @@ namespace AICodeAgentAIOGMTPC
                              // Thêm checkbox cho Vibe (Tab Subtitle)
 
                              ChkVibe.IsChecked == true ||
+
+                             // Thêm checkbox cho Vibe coding
+
+                             ChkVisualStudioCode.IsChecked == true ||
+
+                             ChkVisualStudio2026.IsChecked == true ||
+
+                             ChkGit.IsChecked == true ||
 
                              // Thêm checkbox cho MKVToolNix MKVCleaver (Tab Subtitle)
 

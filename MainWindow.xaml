@@ -228,7 +228,7 @@
                                 FontSize="22"
                                 FontWeight="Bold"
                                 Foreground="Yellow"
-                                Margin="0,0,10,5" Height="29" Width="138"/>
+                                Margin="0,0,10,5" Height="29" Width="288"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,0,0,0">
                     <Grid VerticalAlignment="Center" Margin="0,0,0,6">
@@ -378,7 +378,7 @@
                     </ControlTemplate>
                 </TabControl.Template>
                 
-<TabItem Header="Tool">
+                <TabItem Header="Tool">
                     <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled" Background="#FF1F1F1F">
                         <WrapPanel x:Name="ToolPanel" Orientation="Horizontal" HorizontalAlignment="Stretch" Style="{StaticResource ResponsiveWrapPanelStyle}">
                             <CheckBox x:Name="ChkInstallIDM" Content="IDM" Width="200" Height="34" Click="ChkInstallIDM_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
@@ -394,6 +394,16 @@
                             <CheckBox x:Name="ChkChrome" Content="Google Chrome" Width="200" Height="34" Click="ChkChrome_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
                             <CheckBox x:Name="ChkCocCoc" Content="Cốc Cốc" Width="200" Height="34" Click="ChkCocCoc_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
                             <CheckBox x:Name="ChkVMWare162Lite" Content="VMWare 16.2 lite" Width="200" Height="34" Click="ChkVMWare162Lite_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
+                        </WrapPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <TabItem Header="Vibe coding">
+                    <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled" Background="#FF1F1F1F">
+                        <WrapPanel x:Name="CodePanel" Orientation="Horizontal" HorizontalAlignment="Stretch" Style="{StaticResource ResponsiveWrapPanelStyle}">
+                            <CheckBox x:Name="ChkVisualStudioCode" Content="Visual Studio Code" Width="200" Height="34" Click="ChkVisualStudioCode_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
+                            <CheckBox x:Name="ChkVisualStudio2026" Content="Visual Studio 2026" Width="200" Height="34" Click="ChkVisualStudio2026_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
+                            <CheckBox x:Name="ChkGit" Content="Git" Width="200" Height="34" Click="ChkGit_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
                         </WrapPanel>
                     </ScrollViewer>
                 </TabItem>

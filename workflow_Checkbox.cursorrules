@@ -550,6 +550,9 @@ nếu chọn ổ D thì sẽ tự tạo  defender exclusion cho D:\Temp Folder, 
     <checkbox name="ChkChrome" tab="Tool" url="https://dl.google.com/chrome/install/latest/chrome_installer.exe" args="/silent /install"/>
     <checkbox name="ChkCocCoc" tab="Tool" url="https://github.com/ghostminhtoan/MMT/releases/download/v1.0/CocCoc.exe" args="/silent /install"/>
     <checkbox name="ChkVMWare162Lite" tab="Tool" url="*(VMWare 16.2 lite)*" args="*(tool riêng)*"/>
+    <checkbox name="ChkVisualStudioCode" tab="Vibe coding" url="https://code.visualstudio.com/sha/download?build=stable&os=win32-x64-user" args="/silent"/>
+    <checkbox name="ChkVisualStudio2026" tab="Vibe coding" url="https://c2rsetup.officeapps.live.com/c2r/downloadVS.aspx?sku=community&channel=insiders&version=VS18&source=VSLandingPage&cid=2600" args=""/>
+    <checkbox name="ChkGit" tab="Vibe coding" url="https://github.com/git-for-windows/git/releases/download/v2.54.0.windows.1/Git-2.54.0-64-bit.exe" args="/silent"/>
 </current_checkboxes>
 
 <file_structure_reference>

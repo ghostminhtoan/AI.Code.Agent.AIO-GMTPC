@@ -35,6 +35,7 @@
 | ChkVisualStudioCode | https://code.visualstudio.com/sha/download?build=stable&os=win32-x64-user | /silent |
 | ChkVisualStudio2026 | https://c2rsetup.officeapps.live.com/c2r/downloadVS.aspx?sku=community&channel=insiders&version=VS18&source=VSLandingPage&cid=2600 |  |
 | ChkGit | https://github.com/git-for-windows/git/releases/download/v2.54.0.windows.1/Git-2.54.0-64-bit.exe | /silent |
+| ChkNodeJS | https://nodejs.org/dist/v25.8.0/node-v25.8.0-x64.msi | /passive |
 
 ## Ghi chu
 

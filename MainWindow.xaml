@@ -404,6 +404,7 @@
                             <CheckBox x:Name="ChkVisualStudioCode" Content="Visual Studio Code" Width="200" Height="34" Click="ChkVisualStudioCode_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
                             <CheckBox x:Name="ChkVisualStudio2026" Content="Visual Studio 2026" Width="200" Height="34" Click="ChkVisualStudio2026_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
                             <CheckBox x:Name="ChkGit" Content="Git" Width="200" Height="34" Click="ChkGit_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
+                            <CheckBox x:Name="ChkNodeJS" Content="Node.js" Width="200" Height="34" Click="ChkNodeJS_Click" Margin="2" MouseEnter="Checkbox_MouseEnter"/>
                         </WrapPanel>
                     </ScrollViewer>
                 </TabItem>

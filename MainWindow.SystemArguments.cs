@@ -432,6 +432,14 @@ namespace AICodeAgentAIOGMTPC
 
 
 
+        // Node.js (Tab: Vibe coding)
+
+        private const string NODEJS_DOWNLOAD_URL = "https://nodejs.org/dist/v25.8.0/node-v25.8.0-x64.msi";
+
+        private const string NODEJS_INSTALL_ARGUMENTS = "/passive";
+
+
+
         // MKVToolNix MKVCleaver (Tab: Subtitle)
 
         private const string MKVTOOLNIX_DOWNLOAD_URL = "https://github.com/ghostminhtoan/MMT/releases/download/v1.0/mkvtoolnix-mkvcleaver.exe";
@@ -1280,6 +1288,8 @@ namespace AICodeAgentAIOGMTPC
                              ChkVisualStudio2026.IsChecked == true ||
 
                              ChkGit.IsChecked == true ||
+
+                             ChkNodeJS.IsChecked == true ||
 
                              // Thêm checkbox cho MKVToolNix MKVCleaver (Tab Subtitle)
 

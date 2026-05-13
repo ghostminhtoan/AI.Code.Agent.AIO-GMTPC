@@ -1,6 +1,6 @@
 // =======================================================================
 // MainWindow.TabCode.cs
-// Tab "Vibe coding" - Visual Studio Code, Visual Studio 2026, and Git checkboxes
+// Tab "Vibe coding" - Visual Studio Code, Visual Studio 2026, Git, and Node.js checkboxes
 // =======================================================================
 using System;
 using System.Diagnostics;
@@ -59,6 +59,20 @@ namespace AICodeAgentAIOGMTPC
             UpdateInstallButtonState();
         }
 
+        private void ChkNodeJS_Click(object sender, RoutedEventArgs e)
+        {
+            if (ChkNodeJS.IsChecked == true)
+            {
+                UpdateStatus("Đã chọn: Node.js", "Green");
+            }
+            else
+            {
+                UpdateStatus("Đã hủy chọn: Node.js", "Yellow");
+            }
+
+            UpdateInstallButtonState();
+        }
+
         // ===================================================================
         // TabCode - Install Methods
         // ===================================================================
@@ -95,6 +109,18 @@ namespace AICodeAgentAIOGMTPC
                 arguments: GIT_INSTALL_ARGUMENTS,
                 runningMessage: "Đang chạy Git installer (/silent)...",
                 successMessage: "Cài đặt Git hoàn tất!"
+            );
+        }
+
+        private async Task InstallNodeJSAsync()
+        {
+            await InstallDownloadedSetupAsync(
+                displayName: "Node.js",
+                downloadUrl: NODEJS_DOWNLOAD_URL,
+                localFileName: "node-v25.8.0-x64.msi",
+                arguments: NODEJS_INSTALL_ARGUMENTS,
+                runningMessage: "Đang chạy Node.js installer (/passive)...",
+                successMessage: "Cài đặt Node.js hoàn tất!"
             );
         }
 

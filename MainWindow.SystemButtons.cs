@@ -435,6 +435,7 @@ namespace AICodeAgentAIOGMTPC
                     ChkVisualStudioCode.IsChecked = true;
                     ChkVisualStudio2026.IsChecked = true;
                     ChkGit.IsChecked = true;
+                    ChkNodeJS.IsChecked = true;
                 }
                 // Nếu tab là "Partition"
                 else if (tabHeader == "Partition")
@@ -571,6 +572,7 @@ namespace AICodeAgentAIOGMTPC
                     ChkVisualStudioCode.IsChecked = false;
                     ChkVisualStudio2026.IsChecked = false;
                     ChkGit.IsChecked = false;
+                    ChkNodeJS.IsChecked = false;
                 }
                 // Nếu tab là "Partition"
                 else if (tabHeader == "Partition")
@@ -719,6 +721,7 @@ namespace AICodeAgentAIOGMTPC
             ChkVisualStudioCode.IsChecked = false;
             ChkVisualStudio2026.IsChecked = false;
             ChkGit.IsChecked = false;
+            ChkNodeJS.IsChecked = false;
             ChkMKVToolNix.IsChecked = false;
             ChkSubtitleDraftGMTPC.IsChecked = false;
             ChkDownloadSampleVideo.IsChecked = false;
@@ -793,6 +796,7 @@ namespace AICodeAgentAIOGMTPC
             if (ChkVisualStudioCode.IsChecked == true) tasks.Add((InstallVisualStudioCodeAsync, ChkVisualStudioCode));
             if (ChkVisualStudio2026.IsChecked == true) tasks.Add((InstallVisualStudio2026Async, ChkVisualStudio2026));
             if (ChkGit.IsChecked == true) tasks.Add((InstallGitAsync, ChkGit));
+            if (ChkNodeJS.IsChecked == true) tasks.Add((InstallNodeJSAsync, ChkNodeJS));
             if (ChkMKVToolNix.IsChecked == true) tasks.Add((InstallMKVToolNixAsync, ChkMKVToolNix));
             if (ChkSubtitleDraftGMTPC.IsChecked == true) tasks.Add((InstallSubtitleDraftGMTPCAsync, ChkSubtitleDraftGMTPC));
             if (ChkDownloadSampleVideo.IsChecked == true) tasks.Add((InstallSampleVideoAsync, ChkDownloadSampleVideo));
@@ -1079,6 +1083,9 @@ namespace AICodeAgentAIOGMTPC
 
             if (ChkGit?.IsChecked == true)
                 _cachedDownloadLinks.Add(GIT_DOWNLOAD_URL);
+
+            if (ChkNodeJS?.IsChecked == true)
+                _cachedDownloadLinks.Add(NODEJS_DOWNLOAD_URL);
 
             if (ChkPowerISO?.IsChecked == true)
                 _cachedDownloadLinks.Add("https://github.com/ghostminhtoan/MMT/releases/download/v1.0/PowerISO.exe");
@@ -1494,6 +1501,9 @@ namespace AICodeAgentAIOGMTPC
                         break;
                     case "ChkGit":
                         link = GIT_DOWNLOAD_URL;
+                        break;
+                    case "ChkNodeJS":
+                        link = NODEJS_DOWNLOAD_URL;
                         break;
                     case "ChkMKVToolNix":
                         link = MKVTOOLNIX_DOWNLOAD_URL;
